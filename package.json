@@ -1,0 +1,30 @@
+{
+  "name": "gnosiq-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "15.5.14",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@sendgrid/mail": "^8.1.4",
+    "firebase-admin": "^13.1.0",
+    "posthog-js": "^1.220.5"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^3.4.17",
+    "postcss": "^8",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.14"
+  }
+}
