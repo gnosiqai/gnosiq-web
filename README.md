@@ -380,7 +380,8 @@ gnosiq-web/
 │   ├── firestore.ts        # DB client
 │   └── sendgrid.ts         # Email client
 ├── public/
-│   └── logo.svg            # LOCKED — do not replace
+│   ├── gnosiq-logo.png     # Brand logo — LOCKED, do not replace
+│   └── logo-placeholder.svg
 ├── .github/
 │   └── workflows/          # CI/CD · SonarCloud · Cloud Run deploy
 └── .env.example            # All required vars documented
