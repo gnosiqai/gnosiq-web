@@ -168,21 +168,21 @@ const report = await client.evaluate({
           └──┬───────┬──────────┘
              │       │
   ┌──────────▼─┐  ┌──▼─────────────────┐
-  │  Firestore │  │     AI Router (CAT)     │
-  │ Native Mode│  │   (Metabolic AI v2.0)   │
-  │            │  │                         │
-  │ sessions/  │  │  Agent1 → Claude        │
-  │  reports/  │  │  (Pattern Extractor)    │
-  │  waitlist/ │  │  Agent2 → Gemini        │
-  │  partners/ │  │         2.5 Flash       │
-  └────────────┘  │  (Psychometrician AI)   │
-                  │  Agent3 → Claude        │
-                  │        Sonnet           │
-                  │  (Synthetic Neuropsy.)  │
-                  │                         │
+  │  Firestore │  │     AI Router (CAT)      │
+  │ Native Mode│  │   (Metabolic AI v2.0)    │
+  │            │  │                          │
+  │ sessions/  │  │  Agent1 → Claude         │
+  │  reports/  │  │  (Pattern Extractor)     │
+  │  waitlist/ │  │  Agent2 → Gemini         │
+  │  partners/ │  │         2.5 Flash        │
+  └────────────┘  │  (Psychometrician AI)    │
+                  │  Agent3 → Claude         │
+                  │        Sonnet            │
+                  │  (Synthetic Neuropsy.)   │
+                  │                          │
                   │ 12 instruments · 4 layers│
-                  │ Cache 24h · $1.80/eval  │
-                  │ 98.1% margin            │
+                  │ Cache 24h · $1.80/eval   │
+                  │ 98.1% margin             │
                   └─────────────────────────┘
                            │
                 ┌──────────▼──────────┐
