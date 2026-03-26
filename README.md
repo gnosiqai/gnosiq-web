@@ -1,180 +1,452 @@
-# GnosIQ — The Cognitive Capital API
+<div align="center">
 
-> "The first API that turns human potential into computable capital."
+<img src="public/logo.svg" alt="GnosIQ" width="72" height="72" />
 
-Landing page oficial da GnosIQ em [gnosiq.ai](https://gnosiq.ai).
+# GnosIQ
+
+**The Cognitive Capital API**
+
+*We don't assess people. We unlock the cognitive capital hidden in every human.*
+
+[![Status](https://img.shields.io/badge/status-pre--launch-8B5CF6?style=flat-square)](https://gnosiq.ai)
+[![Beta NPS](https://img.shields.io/badge/beta%20NPS-76-8B5CF6?style=flat-square)](#)
+[![Stack](https://img.shields.io/badge/stack-Next.js%2015%20%7C%20Cloud%20Run%20%7C%20Firestore-0D0B1E?style=flat-square)](#tech-stack)
+[![License](https://img.shields.io/badge/license-Proprietary-6D28D9?style=flat-square)](#legal)
+[![SonarCloud](https://img.shields.io/badge/code%20quality-SonarCloud-3A4E8D?style=flat-square)](https://sonarcloud.io)
+
+[gnosiq.ai](https://gnosiq.ai) · [@gnosiqai](https://x.com/gnosiqai) · [Docs](https://docs.gnosiq.ai) *(coming M4)*
+
+</div>
 
 ---
 
-## Stack
+## What is GnosIQ?
 
-| Tecnologia | Versão |
-|---|---|
-| Next.js | 15 (App Router) |
-| TypeScript | strict mode |
-| Tailwind CSS | 3.x |
-| Node.js | 22 LTS |
-| Package Manager | npm (NUNCA yarn/pnpm) |
+GnosIQ is the first API that turns human potential into computable capital.
 
----
+Where traditional psychometric tools deliver static PDFs locked behind $15,000 enterprise contracts, GnosIQ delivers **deep cognitive assessment at API scale** — programmatic, affordable, and actionable in 30 minutes.
 
-## Setup Local
-
-### Pré-requisitos
-
-- Node.js 22 LTS
-- npm 10+
-
-### Instalação
+Think of it as the **Bloomberg Terminal for human intelligence**: the same depth institutional investors have always had, now accessible via a single `POST /v1/evaluate`.
 
 ```bash
-# 1. Clone o repositório
+curl -X POST https://api.gnosiq.ai/v1/evaluate \
+  -H "Authorization: Bearer giq_sk_..." \
+  -H "Content-Type: application/json" \
+  -d '{"session_id": "sess_abc123", "responses": [...] }'
+
+# → 18-page cognitive capital report · delivered in 30 min · $1.80 cost
+```
+
+### The gap GnosIQ fills
+
+| Solution | Depth | API | Price | Time |
+|---|---|---|---|---|
+| Hogan Assessments | ★★★★★ | ✗ | ~$15K/yr | Weeks |
+| Crystal Knows | ★★☆☆☆ | Partial | $49/mo | Minutes |
+| BetterUp | N/A | ✗ | $4.7B valuation | Coaching |
+| **GnosIQ** | **★★★★★** | **✓ Native** | **$0.50–$97** | **30 min** |
+
+> **Hogan's depth. Crystal's price. Infrastructure neither has.**
+
+---
+
+## The 3 Surfaces
+
+GnosIQ is one cognitive engine distributed across three independent access surfaces.
+The same `POST /v1/evaluate` powers all three. What changes is the wrapper, the buyer, and the price point.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    GNOSIQ COGNITIVE ENGINE                      │
+│      Agent1 (Pattern Extractor) · Agent2 (Psychometrician AI)  │
+│                Agent3 (Synthetic Neuropsychologist)             │
+│          WAIS-IV · Big Five · Gardner · Renzulli · PTG          │
+└────────────────┬────────────────┬───────────────┬──────────────┘
+                 │                │               │
+            Surface 1        Surface 2       Surface 3
+           B2C Direct        White-Label     Public API
+           (M2 · live)       (M3 · B2B)      (M4+ · devs)
+```
+
+### Surface 1 — B2C Assessment *(M2)*
+
+> **Who:** Founders, Tech Leaders, Executive Coaches  
+> **Where:** [gnosiq.ai](https://gnosiq.ai) — direct landing page  
+> **Price:** $97 one-time · $29/mo Pro
+
+The individual buys directly. Answers a 30-minute adaptive session.
+Receives an **18-page Cognitive Capital Report** by email — covering
+IQ range, Big Five profile, Multiple Intelligences map, Renzulli AH/SD
+indicators, and PTG growth vector.
+
+No enterprise contract. No waiting list. No therapist required.
+
+---
+
+### Surface 2 — White-Label B2B *(M3)*
+
+> **Who:** HR Consultancies, Accelerators, EdTechs, Executive Coaches  
+> **Where:** Custom-branded dashboard — GnosIQ invisible on the front  
+> **Price:** Starter $2.5K/mo · Professional $5K/mo · Enterprise $12K/mo
+
+Partners configure their own logo, colors, and domain.
+Their clients take the assessment. Results land in the partner's dashboard.
+GnosIQ is the invisible infrastructure — like Stripe is to payments.
+
+Setup fee: $1,250 · $2,500 · $6,000 (one-time per tier).
+
+---
+
+### Surface 3 — Public API L0 *(M4+)*
+
+> **Who:** Developers, Cognitive Fintechs, HRTechs, EdTechs  
+> **Where:** `api.gnosiq.ai` · `npm install @gnosiqai/sdk`  
+> **Price:** $0.50–$2.00/eval · Free sandbox (3 evals)
+
+> ⚠️ **Not started.** Prerequisite: $30K+ MRR validated at M3.
+
+```typescript
+import { GnosIQ } from '@gnosiqai/sdk';
+
+const client = new GnosIQ({ apiKey: process.env.GNOSIQ_API_KEY });
+
+const report = await client.evaluate({
+  sessionId: 'sess_abc123',
+  responses: adaptiveResponses,
+  webhookUrl: 'https://yourapp.com/webhooks/gnosiq',
+});
+
+// report.cognitiveCapitalScore → 0–1000
+// report.pdfUrl → signed URL · expires 72h
+// report.vectors → { iq, bigFive, gardner, renzulli, ptg }
+```
+
+---
+
+## Architecture
+
+```
+          ┌─────────────────────┐
+          │   gnosiq.ai (web)   │
+          │  Next.js 15 · Edge  │
+          │   Vercel (global)   │
+          └──────────┬──────────┘
+                     │ HTTPS
+          ┌──────────▼──────────┐
+          │   Cloud Run Gen2    │
+          │   Node.js 22 LTS    │
+          │ southamerica-east1  │
+          │                     │
+          │  POST /api/waitlist │
+          │  POST /api/evaluate │◄── Surface 1 · 2 · 3
+          │  POST /api/webhook  │
+          └──┬───────┬──────────┘
+             │       │
+  ┌──────────▼─┐  ┌──▼─────────────────┐
+  │  Firestore │  │     AI Router       │
+  │ Native Mode│  │   (Metabolic AI)    │
+  │            │  │                     │
+  │ sessions/  │  │  Agent1 → Claude    │
+  │  reports/  │  │  Agent2 → Gemini    │
+  │  waitlist/ │  │         2.5 Flash   │
+  │  partners/ │  │  Agent3 → Claude    │
+  └────────────┘  │        Sonnet       │
+                  │                     │
+                  │ Cache 24h · $1.80   │
+                  │ cost/eval · 98.1%   │
+                  │ margin              │
+                  └─────────────────────┘
+                           │
+                ┌──────────▼──────────┐
+                │      SendGrid       │
+                │   Report delivery   │
+                │  100/day free tier  │
+                └─────────────────────┘
+```
+
+**Design principles (from the [GnosIQ Architecture Manifesto](docs/ARCHITECTURE.md)):**  
+100% Cloud · 100% Serverless · Minimum Cost Max Profit · Metabolic AI ·  
+Privacy Sovereign · Solo Founder Scalable · API-First · Async-First
+
+---
+
+## Tech Stack
+
+| Layer | Technology | Rationale |
+|---|---|---|
+| Frontend | Next.js 15 + TypeScript strict | App Router · Edge-ready · SEO |
+| Styling | Tailwind CSS | Design tokens · zero runtime CSS |
+| Backend | Cloud Run Gen2 · Node.js 22 LTS | Serverless · scales to zero · ~$0 |
+| Database | Firestore Native Mode | Realtime · free tier · no ORM needed |
+| AI Orchestration | Claude (Anthropic) + Gemini 2.5 Flash | Metabolic routing · cost/quality tradeoff |
+| Email | SendGrid API v3 | 100/day free · reliable delivery |
+| Analytics | PostHog Cloud | 1M events/mo free · session replay |
+| DNS / CDN | Cloudflare | DDoS · SSL · proxy · free |
+| CI/CD | GitHub Actions → Vercel | Auto-deploy on push main |
+| Code Quality | SonarCloud | AI code trust mitigation |
+| Package Manager | npm (only) | yarn/pnpm not used in this repo |
+
+---
+
+## Roadmap
+
+GnosIQ ships in four sequential milestones. Each unlocks the next surface.
+No milestone starts before the previous gate is validated — solo founder filter.
+
+```
+M1 ──────────► M2 ──────────► M3 ──────────► M4+
+Landing        Surface 1      Surface 2      Surface 3
+
+Waitlist       B2C Live       White-Label    Public API
+               $97/eval       $2.5K–12K/mo   $0.50–2/eval
+
+Gate: 10       Gate: 10       Gate: $30K     Gate: Series A
+leads live     sales +        MRR · 2–3      pipeline
+               NPS≥60         partners
+```
+
+### M1 — Landing + Waitlist *(now · IN PROGRESS)*
+
+| Task | Status |
+|---|---|
+| Repo scaffold (Next.js 15 + Tailwind + TypeScript) | ✅ Done |
+| Brand identity — 12/12 slides approved | ✅ Done |
+| Fix Lovart: favicon + remove teal #14B8A6 | ✅ Done |
+| Setup Vercel + DNS Cloudflare | 🔲 Todo |
+| Backend waitlist: Cloud Run → Firestore → SendGrid | 🔲 Todo |
+| PostHog analytics | 🔲 Todo |
+| Landing page: Nav + Hero + WaitlistForm + Footer | 🔲 Todo |
+| SonarCloud on GitHub Actions | 🔲 Todo |
+| Google Workspace: carlos@gnosiq.ai | 🔲 Todo |
+| Google for Startups — $350K GCP credits | 🔲 Todo |
+
+### M2 — API + First Customers *(Surface 1 · B2C)*
+
+- Cognitive engine: Agent1 + Agent2 + Agent3 fully wired
+- Stripe payment flow → async processing → PDF delivery
+- Target: 10 paying customers · NPS ≥ 60
+- Linear: [GNO-14](https://linear.app/gnosiq/issue/GNO-14)
+
+### M3 — White-Label + B2B *(Surface 2)*
+
+- Multi-tenant dashboard · partner onboarding · custom branding
+- Target: 2–3 white-label partners signed · $30K+ MRR
+- Linear: [GNO-15](https://linear.app/gnosiq/issue/GNO-15)
+
+### M4+ — Public API + International Scale *(Surface 3)*
+
+- API key auth · rate limiting · Swagger docs · Node.js SDK
+- Geo expansion: US 50% · UK 30% · DE 20%
+- Prerequisite: M3 gate validated
+- Linear: [GNO-16](https://linear.app/gnosiq/issue/GNO-16)
+
+---
+
+## Unit Economics
+
+> Numbers at current optimized stack. No hockey-stick assumptions.
+
+```
+Revenue per evaluation (B2C one-time)
+──────────────────────────────────────
+Gross price                    $97.00
+AI cost (3 agents)            − $1.80   ← Metabolic Router + 24h cache
+Payment processing            − $3.12   ← Stripe 2.9% + $0.30
+Infrastructure                − $0.08   ← Cloud Run + Firestore (serverless)
+                               ────────
+Net margin per eval            $92.00   → 98.1% gross margin
+
+LTV / CAC model (M2 target)
+──────────────────────────────────────
+CAC (LinkedIn organic M1)          $0
+LTV one-time buyer                $97
+LTV Pro subscriber ($29/mo)      $348   ← 12-month retention
+LTV/CAC ratio                     18×
+
+White-Label MRR model (M3 target)
+──────────────────────────────────────
+2 Starter partners      2 × $2,500 = $5,000/mo
+1 Professional          1 × $5,000 = $5,000/mo
+                                    ──────────
+Minimum M3 floor MRR              $10,000/mo
+
+3 Professional + 1 Enterprise     $27,000/mo   ← $30K gate
+```
+
+---
+
+## Market
+
+```
+TAM  $125B+
+├── $31B  Psychometric Assessment (CAGR 12%)
+└── $94B  HR Technology (CAGR 26.7%)
+
+SAM  $4.2B  API-first cognitive assessment (emerging)
+SOM  $12M   BR + US early adopters · Year 1–2
+```
+
+**Why now:**
+- LLMs crossed the threshold where 3-agent orchestration matches
+  licensed psychometrician accuracy at 1/1000th the cost
+- No competitor has combined: deep assessment + API + affordable pricing
+- Remote-first work created permanent demand for async cognitive tools
+- Founder is ICP — the $97 report maps exactly this cognitive profile.
+  Living proof of concept.
+
+**Competitive positioning:**
+
+```
+                        High Depth
+                            │
+              Hogan ●       │
+             $15K/yr        │        ● GnosIQ
+              No API        │        $97 · API-native
+                            │
+──────────────────────────────────────────────── API Access
+     No API                 │                 Full API
+                            │
+                            │      Crystal ●
+                            │       $49/mo
+                            │       Shallow
+                        Low Depth
+```
+
+---
+
+## Quick Start
+
+> **M1 (current phase):** the engine is not yet public.  
+> This guide reflects the target API shape for M2+.  
+> Join the waitlist at [gnosiq.ai](https://gnosiq.ai) for early access.
+
+### Run locally
+
+```bash
+# Prerequisites: Node.js 22 LTS · npm · GCP project configured
+
 git clone https://github.com/gnosiqai/gnosiq-web.git
 cd gnosiq-web
-
-# 2. Instale as dependências
 npm install
 
-# 3. Configure as variáveis de ambiente
+# Copy environment variables
 cp .env.example .env.local
-# Edite .env.local com os valores reais (nunca commite este arquivo)
+# → fill ANTHROPIC_API_KEY, GOOGLE_AI_API_KEY, SENDGRID_API_KEY,
+#   NEXT_PUBLIC_POSTHOG_KEY, FIRESTORE_PROJECT_ID
 
-# 4. Inicie o servidor de desenvolvimento
 npm run dev
+# → http://localhost:3000
 ```
 
-Acesse [http://localhost:3000](http://localhost:3000) no browser.
+### Environment variables
 
----
+| Variable | Required | Description |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | M2+ | Agent1 + Agent3 (Claude) |
+| `GOOGLE_AI_API_KEY` | M2+ | Agent2 (Gemini 2.5 Flash) |
+| `SENDGRID_API_KEY` | M1 | Waitlist confirmation + report delivery |
+| `SENDGRID_FROM_EMAIL` | M1 | `carlos@gnosiq.ai` |
+| `NEXT_PUBLIC_POSTHOG_KEY` | M1 | Analytics |
+| `FIRESTORE_PROJECT_ID` | M1 | Waitlist + sessions persistence |
+| `STRIPE_SECRET_KEY` | M2+ | Payment processing |
+| `STRIPE_WEBHOOK_SECRET` | M2+ | Async payment confirmation |
 
-## Variáveis de Ambiente
-
-Copie `.env.example` para `.env.local` e preencha os valores:
-
-| Variável | Descrição |
-|---|---|
-| `NEXT_PUBLIC_POSTHOG_KEY` | Chave do projeto PostHog (analytics) |
-| `NEXT_PUBLIC_POSTHOG_HOST` | Host PostHog (padrão: `https://app.posthog.com`) |
-| `SENDGRID_API_KEY` | API Key do SendGrid (email transacional) |
-| `SENDGRID_FROM_EMAIL` | Email remetente (padrão: `carlos@gnosiq.ai`) |
-| `FIRESTORE_PROJECT_ID` | ID do projeto GCP com Firestore |
-| `GOOGLE_APPLICATION_CREDENTIALS` | Caminho para o JSON de credenciais GCP |
-| `NEXT_PUBLIC_APP_URL` | URL pública da aplicação (padrão: `https://gnosiq.ai`) |
-
----
-
-## Comandos npm
+### Deploy
 
 ```bash
-npm run dev      # Servidor de desenvolvimento (localhost:3000)
-npm run build    # Build de produção
-npm run start    # Servidor de produção (após build)
-npm run lint     # Verificação de lint (ESLint)
+# Frontend → Vercel (auto-deploy on push to main)
+git push origin main
+
+# Backend → Cloud Run (via GitHub Actions)
+# See .github/workflows/deploy-cloud-run.yml
 ```
 
 ---
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
 gnosiq-web/
 ├── app/
-│   ├── layout.tsx              # Root layout · metadata SEO · PostHog · fontes
-│   ├── page.tsx                # Landing page (PLACEHOLDER)
-│   ├── globals.css             # Tailwind base + design tokens GnosIQ
+│   ├── layout.tsx          # Root layout · PostHog · brand tokens
+│   ├── page.tsx            # Landing page
 │   └── api/
-│       └── waitlist/
-│           └── route.ts        # POST handler waitlist (PLACEHOLDER)
+│       ├── waitlist/       # POST /api/waitlist → Firestore + SendGrid
+│       └── evaluate/       # POST /api/evaluate → AI agents (M2+)
 ├── components/
-│   ├── ui/
-│   │   ├── Button.tsx          # variant: primary | ghost | outline
-│   │   ├── Input.tsx           # com label + error state
-│   │   └── Badge.tsx           # variant: default | success | accent
-│   ├── sections/
-│   │   ├── Nav.tsx             # PLACEHOLDER
-│   │   ├── Hero.tsx            # PLACEHOLDER
-│   │   ├── SocialProof.tsx     # PLACEHOLDER
-│   │   ├── HowItWorks.tsx      # PLACEHOLDER
-│   │   ├── WaitlistForm.tsx    # PLACEHOLDER
-│   │   └── Footer.tsx          # PLACEHOLDER
-│   └── layout/
-│       └── PageWrapper.tsx     # max-w + padding padrão
+│   └── sections/           # Nav · Hero · WaitlistForm · Footer · ...
 ├── lib/
-│   ├── firebase.ts             # Firestore client init (PLACEHOLDER)
-│   └── sendgrid.ts             # Email helper (PLACEHOLDER)
+│   ├── agents/             # Agent1 · Agent2 · Agent3 orchestration
+│   ├── firestore.ts        # DB client
+│   └── sendgrid.ts         # Email client
 ├── public/
-│   └── logo-placeholder.svg   # SVG placeholder (substituir pelo logo final)
+│   └── logo.svg            # LOCKED — do not replace
 ├── .github/
-│   └── workflows/
-│       └── deploy.yml          # Push main → Vercel deploy automático
-├── .env.example                # Template de variáveis (sem valores reais)
-├── .gitignore
-├── next.config.ts
-├── tailwind.config.ts          # Design tokens GnosIQ completos
-├── tsconfig.json               # strict: true
-└── package.json
+│   └── workflows/          # CI/CD · SonarCloud · Cloud Run deploy
+└── .env.example            # All required vars documented
 ```
 
 ---
 
-## Design Tokens
+## Contributing
 
-| Token | Valor |
-|---|---|
-| Background Primary | `#0D0B1E` |
-| Background Secondary | `#1A1730` |
-| Accent | `#8B5CF6` |
-| Accent Light | `#A78BFA` |
-| Accent Dark | `#6D28D9` |
-| Brand Blue | `#3A4E8D` |
-| Text Primary | `#FFFFFF` |
-| Text Muted | `#9CA3AF` |
-| **COR PROIBIDA** | **`#14B8A6` (teal — jamais use)** |
+GnosIQ is a **solo-founder proprietary product**, not an open-source project.
 
----
+This repository is public for **transparency and developer trust** — consistent
+with our API-first positioning and the [GnosIQ Architecture Manifesto](docs/ARCHITECTURE.md).
 
-## Deploy
+**What this means:**
+- Pull requests from external contributors are **not accepted** at this stage
+- Issues and bug reports are **welcome** via [GitHub Issues](https://github.com/gnosiqai/gnosiq-web/issues)
+- Architecture decisions are documented in [`docs/ADR/`](docs/ADR/)
+- All production merges require approval from [@gnosiqai](https://github.com/gnosiqai)
 
-O deploy é automático via GitHub Actions ao fazer push na branch `main`.
-
-**Pré-requisitos para CI/CD:**
-
-Configure os seguintes secrets no repositório GitHub (Settings → Secrets → Actions):
-
-- `VERCEL_TOKEN` — Token da conta Vercel
-- `VERCEL_ORG_ID` — ID do time no Vercel
-- `VERCEL_PROJECT_ID` — ID do projeto gnosiq-web no Vercel
+If you're a developer interested in integrating GnosIQ into your product,
+join the [API early access waitlist](https://gnosiq.ai) — Surface 3 (M4+) opens
+to external developers after M3 validation.
 
 ---
 
-## Workflow Git
+## Security
 
-```bash
-# Criar branch de trabalho
-git checkout -b feat/[nome-da-tarefa]
+- Cognitive assessment data is **never used to train external models**
+- All evaluation responses are encrypted at rest in Firestore
+- API keys are rotated quarterly
+- No PII is stored beyond what is strictly necessary for report delivery
+- LGPD (BR) · GDPR (EU) compliant by design
 
-# Commitar com mensagens semânticas
-git commit -m "feat: descrição da mudança"
-git commit -m "fix: descrição do fix"
-git commit -m "chore: descrição da tarefa"
-
-# Push e abrir PR
-git push -u origin feat/[nome-da-tarefa]
-# Abrir Pull Request → main no GitHub
-# NUNCA fazer merge sozinho — Carlos aprova sempre
-```
+Found a vulnerability? Email **carlos@gnosiq.ai** with subject `[SECURITY]`.
+We respond within 24 hours.
 
 ---
 
-## Arquitetura
+## Legal
 
-- **Frontend:** Next.js 15 (App Router) hospedado na Vercel
-- **Backend:** API Routes Next.js → Cloud Run Gen2 (southamerica-east1)
-- **Banco de dados:** Firestore Native Mode (free tier)
-- **Email:** SendGrid API v3 (100 emails/dia free)
-- **Analytics:** PostHog Cloud (1M events/mês free)
-- **DNS/CDN:** Cloudflare (gnosiq.ai)
+**License:** Proprietary — All rights reserved © 2026 GnosIQ
+
+This software and its cognitive assessment frameworks (prompts, scoring models,
+agent orchestration logic, and psychometric benchmarks) are proprietary intellectual
+property of GnosIQ.
+
+> GnosIQ assessments are tools for self-knowledge and strategic planning.
+> They do **not** constitute clinical diagnosis, psychological evaluation,
+> or medical advice. Always consult a licensed mental health professional
+> for clinical decisions.
 
 ---
 
-*GnosIQ · gnosiq.ai · "The Cognitive Capital API"*
+<div align="center">
+
+**GnosIQ · The Cognitive Capital API**
+
+*The first API that turns human potential into computable capital.*
+
+[gnosiq.ai](https://gnosiq.ai) · [carlos@gnosiq.ai](mailto:carlos@gnosiq.ai)  
+[@gnosiqai](https://x.com/gnosiqai) on X · GitHub · ProductHunt · Bluesky  
+[@gnosiq.ai](https://instagram.com/gnosiq.ai) on Instagram · YouTube · Threads
+
+---
+
+*Pre-launch · Beta NPS 76 · TAM $125B+ · São Paulo → Silicon Valley*
+
+</div>
