@@ -150,7 +150,7 @@ const report = await client.evaluate({
   │  reports/  │  │  Agent2 → Gemini    │
   │  waitlist/ │  │         2.5 Flash   │
   │  partners/ │  │  Agent3 → Claude    │
-  └────────────┘  │         Opus        │
+  └────────────┘  │        Sonnet       │
                   │                     │
                   │ Cache 24h · $1.80   │
                   │ cost/eval · 98.1%   │
