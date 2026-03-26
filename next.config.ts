@@ -1,7 +1,10 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  // output: 'standalone' — NÃO usar, Vercel usa serverless nativo
+  images: {
+    formats: ['image/avif', 'image/webp'],
+  },
+}
 
-export default nextConfig;
+export default nextConfig
