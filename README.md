@@ -13,7 +13,9 @@
 [![Stack](https://img.shields.io/badge/stack-Next.js%2015%20%7C%20Vercel%20%7C%20Cloud%20Run%20%7C%20Firestore-0D0B1E?style=flat-square)](#tech-stack)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions%20→%20Vercel-0D0B1E?style=flat-square)](#tech-stack)
 [![License](https://img.shields.io/badge/license-Proprietary-6D28D9?style=flat-square)](#legal)
-[![SonarCloud](https://img.shields.io/badge/code%20quality-SonarCloud-3A4E8D?style=flat-square)](https://sonarcloud.io)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=alert_status)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=coverage)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=bugs)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
 
 [gnosiq.ai](https://gnosiq.ai) · [@gnosiqai](https://x.com/gnosiqai) · [Docs](https://docs.gnosiq.ai) *(coming M4)*
 
@@ -244,7 +246,7 @@ leads live     sales +        MRR · 2–3      pipeline
 | Backend waitlist: Cloud Run → Firestore → SendGrid | 🔲 Todo (GNO-7) |
 | PostHog analytics | 🔲 Todo (GNO-8) |
 | Landing page: Nav + Hero + WaitlistForm + Footer | 🔲 Todo (GNO-9) |
-| SonarCloud on GitHub Actions | 🔲 Todo (GNO-6) |
+| SonarCloud on GitHub Actions | ✅ Done (GNO-6) |
 | Google Workspace: carlos@gnosiq.ai | 🔲 Todo (GNO-12) |
 | Google for Startups — $350K GCP credits | 🔲 Todo (GNO-13) |
 
