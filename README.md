@@ -10,7 +10,8 @@
 
 [![Status](https://img.shields.io/badge/status-pre--launch-8B5CF6?style=flat-square)](https://gnosiq.ai)
 [![Beta NPS](https://img.shields.io/badge/beta%20NPS-76-8B5CF6?style=flat-square)](#)
-[![Stack](https://img.shields.io/badge/stack-Next.js%2015%20%7C%20Cloud%20Run%20%7C%20Firestore-0D0B1E?style=flat-square)](#tech-stack)
+[![Stack](https://img.shields.io/badge/stack-Next.js%2015%20%7C%20Vercel%20%7C%20Cloud%20Run%20%7C%20Firestore-0D0B1E?style=flat-square)](#tech-stack)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions%20→%20Vercel-0D0B1E?style=flat-square)](#tech-stack)
 [![License](https://img.shields.io/badge/license-Proprietary-6D28D9?style=flat-square)](#legal)
 [![SonarCloud](https://img.shields.io/badge/code%20quality-SonarCloud-3A4E8D?style=flat-square)](https://sonarcloud.io)
 
@@ -60,13 +61,37 @@ The same `POST /v1/evaluate` powers all three. What changes is the wrapper, the 
 │                    GNOSIQ COGNITIVE ENGINE                      │
 │      Agent1 (Pattern Extractor) · Agent2 (Psychometrician AI)  │
 │                Agent3 (Synthetic Neuropsychologist)             │
-│          WAIS-IV · Big Five · Gardner · Renzulli · PTG          │
+│     CAT Adaptativo · 12 Instrumentos · 4 Camadas (A/B/C/D)     │
 └────────────────┬────────────────┬───────────────┬──────────────┘
                  │                │               │
             Surface 1        Surface 2       Surface 3
            B2C Direct        White-Label     Public API
            (M2 · live)       (M3 · B2B)      (M4+ · devs)
 ```
+
+### Cognitive Engine v2.0 — CAT Adaptativo
+
+O mesmo engine cognitivo por baixo das 3 superfícies opera via
+**Computerized Adaptive Testing**: o Agent1 decide quais frameworks
+ativar com base no perfil de resposta — nenhum instrumento é aplicado
+cegamente.
+
+| Camada | Frameworks | Milestone | Licença |
+|---|---|---|---|
+| **A — Núcleo** | WAIS-IV (inspirado) · Big Five NEO | M2+ | Domínio público |
+| **B — Expansão** | ASRS-v1.1 · AQ-10 · PHQ-9 · GAD-7 · BRIEF-A | M3+ | Domínio público |
+| **C — Premium** | EQ-i 2.0 · MSCEIT · RAADS-R · Hogan HDS | M4+ | Licença paga (BNDES/FINEP) |
+| **D — Contextual** | Gardner IM · Renzulli · PTG · Brief Resilience Scale | M2+ condicional | Domínio público |
+
+> **CAT Rules:** PTG ativa SE adversidade detectada · Renzulli ativa SE AH/SD em ≥2 dimensões ·  
+> RAADS-R ativa SE AQ-10 ≥ 6 · Camada B completa a partir de M3.
+
+> ⚕️ **Disclaimer clínico:** Este engine identifica padrões cognitivos e comportamentais
+> com instrumentos de rastreio validados internacionalmente. **Não substitui** avaliação
+> diagnóstica conduzida por neurologista, psicólogo clínico ou psiquiatra. Consulte um
+> profissional de saúde licenciado para decisões clínicas (TDAH · TEA · depressão · ansiedade).
+
+---
 
 ### Surface 1 — B2C Assessment *(M2)*
 
@@ -143,19 +168,22 @@ const report = await client.evaluate({
           └──┬───────┬──────────┘
              │       │
   ┌──────────▼─┐  ┌──▼─────────────────┐
-  │  Firestore │  │     AI Router       │
-  │ Native Mode│  │   (Metabolic AI)    │
-  │            │  │                     │
-  │ sessions/  │  │  Agent1 → Claude    │
-  │  reports/  │  │  Agent2 → Gemini    │
-  │  waitlist/ │  │         2.5 Flash   │
-  │  partners/ │  │  Agent3 → Claude    │
-  └────────────┘  │        Sonnet       │
-                  │                     │
-                  │ Cache 24h · $1.80   │
-                  │ cost/eval · 98.1%   │
-                  │ margin              │
-                  └─────────────────────┘
+  │  Firestore │  │     AI Router (CAT)     │
+  │ Native Mode│  │   (Metabolic AI v2.0)   │
+  │            │  │                         │
+  │ sessions/  │  │  Agent1 → Claude        │
+  │  reports/  │  │  (Pattern Extractor)    │
+  │  waitlist/ │  │  Agent2 → Gemini        │
+  │  partners/ │  │         2.5 Flash       │
+  └────────────┘  │  (Psychometrician AI)   │
+                  │  Agent3 → Claude        │
+                  │        Sonnet           │
+                  │  (Synthetic Neuropsy.)  │
+                  │                         │
+                  │ 12 instruments · 4 layers│
+                  │ Cache 24h · $1.80/eval  │
+                  │ 98.1% margin            │
+                  └─────────────────────────┘
                            │
                 ┌──────────▼──────────┐
                 │      SendGrid       │
@@ -182,7 +210,7 @@ Privacy Sovereign · Solo Founder Scalable · API-First · Async-First
 | Email | SendGrid API v3 | 100/day free · reliable delivery |
 | Analytics | PostHog Cloud | 1M events/mo free · session replay |
 | DNS / CDN | Cloudflare | DDoS · SSL · proxy · free |
-| CI/CD | GitHub Actions → Vercel | Auto-deploy on push main |
+| CI/CD | GitHub Actions → Vercel CLI (native) | `vercel pull → vercel build → vercel deploy` on push main |
 | Code Quality | SonarCloud | AI code trust mitigation |
 | Package Manager | npm (only) | yarn/pnpm not used in this repo |
 
@@ -212,13 +240,13 @@ leads live     sales +        MRR · 2–3      pipeline
 | Repo scaffold (Next.js 15 + Tailwind + TypeScript) | ✅ Done |
 | Brand identity — 12/12 slides approved | ✅ Done |
 | Fix Lovart: favicon + remove teal #14B8A6 | ✅ Done |
-| Setup Vercel + DNS Cloudflare | 🔲 Todo |
-| Backend waitlist: Cloud Run → Firestore → SendGrid | 🔲 Todo |
-| PostHog analytics | 🔲 Todo |
-| Landing page: Nav + Hero + WaitlistForm + Footer | 🔲 Todo |
-| SonarCloud on GitHub Actions | 🔲 Todo |
-| Google Workspace: carlos@gnosiq.ai | 🔲 Todo |
-| Google for Startups — $350K GCP credits | 🔲 Todo |
+| Setup Vercel + DNS Cloudflare (`deploy.yml` Vercel CLI nativo) | ✅ Done (GNO-5) |
+| Backend waitlist: Cloud Run → Firestore → SendGrid | 🔲 Todo (GNO-7) |
+| PostHog analytics | 🔲 Todo (GNO-8) |
+| Landing page: Nav + Hero + WaitlistForm + Footer | 🔲 Todo (GNO-9) |
+| SonarCloud on GitHub Actions | 🔲 Todo (GNO-6) |
+| Google Workspace: carlos@gnosiq.ai | 🔲 Todo (GNO-12) |
+| Google for Startups — $350K GCP credits | 🔲 Todo (GNO-13) |
 
 ### M2 — API + First Customers *(Surface 1 · B2C)*
 
@@ -350,15 +378,20 @@ npm run dev
 | `FIRESTORE_PROJECT_ID` | M1 | Waitlist + sessions persistence |
 | `STRIPE_SECRET_KEY` | M2+ | Payment processing |
 | `STRIPE_WEBHOOK_SECRET` | M2+ | Async payment confirmation |
+| `VERCEL_TOKEN` | CI/CD | Deploy token GitHub Actions |
+| `VERCEL_ORG_ID` | CI/CD | Organização Vercel |
+| `VERCEL_PROJECT_ID` | CI/CD | Project ID Vercel |
 
 ### Deploy
 
 ```bash
-# Frontend → Vercel (auto-deploy on push to main)
+# Frontend → Vercel (auto-deploy via GitHub Actions em push main)
+# Workflow: .github/workflows/deploy.yml
+# Pipeline: vercel pull → vercel build --prod → vercel deploy --prebuilt --prod
 git push origin main
 
-# Backend → Cloud Run (via GitHub Actions)
-# See .github/workflows/deploy-cloud-run.yml
+# Backend → Cloud Run (GNO-7 · M1 backend)
+# Ver: .github/workflows/deploy-cloud-run.yml (pendente M1)
 ```
 
 ---
