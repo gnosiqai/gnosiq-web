@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/logo.svg" alt="GnosIQ" width="72" height="72" />
+<img src="https://raw.githubusercontent.com/gnosiqai/gnosiq-web/main/public/gnosiq-logo.png" alt="GnosIQ" width="120" height="auto" />
 
 # GnosIQ
 
