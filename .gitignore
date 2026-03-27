@@ -49,11 +49,12 @@ next-env.d.ts
 *.swp
 *.swo
 
-# GCP credentials — *.json cobre service-account, gcp-key, firebase-admin, etc.
-*.json
-!package.json
-!package-lock.json
-!tsconfig.json
+# GCP / Firebase credentials — padrões explícitos (não usar *.json amplo)
+service-account*.json
+gcp-key*.json
+firebase-admin*.json
+credentials*.json
+secrets*.json
 
 # Additional secrets / certificates
 *.key
