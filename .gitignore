@@ -13,22 +13,28 @@ node_modules/
 
 # Production
 /build
+dist/
 
 # Misc
 .DS_Store
+Thumbs.db
 *.pem
 
 # Debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
 # Local env files — NUNCA commitar credenciais
 .env
+.env.*
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env*.backup
+.envrc
 
 # Vercel
 .vercel
@@ -43,8 +49,41 @@ next-env.d.ts
 *.swp
 *.swo
 
-# GCP credentials
+# GCP credentials — *.json cobre service-account, gcp-key, firebase-admin, etc.
 *.json
 !package.json
 !package-lock.json
 !tsconfig.json
+
+# Additional secrets / certificates
+*.key
+*.crt
+*.p12
+*.pfx
+*.secrets
+secrets.*
+
+# Logs / runtime / temp
+*.log
+logs/
+tmp/
+temp/
+.cache/
+
+# Build tooling
+.turbo/
+
+# Python incidental (scripts auxiliares)
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Cloud / tooling
+.firebase/
+.sonar/
+.scannerwork/
+.terraform/
+*.tfstate
+*.tfstate.*
