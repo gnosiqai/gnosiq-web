@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'GnosIQ — The Cognitive Capital API',
@@ -33,15 +32,17 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-[#0D0B1E]">
-      <Image
-        src="/coming-soon.png"
-        alt="GnosIQ — The Cognitive Capital API"
-        fill
-        priority
-        quality={95}
-        className="object-cover object-center"
-      />
-    </main>
+    <main
+      style={{
+        minHeight: '100dvh',
+        width: '100%',
+        backgroundColor: '#0D0B1E',
+        backgroundImage: 'url(/coming-soon.png)',
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center center',
+      }}
+      aria-label="GnosIQ — The Cognitive Capital API"
+    />
   )
-} 
+}
