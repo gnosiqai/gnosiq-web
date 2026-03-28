@@ -13,9 +13,6 @@
 [![Stack](https://img.shields.io/badge/stack-Next.js%2015%20%7C%20Vercel%20%7C%20Cloud%20Run%20%7C%20Firestore-0D0B1E?style=flat-square)](#tech-stack)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions%20→%20Vercel-0D0B1E?style=flat-square)](#tech-stack)
 [![License](https://img.shields.io/badge/license-Proprietary-6D28D9?style=flat-square)](#legal)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=alert_status)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=coverage)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=bugs)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
 
 [gnosiq.ai](https://gnosiq.ai) · [@gnosiqai](https://x.com/gnosiqai) · [Docs](https://docs.gnosiq.ai) *(coming M4)*
 
@@ -242,11 +239,12 @@ leads live     sales +        MRR · 2–3      pipeline
 | Repo scaffold (Next.js 15 + Tailwind + TypeScript) | ✅ Done |
 | Brand identity — 12/12 slides approved | ✅ Done |
 | Fix Lovart: favicon + remove teal #14B8A6 | ✅ Done |
-| Setup Vercel + DNS Cloudflare (`deploy.yml` Vercel CLI nativo) | ✅ Done (GNO-5) |
+| Setup Vercel + DNS Cloudflare | ✅ Done (GNO-5) |
+| CI/CD GitHub Actions + Vercel CLI (`vercel-production.yml`) | ✅ Done (GNO-20) |
 | Backend waitlist: Cloud Run → Firestore → SendGrid | 🔲 Todo (GNO-7) |
 | PostHog analytics | 🔲 Todo (GNO-8) |
 | Landing page: Nav + Hero + WaitlistForm + Footer | 🔲 Todo (GNO-9) |
-| SonarCloud on GitHub Actions | ✅ Done (GNO-6) |
+| SonarCloud on GitHub Actions | 🔲 Todo (GNO-6) *(pendente instrução explícita)* |
 | Google Workspace: carlos@gnosiq.ai | 🔲 Todo (GNO-12) |
 | Google for Startups — $350K GCP credits | 🔲 Todo (GNO-13) |
 
@@ -388,7 +386,7 @@ npm run dev
 
 ```bash
 # Frontend → Vercel (auto-deploy via GitHub Actions em push main)
-# Workflow: .github/workflows/deploy.yml
+# Workflow: .github/workflows/vercel-production.yml
 # Pipeline: vercel pull → vercel build --prod → vercel deploy --prebuilt --prod
 git push origin main
 
@@ -418,7 +416,7 @@ gnosiq-web/
 │   ├── gnosiq-logo.png     # Brand logo — LOCKED, do not replace
 │   └── logo-placeholder.svg
 ├── .github/
-│   └── workflows/          # CI/CD · SonarCloud · Cloud Run deploy
+│   └── workflows/          # vercel-production.yml (único workflow autorizado)
 └── .env.example            # All required vars documented
 ```
 
