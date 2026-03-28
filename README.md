@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/gnosiqai/gnosiq-web/main/public/gnosiq-logo.png" alt="GnosIQ" width="120" height="auto" />
+<img src="https://raw.githubusercontent.com/gnosiqai/gnosiq-web/main/public/gnosiq-banner.png" alt="GnosIQ — The Cognitive Capital API" width="800" height="auto" />
 
 # GnosIQ
 
