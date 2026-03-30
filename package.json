@@ -14,7 +14,10 @@
     "react-dom": "^19.0.0",
     "@sendgrid/mail": "^8.1.4",
     "firebase-admin": "^13.1.0",
-    "posthog-js": "^1.220.5"
+    "posthog-js": "^1.220.5",
+    "@vercel/oidc": "latest",
+    "google-auth-library": "latest",
+    "@google-cloud/firestore": "latest"
   },
   "devDependencies": {
     "typescript": "^5",
