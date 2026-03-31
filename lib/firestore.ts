@@ -1,15 +1,16 @@
-import { Firestore, Timestamp, Settings } from '@google-cloud/firestore';
+import { Firestore, Timestamp } from '@google-cloud/firestore';
 import { createGcpAuthClient } from './gcp-auth';
 
 let _db: Firestore | null = null;
 
 export function getFirestore(): Firestore {
   if (!_db) {
-    const settings = {
+    const auth = createGcpAuthClient();
+    _db = new Firestore({
       projectId: process.env.GCP_PROJECT_ID,
-      authClient: createGcpAuthClient(),
-    } as unknown as Settings;
-    _db = new Firestore(settings);
+      // @ts-expect-error: GoogleAuth é compatível com authClient do Firestore SDK
+      authClient: auth,
+    });
   }
   return _db;
 }
