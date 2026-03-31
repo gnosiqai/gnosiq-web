@@ -1,15 +1,18 @@
-import { getVercelOidcToken } from '@vercel/oidc';
-import { ExternalAccountClient, ExternalAccountSupplierContext } from 'google-auth-library';
+import { GoogleAuth } from 'google-auth-library';
+
+let _auth: GoogleAuth | null = null;
 
 export function createGcpAuthClient() {
-  return ExternalAccountClient.fromJSON({
-    type: 'external_account',
-    audience: `//iam.googleapis.com/projects/${process.env.GCP_PROJECT_NUMBER}/locations/global/workloadIdentityPools/${process.env.GCP_WORKLOAD_IDENTITY_POOL_ID}/providers/${process.env.GCP_WORKLOAD_IDENTITY_POOL_PROVIDER_ID}`,
-    subject_token_type: 'urn:ietf:params:oauth:token-type:jwt',
-    token_url: 'https://sts.googleapis.com/v1/token',
-    service_account_impersonation_url: `https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${process.env.GCP_SERVICE_ACCOUNT_EMAIL}:generateAccessToken`,
-    subject_token_supplier: {
-      getSubjectToken: (_context: ExternalAccountSupplierContext) => getVercelOidcToken(),
-    },
-  });
+  if (!_auth) {
+    const keyJson = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
+    if (!keyJson) {
+      throw new Error('GOOGLE_APPLICATION_CREDENTIALS_JSON não configurada');
+    }
+    const credentials = JSON.parse(keyJson);
+    _auth = new GoogleAuth({
+      credentials,
+      scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+    });
+  }
+  return _auth;
 }
