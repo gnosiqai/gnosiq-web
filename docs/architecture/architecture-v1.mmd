@@ -12,7 +12,7 @@ flowchart TD
         GHA["GitHub Actions CI/CD\ndeploy.yml ← único workflow\nGNO-20 ✅"]
     end
 
-    subgraph L2["🔐 Camada 2 — Auth Bridge (BUG ATUAL)"]
+    subgraph L2["🔐 Camada 2 — Auth Bridge"]
         ENV["GOOGLE_APPLICATION\n_CREDENTIALS_JSON\n(Vercel Secret)"]
         BUG["❌ GoogleAuth.getClient()\n+ authClient → PERMISSION_DENIED 7"]
         FIX["✅ credentials explícitas\n{ client_email, private_key }\n.replace(/\\\\n/g, '\\n') — commit 3"]
