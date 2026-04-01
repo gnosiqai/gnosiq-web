@@ -1,0 +1,76 @@
+flowchart TD
+    subgraph L0["⛅ Camada 0 — DNS & CDN"]
+        CF["Cloudflare\ngnosiq.ai · gnosiq.org\nTLS · DDoS · Cache"]
+    end
+
+    subgraph L1["🖥️ Camada 1 — Frontend (Vercel Edge)"]
+        NEXT["Next.js 15 App Router\nTypeScript · Tailwind CSS"]
+        PAGES["/ Landing\n/assessment\n/report/[id]"]
+        API_W["POST /api/waitlist ✅ GNO-7"]
+        API_E["POST /api/evaluate 🔲 M2 GNO-14"]
+        API_H["GET /api/health-gcp"]
+        GHA["GitHub Actions CI/CD\ndeploy.yml ← único workflow\nGNO-20 ✅"]
+    end
+
+    subgraph L2["🔐 Camada 2 — Auth Bridge (BUG ATUAL)"]
+        ENV["GOOGLE_APPLICATION\n_CREDENTIALS_JSON\n(Vercel Secret)"]
+        BUG["❌ GoogleAuth.getClient()\n+ authClient → PERMISSION_DENIED 7"]
+        FIX["✅ credentials explícitas\n{ client_email, private_key }\n.replace(/\\\\n/g, '\\n') — commit 3"]
+    end
+
+    subgraph L3["☁️ Camada 3 — GCP project-6482cadc-95f4-4adb-a0c"]
+        FS["Firestore Native\n/waitlist\n/evaluations M2\n/reports M2\n/tenants M3"]
+        SM["Secret Manager\nGOOGLE_APP_CREDS\nSENDGRID_KEY\nSTRIPE_KEY M2"]
+        IAM["IAM — gnosiq-web-server@...\ndatastore.user ✅\nserviceAccountTokenCreator ✅\nworkloadIdentityUser ✅"]
+        WIP["Workload Identity Pool\nvercel-pool OIDC\nattribute.owner =\ngnosiq-webs-projects ✅"]
+        CR["Cloud Run M2\nCognitive Engine\nAgent1 · Agent2 · Agent3"]
+        LOG["Cloud Logging\nCloud Monitoring"]
+    end
+
+    subgraph L4["🔌 Camada 4 — Serviços Externos"]
+        CLAUDE["Anthropic Claude\nAgent1 Extrator\nAgent3 Neuropsicólogo"]
+        GEMINI["Gemini 2.5 Flash\nAgent2 Psicometricista"]
+        SG["SendGrid\nEmail confirmação\nEntrega PDF M2"]
+        STRIPE["Stripe M2\n$97 one-time · $29/mês"]
+        PH["PostHog Analytics GNO-8"]
+    end
+
+    subgraph CE["🧠 Cognitive Engine — Frameworks por Camada"]
+        CA["Camada A — Núcleo 100%\nWAIS-IV · Big Five NEO"]
+        CB["Camada B — Expansão M3\nASRS · AQ-10 · PHQ-9 · GAD-7 · BRIEF-A"]
+        CC["Camada C — Premium M4+\nEQ-i 2.0 · MSCEIT · RAADS-R · Hogan HDS"]
+        CD["Camada D — Contextual CAT\nGardner IM · Renzulli · PTG · BRS"]
+        AG1["Agent1 CAT Logic GNO-18\nIF adversidade → PTG\nIF AQ-10≥6 → RAADS-R + disclaimer\nIF founders B2C → Gardner SEMPRE\nIF M3+ → ativa Camada B"]
+    end
+
+    CF -->|HTTPS| NEXT
+    NEXT --> PAGES & API_W & API_E & API_H
+    GHA -->|deploy| NEXT
+
+    API_W --> ENV
+    ENV --> BUG
+    BUG -->|substituído por commit 3| FIX
+    FIX --> FS
+    FIX --> IAM
+    IAM --> WIP
+    SM --> FIX
+
+    API_E -->|M2| CR
+    CR --> AG1
+    AG1 --> CA & CB & CC & CD
+    CA & CB & CC & CD --> CLAUDE
+    CA & CB --> GEMINI
+    CLAUDE & GEMINI --> FS
+
+    FS --> SG & STRIPE
+    NEXT --> PH
+    LOG -.->|monitora| FS
+    LOG -.->|monitora| CR
+
+    style BUG fill:#ef4444,color:#fff
+    style FIX fill:#22c55e,color:#fff
+    style GHA fill:#8b5cf6,color:#fff
+    style AG1 fill:#f59e0b,color:#000
+    style FS fill:#3b82f6,color:#fff
+    style IAM fill:#06b6d4,color:#fff
+    style WIP fill:#0891b2,color:#fff
