@@ -6,10 +6,10 @@ let _db: Firestore | null = null;
 export function getFirestore(): Firestore {
   if (!_db) {
     const auth = createGcpAuthClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     _db = new Firestore({
       projectId: process.env.GCP_PROJECT_ID,
-      // @ts-expect-error: GoogleAuth é compatível com authClient do Firestore SDK
-      authClient: auth,
+      authClient: auth as any,
     });
   }
   return _db;
