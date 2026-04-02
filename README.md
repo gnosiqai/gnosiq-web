@@ -86,7 +86,7 @@ blindly.
 | **C — Premium** | EQ-i 2.0 · MSCEIT · RAADS-R · Hogan HDS | M4+ | Paid license (BNDES/FINEP) |
 | **D — Contextual** | Gardner IM · Renzulli · PTG · Brief Resilience Scale | M2+ conditional | Public domain |
 
-> **CAT Rules:** PTG activates IF adversity detected · Renzulli activates IF AH/GD in ≥2 dimensions ·  
+> **CAT Rules:** PTG activates IF adversity detected · Renzulli activates IF high ability/giftedness detected in ≥2 dimensions ·  
 > RAADS-R activates IF AQ-10 ≥ 6 · Layer B fully available from M3.
 
 > ⚕️ **Clinical Disclaimer:** This engine identifies cognitive and behavioral patterns
