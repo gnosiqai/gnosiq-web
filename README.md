@@ -5,6 +5,8 @@
 # GnosIQ
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gnosiqai_gnosiq-web)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=bugs)](https://sonarcloud.io/summary/new_code?id=gnosiqai_gnosiq-web)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=gnosiqai_gnosiq-web)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=gnosiqai_gnosiq-web)
 
 **The Cognitive Capital API**
 
@@ -13,7 +15,7 @@
 [![Status](https://img.shields.io/badge/status-pre--launch-8B5CF6?style=flat-square)](https://gnosiq.ai)
 [![Beta NPS](https://img.shields.io/badge/beta%20NPS-76-8B5CF6?style=flat-square)](#)
 [![Stack](https://img.shields.io/badge/stack-Next.js%2015%20%7C%20Vercel%20%7C%20Cloud%20Run%20%7C%20Firestore-0D0B1E?style=flat-square)](#tech-stack)
-[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions%20→%20Vercel-0D0B1E?style=flat-square)](#tech-stack)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions%20→%20Vercel%20(deploy.yml)-0D0B1E?style=flat-square)](#tech-stack)
 [![License](https://img.shields.io/badge/license-Proprietary-6D28D9?style=flat-square)](#legal)
 
 [gnosiq.ai](https://gnosiq.ai) · [@gnosiqai](https://x.com/gnosiqai) · [Docs](https://docs.gnosiq.ai) *(coming M4)*
@@ -62,7 +64,7 @@ The same `POST /v1/evaluate` powers all three. What changes is the wrapper, the 
 │                    GNOSIQ COGNITIVE ENGINE                      │
 │      Agent1 (Pattern Extractor) · Agent2 (Psychometrician AI)  │
 │                Agent3 (Synthetic Neuropsychologist)             │
-│     CAT Adaptativo · 12 Instrumentos · 4 Camadas (A/B/C/D)     │
+│     Adaptive CAT · 12 Instruments · 4 Layers (A/B/C/D)     │
 └────────────────┬────────────────┬───────────────┬──────────────┘
                  │                │               │
             Surface 1        Surface 2       Surface 3
@@ -70,27 +72,27 @@ The same `POST /v1/evaluate` powers all three. What changes is the wrapper, the 
            (M2 · live)       (M3 · B2B)      (M4+ · devs)
 ```
 
-### Cognitive Engine v2.0 — CAT Adaptativo
+### Cognitive Engine v2.0 — Adaptive CAT
 
-O mesmo engine cognitivo por baixo das 3 superfícies opera via
-**Computerized Adaptive Testing**: o Agent1 decide quais frameworks
-ativar com base no perfil de resposta — nenhum instrumento é aplicado
-cegamente.
+The same cognitive engine powering all 3 surfaces operates via
+**Computerized Adaptive Testing**: Agent1 decides which frameworks
+to activate based on the response profile — no instrument is applied
+blindly.
 
-| Camada | Frameworks | Milestone | Licença |
+| Layer | Frameworks | Milestone | License |
 |---|---|---|---|
-| **A — Núcleo** | WAIS-IV (inspirado) · Big Five NEO | M2+ | Domínio público |
-| **B — Expansão** | ASRS-v1.1 · AQ-10 · PHQ-9 · GAD-7 · BRIEF-A | M3+ | Domínio público |
-| **C — Premium** | EQ-i 2.0 · MSCEIT · RAADS-R · Hogan HDS | M4+ | Licença paga (BNDES/FINEP) |
-| **D — Contextual** | Gardner IM · Renzulli · PTG · Brief Resilience Scale | M2+ condicional | Domínio público |
+| **A — Core** | WAIS-IV (inspired) · Big Five NEO | M2+ | Public domain |
+| **B — Expansion** | ASRS-v1.1 · AQ-10 · PHQ-9 · GAD-7 · BRIEF-A | M3+ | Public domain |
+| **C — Premium** | EQ-i 2.0 · MSCEIT · RAADS-R · Hogan HDS | M4+ | Paid license (BNDES/FINEP) |
+| **D — Contextual** | Gardner IM · Renzulli · PTG · Brief Resilience Scale | M2+ conditional | Public domain |
 
-> **CAT Rules:** PTG ativa SE adversidade detectada · Renzulli ativa SE AH/SD em ≥2 dimensões ·  
-> RAADS-R ativa SE AQ-10 ≥ 6 · Camada B completa a partir de M3.
+> **CAT Rules:** PTG activates IF adversity detected · Renzulli activates IF AH/GD in ≥2 dimensions ·  
+> RAADS-R activates IF AQ-10 ≥ 6 · Layer B fully available from M3.
 
-> ⚕️ **Disclaimer clínico:** Este engine identifica padrões cognitivos e comportamentais
-> com instrumentos de rastreio validados internacionalmente. **Não substitui** avaliação
-> diagnóstica conduzida por neurologista, psicólogo clínico ou psiquiatra. Consulte um
-> profissional de saúde licenciado para decisões clínicas (TDAH · TEA · depressão · ansiedade).
+> ⚕️ **Clinical Disclaimer:** This engine identifies cognitive and behavioral patterns
+> using internationally validated screening instruments. It does **not replace** clinical
+> assessment by a neurologist, clinical psychologist, or psychiatrist. Always consult a
+> licensed health professional for clinical decisions (ADHD · ASD · depression · anxiety).
 
 ---
 
@@ -211,8 +213,8 @@ Privacy Sovereign · Solo Founder Scalable · API-First · Async-First
 | Email | SendGrid API v3 | 100/day free · reliable delivery |
 | Analytics | PostHog Cloud | 1M events/mo free · session replay |
 | DNS / CDN | Cloudflare | DDoS · SSL · proxy · free |
-| CI/CD | GitHub Actions → Vercel CLI (native) | `vercel pull → vercel build → vercel deploy` on push main |
-| Code Quality | SonarCloud | AI code trust mitigation |
+| CI/CD | GitHub Actions → Vercel CLI (native) | `vercel pull → vercel build --prod → vercel deploy --prebuilt --prod` on push main · workflow: `deploy.yml` |
+| Code Quality | SonarCloud | AI code trust mitigation · Quality Gate ✅ · A/A/A (Security / Reliability / Maintainability) |
 | Package Manager | npm (only) | yarn/pnpm not used in this repo |
 
 ---
@@ -242,11 +244,11 @@ leads live     sales +        MRR · 2–3      pipeline
 | Brand identity — 12/12 slides approved | ✅ Done |
 | Fix Lovart: favicon + remove teal #14B8A6 | ✅ Done |
 | Setup Vercel + DNS Cloudflare | ✅ Done (GNO-5) |
-| CI/CD GitHub Actions + Vercel CLI (`vercel-production.yml`) | ✅ Done (GNO-20) |
-| Backend waitlist: Cloud Run → Firestore → SendGrid | 🔲 Todo (GNO-7) |
+| CI/CD GitHub Actions + Vercel CLI (`deploy.yml`) | ✅ Done (GNO-20) |
+| Backend waitlist: Cloud Run → Firestore → SendGrid | ✅ Done (GNO-7) — 2026-04-01 |
 | PostHog analytics | 🔲 Todo (GNO-8) |
 | Landing page: Nav + Hero + WaitlistForm + Footer | 🔲 Todo (GNO-9) |
-| SonarCloud on GitHub Actions | 🔲 Todo (GNO-6) *(pendente instrução explícita)* |
+| SonarCloud on GitHub Actions | ✅ Done (GNO-6) — 2026-04-02 |
 | Google Workspace: carlos@gnosiq.ai | 🔲 Todo (GNO-12) |
 | Google for Startups — $350K GCP credits | 🔲 Todo (GNO-13) |
 
@@ -381,19 +383,19 @@ npm run dev
 | `STRIPE_SECRET_KEY` | M2+ | Payment processing |
 | `STRIPE_WEBHOOK_SECRET` | M2+ | Async payment confirmation |
 | `VERCEL_TOKEN` | CI/CD | Deploy token GitHub Actions |
-| `VERCEL_ORG_ID` | CI/CD | Organização Vercel |
+| `VERCEL_ORG_ID` | CI/CD | Vercel Organization ID |
 | `VERCEL_PROJECT_ID` | CI/CD | Project ID Vercel |
 
 ### Deploy
 
 ```bash
-# Frontend → Vercel (auto-deploy via GitHub Actions em push main)
-# Workflow: .github/workflows/vercel-production.yml
+# Frontend → Vercel (auto-deploy via GitHub Actions on push to main)
+# Workflow: .github/workflows/deploy.yml
 # Pipeline: vercel pull → vercel build --prod → vercel deploy --prebuilt --prod
 git push origin main
 
 # Backend → Cloud Run (GNO-7 · M1 backend)
-# Ver: .github/workflows/deploy-cloud-run.yml (pendente M1)
+# See: .github/workflows/deploy-cloud-run.yml (pending M1)
 ```
 
 ---
@@ -412,13 +414,17 @@ gnosiq-web/
 │   └── sections/           # Nav · Hero · WaitlistForm · Footer · ...
 ├── lib/
 │   ├── agents/             # Agent1 · Agent2 · Agent3 orchestration
-│   ├── firestore.ts        # DB client
+│   ├── constants/
+│   │   └── legal.ts        # Canonical clinical disclaimers (LGPD · CFP · GDPR)
+│   ├── firestore.ts        # DB client (canonical pattern — GoogleAuth anti-pattern banned)
 │   └── sendgrid.ts         # Email client
+├── prompts/
+│   └── base.ts             # Cognitive Engine agents foundation (GNO-26)
 ├── public/
 │   ├── gnosiq-logo.png     # Brand logo — LOCKED, do not replace
 │   └── logo-placeholder.svg
 ├── .github/
-│   └── workflows/          # vercel-production.yml (único workflow autorizado)
+│   └── workflows/          # deploy.yml (sole authorized workflow)
 └── .env.example            # All required vars documented
 ```
 
