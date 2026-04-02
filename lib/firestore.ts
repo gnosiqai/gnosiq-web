@@ -1,17 +1,33 @@
 import { Firestore, Timestamp } from '@google-cloud/firestore';
-import { createGcpAuthClient } from './gcp-auth';
 
 let _db: Firestore | null = null;
 
 export function getFirestore(): Firestore {
-  if (!_db) {
-    const auth = createGcpAuthClient();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    _db = new Firestore({
-      projectId: process.env.GCP_PROJECT_ID,
-      authClient: auth as any,
-    });
+  if (_db) return _db;
+
+  const raw = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
+  if (!raw) {
+    throw new Error('GOOGLE_APPLICATION_CREDENTIALS_JSON não definida');
   }
+
+  let credentials: { client_email: string; private_key: string };
+  try {
+    credentials = JSON.parse(raw);
+  } catch {
+    throw new Error('GOOGLE_APPLICATION_CREDENTIALS_JSON não é JSON válido');
+  }
+
+  // Normaliza \n escapado que o Vercel pode introduzir na env var
+  const privateKey = credentials.private_key.replace(/\\n/g, '\n');
+
+  _db = new Firestore({
+    projectId: 'project-6482cadc-95f4-4adb-a0c',
+    credentials: {
+      client_email: credentials.client_email,
+      private_key: privateKey,
+    },
+  });
+
   return _db;
 }
 
