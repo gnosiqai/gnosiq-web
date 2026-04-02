@@ -3,10 +3,10 @@
 <img src="./public/gnosiq-banner.png" alt="GnosIQ — The Cognitive Capital API" width="800" height="auto" />
 
 # GnosIQ
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gnosiqai_gnosiq-web)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=bugs)](https://sonarcloud.io/summary/new_code?id=gnosiqai_gnosiq-web)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=gnosiqai_gnosiq-web)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=gnosiqai_gnosiq-web)
+[![Status](https://img.shields.io/badge/status-pre--launch-8B5CF6?style=flat-square)](https://gnosiq.ai)
+[![Beta NPS](https://img.shields.io/badge/beta%20NPS-76-8B5CF6?style=flat-square)](#)
+[![Quality](https://img.shields.io/badge/code%20quality-review%20M2-6D28D9?style=flat-square)](#)
+[![Security](https://img.shields.io/badge/security-audit%20M2-6D28D9?style=flat-square)](#)
 
 **The Cognitive Capital API**
 
