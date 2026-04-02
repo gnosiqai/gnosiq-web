@@ -38,19 +38,9 @@ curl -X POST https://api.gnosiq.ai/v1/evaluate \
   -H "Content-Type: application/json" \
   -d '{"session_id": "sess_abc123", "responses": [...] }'
 
-# → 18-page cognitive capital report · delivered in 30 min · $1.80 cost
+# → 18-page cognitive capital report · delivered in 30 min
 ```
 
-### The gap GnosIQ fills
-
-| Solution | Depth | API | Price | Time |
-|---|---|---|---|---|
-| Hogan Assessments | ★★★★★ | ✗ | ~$15K/yr | Weeks |
-| Crystal Knows | ★★☆☆☆ | Partial | $49/mo | Minutes |
-| BetterUp | N/A | ✗ | $4.7B valuation | Coaching |
-| **GnosIQ** | **★★★★★** | **✓ Native** | **$0.50–$97** | **30 min** |
-
-> **Hogan's depth. Crystal's price. Infrastructure neither has.**
 
 ---
 
@@ -62,8 +52,6 @@ The same `POST /v1/evaluate` powers all three. What changes is the wrapper, the 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    GNOSIQ COGNITIVE ENGINE                      │
-│      Agent1 (Pattern Extractor) · Agent2 (Psychometrician AI)   │
-│                Agent3 (Synthetic Neuropsychologist)             │
 │     Adaptive CAT · 12 Instruments · 4 Layers (A/B/C/D)          │
 └────────────────┬────────────────┬───────────────┬───────────────┘
                  │                │               │
@@ -75,7 +63,6 @@ The same `POST /v1/evaluate` powers all three. What changes is the wrapper, the 
 ### Cognitive Engine v2.0 — Adaptive CAT
 
 The same cognitive engine powering all 3 surfaces operates via
-**Computerized Adaptive Testing**: Agent1 decides which frameworks
 to activate based on the response profile — no instrument is applied
 blindly.
 
@@ -86,8 +73,6 @@ blindly.
 | **C — Premium** | EQ-i 2.0 · MSCEIT · RAADS-R · Hogan HDS | M4+ | Paid license (BNDES/FINEP) |
 | **D — Contextual** | Gardner IM · Renzulli · PTG · Brief Resilience Scale | M2+ conditional | Public domain |
 
-> **CAT Rules:** PTG activates IF adversity detected · Renzulli activates IF high ability/giftedness detected in ≥2 dimensions ·  
-> RAADS-R activates IF AQ-10 ≥ 6 · Layer B fully available from M3.
 
 > ⚕️ **Clinical Disclaimer:** This engine identifies cognitive and behavioral patterns
 > using internationally validated screening instruments. It does **not replace** clinical
@@ -174,17 +159,13 @@ const report = await client.evaluate({
   │  Firestore │  │     AI Router (CAT)       │
   │ Native Mode│  │   (Metabolic AI v2.0)     │
   │            │  │                           │
-  │ sessions/  │  │  Agent1 → Claude          │
   │  reports/  │  │  (Pattern Extractor)      │
-  │  waitlist/ │  │  Agent2 → Gemini          │
   │  partners/ │  │         2.5 Flash         │
   └────────────┘  │  (Psychometrician AI)     │
-                  │  Agent3 → Claude          │
                   │        Sonnet             │
                   │  (Synthetic Neuropsy.)    │
                   │                           │
                   │ 12 instruments · 4 layers │
-                  │  Cache 24h · $1.80/eval   │
                   │  98.1% margin             │
                   └───────────────────────────┘
                            │
@@ -254,7 +235,6 @@ leads live     sales +        MRR · 2–3      pipeline
 
 ### M2 — API + First Customers *(Surface 1 · B2C)*
 
-- Cognitive engine: Agent1 + Agent2 + Agent3 fully wired
 - Stripe payment flow → async processing → PDF delivery
 - Target: 10 paying customers · NPS ≥ 60
 - Linear: [GNO-14](https://linear.app/gnosiq/issue/GNO-14)
@@ -279,21 +259,6 @@ leads live     sales +        MRR · 2–3      pipeline
 > Numbers at current optimized stack. No hockey-stick assumptions.
 
 ```
-Revenue per evaluation (B2C one-time)
-──────────────────────────────────────
-Gross price                    $97.00
-AI cost (3 agents)            − $1.80   ← Metabolic Router + 24h cache
-Payment processing            − $3.12   ← Stripe 2.9% + $0.30
-Infrastructure                − $0.08   ← Cloud Run + Firestore (serverless)
-                               ────────
-Net margin per eval            $92.00   → 98.1% gross margin
-
-LTV / CAC model (M2 target)
-──────────────────────────────────────
-CAC (LinkedIn organic M1)          $0
-LTV one-time buyer                $97
-LTV Pro subscriber ($29/mo)      $348   ← 12-month retention
-LTV/CAC ratio                     18×
 
 White-Label MRR model (M3 target)
 ──────────────────────────────────────
@@ -309,14 +274,6 @@ Minimum M3 floor MRR              $10,000/mo
 
 ## Market
 
-```
-TAM  $125B+
-├── $31B  Psychometric Assessment (CAGR 12%)
-└── $94B  HR Technology (CAGR 26.7%)
-
-SAM  $4.2B  API-first cognitive assessment (emerging)
-SOM  $12M   BR + US early adopters · Year 1–2
-```
 
 **Why now:**
 - LLMs crossed the threshold where 3-agent orchestration matches
@@ -325,24 +282,6 @@ SOM  $12M   BR + US early adopters · Year 1–2
 - Remote-first work created permanent demand for async cognitive tools
 - Founder is ICP — the $97 report maps exactly this cognitive profile.
   Living proof of concept.
-
-**Competitive positioning:**
-
-```
-                        High Depth
-                            │
-              Hogan ●       │
-             $15K/yr        │        ● GnosIQ
-              No API        │        $97 · API-native
-                            │
-──────────────────────────────────────────────── API Access
-     No API                 │                 Full API
-                            │
-                            │      Crystal ●
-                            │       $49/mo
-                            │       Shallow
-                        Low Depth
-```
 
 ---
 
@@ -374,8 +313,6 @@ npm run dev
 
 | Variable | Required | Description |
 |---|---|---|
-| `ANTHROPIC_API_KEY` | M2+ | Agent1 + Agent3 (Claude) |
-| `GOOGLE_AI_API_KEY` | M2+ | Agent2 (Gemini 2.5 Flash) |
 | `SENDGRID_API_KEY` | M1 | Waitlist confirmation + report delivery |
 | `SENDGRID_FROM_EMAIL` | M1 | `carlos@gnosiq.ai` |
 | `NEXT_PUBLIC_POSTHOG_KEY` | M1 | Analytics |
@@ -413,7 +350,6 @@ gnosiq-web/
 ├── components/
 │   └── sections/           # Nav · Hero · WaitlistForm · Footer · ...
 ├── lib/
-│   ├── agents/             # Agent1 · Agent2 · Agent3 orchestration
 │   ├── constants/
 │   │   └── legal.ts        # Canonical clinical disclaimers (LGPD · CFP · GDPR)
 │   ├── firestore.ts        # DB client (canonical pattern — GoogleAuth anti-pattern banned)
@@ -489,6 +425,6 @@ property of GnosIQ.
 
 ---
 
-*Pre-launch · Beta NPS 76 · TAM $125B+ · São Paulo → Silicon Valley*
+*Pre-launch · Beta NPS 76 · São Paulo → Silicon Valley*
 
 </div>
