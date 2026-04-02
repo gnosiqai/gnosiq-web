@@ -7,9 +7,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { email, name } = body;
 
-    if (!email || typeof email !== 'string') {
+    if (!email || typeof email !== 'string' || email.length > 254) {
       return NextResponse.json(
-        { success: false, error: 'Email is required' },
+        { success: false, error: 'Invalid email' },
         { status: 400 }
       );
     }
