@@ -27,7 +27,7 @@ export function getFirestore(): Firestore {
     projectId: 'project-6482cadc-95f4-4adb-a0c',
     credentials: {
       client_email: credentials.client_email,
-      private_key: credentials.private_key.replace(/\\n/g, '\n'),
+      private_key: credentials.private_key.replaceAll('\\n', '\n'),
     },
   })
 
