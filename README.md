@@ -63,6 +63,7 @@ The same `POST /v1/evaluate` powers all three. What changes is the wrapper, the 
 ### Cognitive Engine v2.0 — Adaptive CAT
 
 The same cognitive engine powering all 3 surfaces operates via
+**Computerized Adaptive Testing**: Agent1 decides which frameworks
 to activate based on the response profile — no instrument is applied
 blindly.
 
@@ -321,7 +322,7 @@ npm run dev
 | `STRIPE_WEBHOOK_SECRET` | M2+ | Async payment confirmation |
 | `VERCEL_TOKEN` | CI/CD | Deploy token GitHub Actions |
 | `VERCEL_ORG_ID` | CI/CD | Vercel Organization ID |
-| `VERCEL_PROJECT_ID` | CI/CD | Project ID Vercel |
+| `VERCEL_PROJECT_ID` | CI/CD | Vercel Project ID |
 
 ### Deploy
 
