@@ -428,3 +428,25 @@ property of GnosIQ.
 *Pre-launch · Beta NPS 76 · São Paulo → Silicon Valley*
 
 </div>
+
+---
+
+## Contributing
+
+This repository contains the public-facing web layer of GnosIQ.
+The cognitive engine, AI agents, and psychometric pipelines are maintained
+in a separate private repository.
+
+**We are not accepting external contributions at this stage (pre-launch).**
+For partnership or integration inquiries: carlos@gnosiq.ai
+
+## API Access
+
+Public API documentation will be available at [docs.gnosiq.ai](https://docs.gnosiq.ai)
+upon launch. For early access or enterprise inquiries: carlos@gnosiq.ai
+
+## License
+
+This project is licensed under the [Business Source License 1.1](./LICENSE).
+Commercial use requires a separate agreement with GnosIQ.
+© 2026 Carlos Alberto Gomes. All rights reserved.
