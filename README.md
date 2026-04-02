@@ -3,6 +3,8 @@
 <img src="./public/gnosiq-banner.png" alt="GnosIQ — The Cognitive Capital API" width="800" height="auto" />
 
 # GnosIQ
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gnosiqai_gnosiq-web)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=gnosiqai_gnosiq-web&metric=bugs)](https://sonarcloud.io/summary/new_code?id=gnosiqai_gnosiq-web)
 
 **The Cognitive Capital API**
 
