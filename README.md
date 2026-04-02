@@ -62,10 +62,10 @@ The same `POST /v1/evaluate` powers all three. What changes is the wrapper, the 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    GNOSIQ COGNITIVE ENGINE                      │
-│      Agent1 (Pattern Extractor) · Agent2 (Psychometrician AI)  │
+│      Agent1 (Pattern Extractor) · Agent2 (Psychometrician AI)   │
 │                Agent3 (Synthetic Neuropsychologist)             │
-│     Adaptive CAT · 12 Instruments · 4 Layers (A/B/C/D)     │
-└────────────────┬────────────────┬───────────────┬──────────────┘
+│     Adaptive CAT · 12 Instruments · 4 Layers (A/B/C/D)          │
+└────────────────┬────────────────┬───────────────┬───────────────┘
                  │                │               │
             Surface 1        Surface 2       Surface 3
            B2C Direct        White-Label     Public API
