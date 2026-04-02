@@ -2,12 +2,13 @@ Business Source License 1.1
 
 Parameters
 
-Licensor: Carlos Alberto Gomes (GnosIQ)
-Licensed Work: GnosIQ Web (gnosiq-web repository)
+Licensor:             Carlos Alberto Gomes (GnosIQ)
+Licensed Work:        GnosIQ Web (gnosiq-web repository)
+                      © 2026 Carlos Alberto Gomes. All rights reserved.
 Additional Use Grant: You may use the Licensed Work for personal,
-  non-commercial evaluation purposes only.
-Change Date: 2029-01-01
-Change License: MIT License
+                      non-commercial evaluation purposes only.
+Change Date:          2029-01-01
+Change License:       MIT License
 
 ---
 
@@ -52,34 +53,13 @@ TO THE EXTENT PERMITTED BY APPLICABLE LAW, THE LICENSED WORK IS
 PROVIDED ON AN "AS IS" BASIS. LICENSOR HEREBY DISCLAIMS ALL WARRANTIES
 AND CONDITIONS, EXPRESS OR IMPLIED, INCLUDING (WITHOUT LIMITATION)
 WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND
-ANY WARRANTIES OR CONDITIONS OF TITLE. THE LICENSOR WILL NOT BE LIABLE
-TO YOU FOR ANY DAMAGES ARISING OUT OF OR RELATED TO YOUR USE OR
-INABILITY TO USE THE LICENSED WORK, INCLUDING BUT NOT LIMITED TO
-DIRECT, INDIRECT, INCIDENTAL, AND CONSEQUENTIAL DAMAGES, REGARDLESS
-OF WHETHER LICENSOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
-DAMAGES.
+ANY WARRANTIES ARISING OUT OF COURSE OF DEALING OR USAGE OF TRADE.
+IN NO EVENT WILL THE LICENSOR BE LIABLE TO YOU OR ANYONE ELSE FOR ANY
+INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF
+OR RELATED TO THIS LICENSE, THE LICENSED WORK, OR THE USE OF THE
+LICENSED WORK, EVEN IF THE LICENSOR HAS BEEN ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGES.
 
----
-
-Covenants of Licensor
-
-In consideration of the right to use this License's text and the
-"Business Source License" name and trademark, Licensor covenants to
-MariaDB Corporation Ab and to all other recipients of the licensed
-work to be provided by Licensor:
-
-1. To specify as the Change License the GPL Version 2.0 or any later
-   version, or a license that is compatible with GPL Version 2.0 or a
-   later version, where "compatible" means that software provided
-   under the Change License can be included in a program with software
-   provided under GPL Version 2.0 or a later version. Licensor may
-   specify additional Change Licenses without limitation.
-
-2. To either: (a) specify an additional grant of rights to use that
-   does not impose any additional restriction on the right granted in
-   this License, as the Additional Use Grant; or (b) insert the text
-   "None".
-
-3. To specify a Change Date.
-
-4. Not to modify this License in any other way.
+For all third-party components incorporated into the Licensed Work,
+those components are licensed under their original license terms, and
+the Licensor expressly reserves all rights not expressly granted herein.
