@@ -12,8 +12,6 @@
 
 *We don't assess people. We unlock the cognitive capital hidden in every human.*
 
-[![Status](https://img.shields.io/badge/status-pre--launch-8B5CF6?style=flat-square)](https://gnosiq.ai)
-[![Beta NPS](https://img.shields.io/badge/beta%20NPS-76-8B5CF6?style=flat-square)](#)
 [![Stack](https://img.shields.io/badge/stack-Next.js%2015%20%7C%20Vercel%20%7C%20Cloud%20Run%20%7C%20Firestore-0D0B1E?style=flat-square)](#tech-stack)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions%20→%20Vercel%20(deploy.yml)-0D0B1E?style=flat-square)](#tech-stack)
 [![License](https://img.shields.io/badge/license-Proprietary-6D28D9?style=flat-square)](#legal)
@@ -275,6 +273,13 @@ Minimum M3 floor MRR              $10,000/mo
 
 ## Market
 
+**TAM $125B+** — $31B psychometric assessment market + $94B HR Tech · CAGR 26.7%
+
+| Competitor | Price | Depth | API | GnosIQ Advantage |
+|---|---|---|---|---|
+| Hogan Assessments | $15,000/eval | ✅ Deep | ❌ None | Same depth · 150× cheaper · programmatic |
+| Crystal Knows | $49/mo | ❌ Surface | ❌ None | Deep vs. shallow · API infrastructure |
+| BetterUp | $4,700/seat/yr | — (coaching) | ❌ None | Assessment ≠ coaching — different category |
 
 **Why now:**
 - LLMs crossed the threshold where 3-agent orchestration matches
@@ -429,25 +434,3 @@ property of GnosIQ.
 *Pre-launch · Beta NPS 76 · São Paulo → Silicon Valley*
 
 </div>
-
----
-
-## Contributing
-
-This repository contains the public-facing web layer of GnosIQ.
-The cognitive engine, AI agents, and psychometric pipelines are maintained
-in a separate private repository.
-
-**We are not accepting external contributions at this stage (pre-launch).**
-For partnership or integration inquiries: carlos@gnosiq.ai
-
-## API Access
-
-Public API documentation will be available at [docs.gnosiq.ai](https://docs.gnosiq.ai)
-upon launch. For early access or enterprise inquiries: carlos@gnosiq.ai
-
-## License
-
-This project is licensed under the [Business Source License 1.1](./LICENSE).
-Commercial use requires a separate agreement with GnosIQ.
-© 2026 Carlos Alberto Gomes. All rights reserved.
