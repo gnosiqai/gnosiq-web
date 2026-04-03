@@ -277,9 +277,9 @@ Minimum M3 floor MRR              $10,000/mo
 
 | Competitor | Price | Depth | API | GnosIQ Advantage |
 |---|---|---|---|---|
-| Hogan Assessments | $15,000/eval | ✅ Deep | ❌ None | Same depth · 150× cheaper · programmatic |
-| Crystal Knows | $49/mo | ❌ Surface | ❌ None | Deep vs. shallow · API infrastructure |
-| BetterUp | $4,700/seat/yr | — (coaching) | ❌ None | Assessment ≠ coaching — different category |
+| Hogan Assessments | $15,000/eval | ✅ Deep | ❌ None | ✅ Same depth · 150× cheaper · programmatic |
+| Crystal Knows | $49/mo | ❌ Surface | ❌ None | ✅ Deep vs. shallow · API infrastructure |
+| BetterUp | $4,700/seat/yr | — (coaching) | ❌ None | ✅ Assessment ≠ coaching — different category |
 
 **Why now:**
 - LLMs crossed the threshold where 3-agent orchestration matches
