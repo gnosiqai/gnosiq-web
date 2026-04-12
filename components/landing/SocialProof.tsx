@@ -2,6 +2,7 @@
 
 import { useLocale } from '@/lib/context/LocaleContext'
 import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
+import AnimatedCounter from '@/components/ui/AnimatedCounter'
 
 const testimonials = [
   {
@@ -40,15 +41,21 @@ export default function SocialProof() {
         {/* Metrics */}
         <div className="grid grid-cols-3 gap-8 mb-20 text-center">
           <div>
-            <div className="text-4xl font-bold text-accent mb-2">76</div>
+            <div className="text-4xl font-bold text-accent mb-2">
+              <AnimatedCounter value={76} duration={1200} />
+            </div>
             <div className="text-sm text-text-muted">NPS Beta</div>
           </div>
           <div>
-            <div className="text-4xl font-bold text-accent mb-2">22min</div>
+            <div className="text-4xl font-bold text-accent mb-2">
+              <AnimatedCounter value={22} suffix="min" duration={1400} />
+            </div>
             <div className="text-sm text-text-muted">Tempo médio de assessment</div>
           </div>
           <div>
-            <div className="text-4xl font-bold text-accent mb-2">18</div>
+            <div className="text-4xl font-bold text-accent mb-2">
+              <AnimatedCounter value={18} duration={1600} />
+            </div>
             <div className="text-sm text-text-muted">Páginas de relatório</div>
           </div>
         </div>
@@ -56,7 +63,7 @@ export default function SocialProof() {
         {/* Testimonials */}
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((t) => (
-            <div key={t.name} className="bg-background-secondary rounded-xl p-6 border border-white/5">
+            <div key={t.name} className="bg-background-secondary rounded-xl p-6 border border-white/5 card-hover">
               <p className="text-text-secondary text-sm leading-relaxed mb-6 italic">
                 {t.quote}
               </p>
