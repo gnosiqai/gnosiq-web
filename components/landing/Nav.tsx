@@ -1,5 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useLocale } from '@/lib/context/LocaleContext'
 
 export default function Nav() {
@@ -28,14 +29,14 @@ export default function Nav() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background-primary/90 backdrop-blur-sm border-b border-white/5">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Wordmark tipográfico — FIX 2: logo reset */}
-        <a
+        <Link
           href="/"
           onClick={handleLogoClick}
           aria-label="GnosIQ — Home"
           className="font-display text-xl font-bold tracking-tight text-white select-none hover:opacity-90 transition-opacity"
         >
           Gnos<span className="text-accent">IQ</span>
-        </a>
+        </Link>
 
         {/* Links + CTA + Toggle */}
         <div className="flex items-center gap-6">
