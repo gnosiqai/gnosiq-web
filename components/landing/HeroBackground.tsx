@@ -20,11 +20,14 @@ export default function HeroBackground() {
 
   useEffect(() => {
     const canvas = canvasRef.current
+    if (canvas === null) return
 
     // Respeitar prefers-reduced-motion
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-    const ctx = canvas.getContext('2d')!
+    const ctx = canvas.getContext('2d')
+    if (ctx === null) return
+
     const mouse = { x: -9999, y: -9999 }
     let raf: number
 
@@ -89,7 +92,9 @@ export default function HeroBackground() {
       raf = requestAnimationFrame(draw)
     }
 
+    // Mouse tracking apenas em dispositivos com hover (nao touch)
     const isTouchDevice = window.matchMedia('(hover: none)').matches
+    if (isTouchDevice === false) {
       const onMove = (e: MouseEvent) => {
         const rect = canvas.getBoundingClientRect()
         mouse.x = e.clientX - rect.left
