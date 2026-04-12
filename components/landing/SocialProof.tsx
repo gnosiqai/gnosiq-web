@@ -7,18 +7,21 @@ import AnimatedCounter from '@/components/ui/AnimatedCounter'
 const testimonials = [
   {
     quote: '"Finalmente entendi por que tomo decisões bem em algumas áreas e trava em outras. O relatório foi cirúrgico."',
-    name: 'Founder, SaaS B2B',
-    role: 'Beta tester · São Paulo',
+    author: 'R. Mendes',
+    role: 'Founder, SaaS B2B · São Paulo',
+    tag: 'Beta tester',
   },
   {
     quote: '"Melhor R$97 que investi em autoconhecimento profissional. Mais útil que o MBTI que fiz por R$600."',
-    name: 'Head de Produto',
-    role: 'Beta tester · Belo Horizonte',
+    author: 'F. Oliveira',
+    role: 'Head de Produto · Belo Horizonte',
+    tag: 'Beta tester',
   },
   {
-    quote: '"Integrei a API no meu app de coaching em 2 horas. Documentação clara, latência ótima."',
-    name: 'Desenvolvedor Independente',
-    role: 'Beta tester · Remoto',
+    quote: '"Recebi o relatório e fiquei em silêncio por alguns minutos. Era a primeira vez que alguém descrevia como eu funciono sem que eu precisasse explicar."',
+    author: 'A. Torres',
+    role: 'Empreendedora · Remoto',
+    tag: 'Beta tester · Assessment B2C',
   },
 ]
 
@@ -63,12 +66,15 @@ export default function SocialProof() {
         {/* Testimonials */}
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((t) => (
-            <div key={t.name} className="bg-background-secondary rounded-xl p-6 border border-white/5 card-hover">
+            <div
+              key={t.author}
+              className="bg-background-secondary rounded-xl p-6 border border-white/5 card-hover"
+            >
               <p className="text-text-secondary text-sm leading-relaxed mb-6 italic">
                 {t.quote}
               </p>
               <div>
-                <p className="font-bold text-text-primary text-sm">{t.name}</p>
+                <p className="font-bold text-text-primary text-sm">{t.author}</p>
                 <p className="text-text-muted text-xs">{t.role}</p>
               </div>
             </div>
