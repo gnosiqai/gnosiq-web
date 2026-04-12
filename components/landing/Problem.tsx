@@ -2,9 +2,11 @@
 
 import { useLocale } from '@/lib/context/LocaleContext'
 import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
+import { useStaggerReveal } from '@/hooks/useStaggerReveal'
 
 export default function Problem() {
   const { locale } = useLocale()
+  const staggerRef = useStaggerReveal(100)
 
   if (locale === 'en') {
     return (
@@ -36,8 +38,8 @@ export default function Problem() {
         </p>
 
         {/* Pain points */}
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-background-primary rounded-xl p-6 border border-white/5">
+        <div ref={staggerRef} className="grid md:grid-cols-3 gap-8">
+          <div className="stagger-item bg-background-primary rounded-xl p-6 border border-white/5 card-hover">
             <div className="w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
               <span className="text-accent font-bold text-sm">01</span>
             </div>
@@ -47,7 +49,7 @@ export default function Problem() {
             </p>
           </div>
 
-          <div className="bg-background-primary rounded-xl p-6 border border-white/5">
+          <div className="stagger-item bg-background-primary rounded-xl p-6 border border-white/5 card-hover">
             <div className="w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
               <span className="text-accent font-bold text-sm">02</span>
             </div>
@@ -57,7 +59,7 @@ export default function Problem() {
             </p>
           </div>
 
-          <div className="bg-background-primary rounded-xl p-6 border border-white/5">
+          <div className="stagger-item bg-background-primary rounded-xl p-6 border border-white/5 card-hover">
             <div className="w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
               <span className="text-accent font-bold text-sm">03</span>
             </div>
