@@ -1,6 +1,6 @@
 'use client'
-
-import { useLocale } from '@/lib/useLocale'
+import { useLocale } from '@/lib/context/LocaleContext'
+import HeroBackground from './HeroBackground'
 
 declare global {
   interface Window {
@@ -13,12 +13,14 @@ declare global {
 export default function Hero() {
   const { locale } = useLocale()
 
+  const price    = locale === 'en' ? '$97'                         : 'R$97'
+  const ctaLabel = locale === 'en' ? `Start Assessment — ${price}` : `Começar Avaliação — ${price}`
+
   const copy = {
     pt: {
       eyebrow: 'Capital Cognitivo · Assessment com IA · Relatório em 30 minutos',
       h1: 'Desbloqueie o Capital Cognitivo escondido em você',
       sub: 'A primeira API que transforma potencial humano em capital computável. Para founders e líderes que precisam de mais do que um teste de personalidade.',
-      cta1: 'Começar Avaliação — R$97',
       cta2: 'Sou desenvolvedor → ver API',
       micro: ['✓ Pagamento único', '✓ Relatório de 18 páginas', '✓ Entrega em 30 minutos', '✓ NPS Beta: 76'],
     },
@@ -26,12 +28,10 @@ export default function Hero() {
       eyebrow: 'Cognitive Capital · AI Assessment · 30-minute Report',
       h1: 'Unlock the Cognitive Capital hidden in every human',
       sub: 'The first API that turns human potential into computable capital. For founders and leaders who need more than a personality test.',
-      cta1: 'Start Assessment — $97',
       cta2: "I'm a developer → View API",
       micro: ['✓ One-time payment', '✓ 18-page report', '✓ Delivered in 30 minutes', '✓ Beta NPS: 76'],
     },
   }
-
   const t = copy[locale]
 
   const handleCta1Click = () => {
@@ -49,8 +49,47 @@ export default function Hero() {
   }
 
   return (
-    <section className="min-h-screen flex items-center justify-center pt-16 px-6">
-      <div className="max-w-4xl mx-auto text-center">
+    <section className="relative overflow-hidden min-h-screen flex items-center">
+
+      {/* LAYER 1: Neural canvas — z-index 0 */}
+      <HeroBackground />
+
+      {/* LAYER 2: Dot grid CSS — z-index 1 */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        aria-hidden="true"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle, rgba(139,92,246,0.12) 1px, transparent 1px)',
+          backgroundSize: '36px 36px',
+          zIndex: 1,
+        }}
+      />
+
+      {/* LAYER 3: Radial purple glow — z-index 2 */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        aria-hidden="true"
+        style={{
+          background:
+            'radial-gradient(ellipse 80% 60% at 50% -10%, rgba(139,92,246,0.18) 0%, transparent 70%)',
+          zIndex: 2,
+        }}
+      />
+
+      {/* LAYER 4: Noise texture overlay — z-index 3 */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.025]"
+        aria-hidden="true"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
+          backgroundSize: '256px 256px',
+          zIndex: 3,
+        }}
+      />
+
+      {/* CONTEÚDO — z-index 10 */}
+      <div className="relative z-10 container mx-auto px-6 py-32 text-center max-w-4xl">
         {/* Eyebrow */}
         <p className="text-xs font-bold text-accent uppercase tracking-widest mb-6">
           {t.eyebrow}
@@ -71,9 +110,9 @@ export default function Hero() {
           <a
             href="#waitlist"
             onClick={handleCta1Click}
-            className="bg-accent hover:bg-accent-dark text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors"
+            className="btn-cta-primary bg-accent hover:bg-accent-dark text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors"
           >
-            {t.cta1}
+            {ctaLabel}
           </a>
           <a
             href="#como-funciona"
