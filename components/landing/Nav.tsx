@@ -1,5 +1,4 @@
 'use client'
-import Image from 'next/image'
 import { useLocale } from '@/lib/context/LocaleContext'
 
 export default function Nav() {
@@ -14,16 +13,10 @@ export default function Nav() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background-primary/90 backdrop-blur-sm border-b border-white/5">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Image
-          src="/images/logo.jpg"
-          alt="GnosIQ — The Cognitive Capital API"
-          width={140}
-          height={40}
-          priority
-          className="h-10 w-auto object-contain"
-          style={{ minWidth: '120px' }}
-        />
+        {/* Wordmark tipográfico */}
+        <span className="font-display text-xl font-bold tracking-tight text-white select-none">
+          Gnos<span className="text-accent">IQ</span>
+        </span>
 
         {/* Links + CTA + Toggle */}
         <div className="flex items-center gap-6">

@@ -54,46 +54,54 @@ export default function Hero() {
       {/* LAYER 1: Neural canvas — z-index 0 */}
       <HeroBackground />
 
-      {/* LAYER 2: Dot grid CSS — z-index 1 */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        aria-hidden="true"
-        style={{
-          backgroundImage:
-            'radial-gradient(circle, rgba(139,92,246,0.12) 1px, transparent 1px)',
-          backgroundSize: '36px 36px',
-          zIndex: 1,
-        }}
-      />
-
-      {/* LAYER 3: Radial purple glow — z-index 2 */}
+      {/* LAYER 2: Radial purple glow — z-index 1 */}
       <div
         className="absolute inset-0 pointer-events-none"
         aria-hidden="true"
         style={{
           background:
             'radial-gradient(ellipse 80% 60% at 50% -10%, rgba(139,92,246,0.18) 0%, transparent 70%)',
-          zIndex: 2,
+          zIndex: 1,
         }}
       />
 
-      {/* LAYER 4: Noise texture overlay — z-index 3 */}
+      {/* LAYER 3: Noise texture overlay — z-index 2 */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.025]"
         aria-hidden="true"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
           backgroundSize: '256px 256px',
-          zIndex: 3,
+          zIndex: 2,
         }}
       />
 
       {/* CONTEÚDO — z-index 10 */}
       <div className="relative z-10 container mx-auto px-6 py-32 text-center max-w-4xl">
-        {/* Eyebrow */}
-        <p className="text-xs font-bold text-accent uppercase tracking-widest mb-6">
-          {t.eyebrow}
-        </p>
+        {/* Eyebrow badge com SVG cognitivo */}
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+            className="text-accent flex-shrink-0"
+          >
+            <circle cx="8" cy="8" r="2.5" fill="currentColor" opacity="0.9" />
+            <circle cx="8" cy="2" r="1.5" fill="currentColor" opacity="0.5" />
+            <circle cx="8" cy="14" r="1.5" fill="currentColor" opacity="0.5" />
+            <circle cx="2" cy="8" r="1.5" fill="currentColor" opacity="0.5" />
+            <circle cx="14" cy="8" r="1.5" fill="currentColor" opacity="0.5" />
+            <line x1="8" y1="5.5" x2="8" y2="3.5" stroke="currentColor" strokeWidth="1" opacity="0.4" />
+            <line x1="8" y1="10.5" x2="8" y2="12.5" stroke="currentColor" strokeWidth="1" opacity="0.4" />
+            <line x1="5.5" y1="8" x2="3.5" y2="8" stroke="currentColor" strokeWidth="1" opacity="0.4" />
+            <line x1="10.5" y1="8" x2="12.5" y2="8" stroke="currentColor" strokeWidth="1" opacity="0.4" />
+          </svg>
+          <span className="text-xs font-bold text-accent uppercase tracking-widest">
+            {t.eyebrow}
+          </span>
+        </div>
 
         {/* H1 */}
         <h1 className="text-4xl md:text-6xl font-bold text-text-primary leading-tight mb-6">
