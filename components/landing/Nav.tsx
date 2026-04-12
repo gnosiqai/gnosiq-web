@@ -1,6 +1,6 @@
 'use client'
-
-import { useLocale } from '@/lib/useLocale'
+import Image from 'next/image'
+import { useLocale } from '@/lib/context/LocaleContext'
 
 export default function Nav() {
   const { locale, switchLocale } = useLocale()
@@ -9,16 +9,21 @@ export default function Nav() {
     pt: { links: ['Como funciona', 'API'], cta: 'Começar' },
     en: { links: ['How it works', 'API'], cta: 'Get started' },
   }
-
   const t = copy[locale]
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background-primary/90 backdrop-blur-sm border-b border-white/5">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <span className="font-bold text-lg text-text-primary tracking-tight">
-          Gnos<span className="text-accent">IQ</span>
-        </span>
+        <Image
+          src="/images/logo.jpg"
+          alt="GnosIQ — The Cognitive Capital API"
+          width={140}
+          height={40}
+          priority
+          className="h-10 w-auto object-contain"
+          style={{ minWidth: '120px' }}
+        />
 
         {/* Links + CTA + Toggle */}
         <div className="flex items-center gap-6">
