@@ -61,9 +61,14 @@ export default function WaitlistCTA() {
           source: locale === 'pt' ? 'landing_cta_pt' : 'landing_cta_en',
         })
       }
-    } catch (err) {
+    } catch {
       setStatus('error')
-      setErrorMsg(err instanceof Error ? err.message : t.error)
+      // Nunca expor mensagem técnica ao usuário final
+      setErrorMsg(
+        locale === 'en'
+          ? 'Service temporarily unavailable. Please try again in a moment.'
+          : 'Serviço temporariamente indisponível. Tente novamente em instantes.',
+      )
     }
   }
 
