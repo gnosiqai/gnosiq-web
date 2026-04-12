@@ -1,98 +1,109 @@
 'use client'
 import { useEffect, useRef } from 'react'
 
-interface NodeItem {
+interface Particle {
   x: number
   y: number
   vx: number
   vy: number
+  opacity: number
   radius: number
-  pulsePhase: number
 }
 
-const NODE_COUNT   = 14
-const MAX_DISTANCE = 180
-const ACCENT       = '139,92,246'   // #8B5CF6 em RGB
+const GRAVITY_RADIUS = 120
+const GRAVITY_FORCE = 0.06
+const DAMPING = 0.92
+const ACCENT = '139,92,246' // #8B5CF6
 
 export default function HeroBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
 
+    // Respeitar prefers-reduced-motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const ctx = canvas.getContext('2d')!
+    const mouse = { x: -9999, y: -9999 }
     let raf: number
-    const nodes: NodeItem[] = []
 
     const resize = () => {
-      canvas.width  = canvas.offsetWidth
+      canvas.width = canvas.offsetWidth
       canvas.height = canvas.offsetHeight
     }
     resize()
     window.addEventListener('resize', resize)
 
-    // Inicializar nós
-    for (let i = 0; i < NODE_COUNT; i++) {
-      nodes.push({
-        x:          Math.random() * canvas.width,
-        y:          Math.random() * canvas.height,
-        vx:         (Math.random() - 0.5) * 0.3,
-        vy:         (Math.random() - 0.5) * 0.3,
-        radius:     Math.random() * 2 + 1.5,
-        pulsePhase: Math.random() * Math.PI * 2,
-      })
-    }
+    const particles: Particle[] = Array.from({ length: 70 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      opacity: Math.random() * 0.35 + 0.08,
+      radius: Math.random() * 1.5 + 0.5,
+    }))
 
-    const animate = (t: number) => {
+    const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // Mover nós
-      for (const n of nodes) {
-        n.x += n.vx
-        n.y += n.vy
-        if (n.x < 0 || n.x > canvas.width)  n.vx *= -1
-        if (n.y < 0 || n.y > canvas.height) n.vy *= -1
+      for (const p of particles) {
+        p.x += p.vx
+        p.y += p.vy
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1
+
+        const dx = mouse.x - p.x
+        const dy = mouse.y - p.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        if (dist < GRAVITY_RADIUS && dist > 0) {
+          const force = (GRAVITY_RADIUS - dist) / GRAVITY_RADIUS
+          p.vx += dx * force * GRAVITY_FORCE
+          p.vy += dy * force * GRAVITY_FORCE
+          p.vx *= DAMPING
+          p.vy *= DAMPING
+        }
+
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(${ACCENT},${p.opacity})`
+        ctx.fill()
       }
 
-      // Desenhar conexões dinâmicas (baseado em distância)
-      for (let i = 0; i < NODE_COUNT; i++) {
-        for (let j = i + 1; j < NODE_COUNT; j++) {
-          const dx   = nodes[i].x - nodes[j].x
-          const dy   = nodes[i].y - nodes[j].y
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x
+          const dy = particles[i].y - particles[j].y
           const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist < MAX_DISTANCE) {
-            const alpha = (1 - dist / MAX_DISTANCE) * 0.12
+          if (dist < 80) {
             ctx.beginPath()
-            ctx.moveTo(nodes[i].x, nodes[i].y)
-            ctx.lineTo(nodes[j].x, nodes[j].y)
-            ctx.strokeStyle = `rgba(${ACCENT},${alpha})`
-            ctx.lineWidth   = 0.8
+            ctx.moveTo(particles[i].x, particles[i].y)
+            ctx.lineTo(particles[j].x, particles[j].y)
+            ctx.strokeStyle = `rgba(${ACCENT},${0.1 * (1 - dist / 80)})`
+            ctx.lineWidth = 0.5
             ctx.stroke()
           }
         }
       }
 
-      // Desenhar nós
-      for (const n of nodes) {
-        const pulse = Math.sin(t * 0.001 + n.pulsePhase) * 0.4 + 0.6
-        ctx.beginPath()
-        ctx.arc(n.x, n.y, n.radius * pulse, 0, Math.PI * 2)
-        ctx.fillStyle   = `rgba(${ACCENT},${0.35 * pulse})`
-        ctx.fill()
-
-        // Halo suave
-        ctx.beginPath()
-        ctx.arc(n.x, n.y, n.radius * pulse * 2.5, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(${ACCENT},${0.06 * pulse})`
-        ctx.fill()
-      }
-
-      raf = requestAnimationFrame(animate)
+      raf = requestAnimationFrame(draw)
     }
 
-    raf = requestAnimationFrame(animate)
+    const isTouchDevice = window.matchMedia('(hover: none)').matches
+      const onMove = (e: MouseEvent) => {
+        const rect = canvas.getBoundingClientRect()
+        mouse.x = e.clientX - rect.left
+        mouse.y = e.clientY - rect.top
+      }
+      const onLeave = () => {
+        mouse.x = -9999
+        mouse.y = -9999
+      }
+      window.addEventListener('mousemove', onMove)
+      window.addEventListener('mouseleave', onLeave)
+    }
+
+    draw()
 
     return () => {
       cancelAnimationFrame(raf)

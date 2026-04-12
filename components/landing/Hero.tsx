@@ -54,37 +54,25 @@ export default function Hero() {
       {/* LAYER 1: Neural canvas — z-index 0 */}
       <HeroBackground />
 
-      {/* LAYER 2: Dot grid CSS — z-index 1 */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        aria-hidden="true"
-        style={{
-          backgroundImage:
-            'radial-gradient(circle, rgba(139,92,246,0.12) 1px, transparent 1px)',
-          backgroundSize: '36px 36px',
-          zIndex: 1,
-        }}
-      />
-
-      {/* LAYER 3: Radial purple glow — z-index 2 */}
+      {/* LAYER 2: Radial purple glow — z-index 1 */}
       <div
         className="absolute inset-0 pointer-events-none"
         aria-hidden="true"
         style={{
           background:
             'radial-gradient(ellipse 80% 60% at 50% -10%, rgba(139,92,246,0.18) 0%, transparent 70%)',
-          zIndex: 2,
+          zIndex: 1,
         }}
       />
 
-      {/* LAYER 4: Noise texture overlay — z-index 3 */}
+      {/* LAYER 3: Noise texture overlay — z-index 2 */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.025]"
         aria-hidden="true"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
           backgroundSize: '256px 256px',
-          zIndex: 3,
+          zIndex: 2,
         }}
       />
 
