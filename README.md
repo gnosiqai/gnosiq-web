@@ -431,6 +431,6 @@ property of GnosIQ.
 
 ---
 
-*Pre-launch · Beta NPS 76 · São Paulo → Silicon Valley*
+*Pre-launch · Beta NPS 76 · Sao Paulo → Silicon Valley*
 
 </div>
