@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
+import PostHogProvider from "@/components/PostHogProvider";
 import "@/app/globals.css";
 
 const inter = Inter({
@@ -71,7 +72,7 @@ export default function RootLayout({
         )}
       </head>
       <body className="bg-background-primary text-text-primary font-sans antialiased">
-        {children}
+        <PostHogProvider>{children}</PostHogProvider>
       </body>
     </html>
   );
