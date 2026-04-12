@@ -90,10 +90,30 @@ export default function Hero() {
 
       {/* CONTEÚDO — z-index 10 */}
       <div className="relative z-10 container mx-auto px-6 py-32 text-center max-w-4xl">
-        {/* Eyebrow */}
-        <p className="text-xs font-bold text-accent uppercase tracking-widest mb-6">
-          {t.eyebrow}
-        </p>
+        {/* Eyebrow badge com SVG cognitivo */}
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+            className="text-accent flex-shrink-0"
+          >
+            <circle cx="8" cy="8" r="2.5" fill="currentColor" opacity="0.9" />
+            <circle cx="8" cy="2" r="1.5" fill="currentColor" opacity="0.5" />
+            <circle cx="8" cy="14" r="1.5" fill="currentColor" opacity="0.5" />
+            <circle cx="2" cy="8" r="1.5" fill="currentColor" opacity="0.5" />
+            <circle cx="14" cy="8" r="1.5" fill="currentColor" opacity="0.5" />
+            <line x1="8" y1="5.5" x2="8" y2="3.5" stroke="currentColor" strokeWidth="1" opacity="0.4" />
+            <line x1="8" y1="10.5" x2="8" y2="12.5" stroke="currentColor" strokeWidth="1" opacity="0.4" />
+            <line x1="5.5" y1="8" x2="3.5" y2="8" stroke="currentColor" strokeWidth="1" opacity="0.4" />
+            <line x1="10.5" y1="8" x2="12.5" y2="8" stroke="currentColor" strokeWidth="1" opacity="0.4" />
+          </svg>
+          <span className="text-xs font-bold text-accent uppercase tracking-widest">
+            {t.eyebrow}
+          </span>
+        </div>
 
         {/* H1 */}
         <h1 className="text-4xl md:text-6xl font-bold text-text-primary leading-tight mb-6">
