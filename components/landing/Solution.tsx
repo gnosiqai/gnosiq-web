@@ -1,6 +1,6 @@
 'use client'
 
-import { useLocale } from '@/lib/useLocale'
+import { useLocale } from '@/lib/context/LocaleContext'
 import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
 
 export default function Solution() {
@@ -8,7 +8,7 @@ export default function Solution() {
 
   if (locale === 'en') {
     return (
-      <section className="py-24 px-6">
+      <section className="reveal py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <ComingSoonBanner milestone="M2" />
         </div>
@@ -17,7 +17,7 @@ export default function Solution() {
   }
 
   return (
-    <section className="py-24 px-6">
+    <section className="reveal py-24 px-6">
       <div className="max-w-4xl mx-auto">
         {/* Eyebrow */}
         <p className="text-xs font-bold text-accent uppercase tracking-widest mb-4">

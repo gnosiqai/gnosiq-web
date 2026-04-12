@@ -1,6 +1,6 @@
 'use client'
 
-import { useLocale } from '@/lib/useLocale'
+import { useLocale } from '@/lib/context/LocaleContext'
 import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
 
 const steps = [
@@ -26,7 +26,7 @@ export default function HowItWorks() {
 
   if (locale === 'en') {
     return (
-      <section id="como-funciona" className="py-24 px-6 bg-background-secondary">
+      <section id="como-funciona" className="reveal py-24 px-6 bg-background-secondary">
         <div className="max-w-4xl mx-auto">
           <ComingSoonBanner milestone="M2" />
         </div>
@@ -35,7 +35,7 @@ export default function HowItWorks() {
   }
 
   return (
-    <section id="como-funciona" className="py-24 px-6 bg-background-secondary">
+    <section id="como-funciona" className="reveal py-24 px-6 bg-background-secondary">
       <div className="max-w-4xl mx-auto">
         <p className="text-xs font-bold text-accent uppercase tracking-widest mb-4">
           Como funciona

@@ -1,6 +1,6 @@
 'use client'
 
-import { useLocale } from '@/lib/useLocale'
+import { useLocale } from '@/lib/context/LocaleContext'
 import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
 
 const testimonials = [
@@ -26,7 +26,7 @@ export default function SocialProof() {
 
   if (locale === 'en') {
     return (
-      <section className="py-24 px-6">
+      <section className="reveal py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <ComingSoonBanner milestone="M2" />
         </div>
@@ -35,7 +35,7 @@ export default function SocialProof() {
   }
 
   return (
-    <section className="py-24 px-6">
+    <section className="reveal py-24 px-6">
       <div className="max-w-4xl mx-auto">
         {/* Metrics */}
         <div className="grid grid-cols-3 gap-8 mb-20 text-center">
