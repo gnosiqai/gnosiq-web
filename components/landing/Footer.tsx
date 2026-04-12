@@ -1,5 +1,4 @@
 'use client'
-import Image from 'next/image'
 import { useLocale } from '@/lib/context/LocaleContext'
 import { DISCLAIMER_PT, DISCLAIMER_EN, LGPD_NOTICE_PT, LGPD_NOTICE_EN } from '@/lib/constants/legal'
 
@@ -43,14 +42,9 @@ export default function Footer() {
         {/* Bottom row */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
-            <Image
-              src="/images/logo.jpg"
-              alt="GnosIQ"
-              width={120}
-              height={34}
-              loading="lazy"
-              className="h-8 w-auto object-contain opacity-90"
-            />
+            <span className="opacity-70 font-display text-lg font-bold tracking-tight text-white select-none">
+              Gnos<span className="text-accent">IQ</span>
+            </span>
             <span className="text-text-muted text-sm">· {t.tagline}</span>
           </div>
 
