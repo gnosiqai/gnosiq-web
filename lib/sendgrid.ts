@@ -1,15 +1,14 @@
 import sgMail from '@sendgrid/mail';
 
-const apiKey = process.env.SENDGRID_API_KEY;
-if (!apiKey) throw new Error('[GnosIQ] SENDGRID_API_KEY is not set');
-sgMail.setApiKey(apiKey);
-
 interface ConfirmationParams {
   email: string;
   name: string;
 }
 
 export async function sendWaitlistConfirmation({ email, name }: ConfirmationParams): Promise<void> {
+  const apiKey = process.env.SENDGRID_API_KEY;
+  if (!apiKey) throw new Error('[GnosIQ] SENDGRID_API_KEY is not set');
+  sgMail.setApiKey(apiKey);
   const firstName = name.split(' ')[0] || 'there';
 
   await sgMail.send({
