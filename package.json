@@ -15,7 +15,7 @@
     "firebase-admin": "^13.8.0",
     "google-auth-library": "latest",
     "next": "^15.5.15",
-    "posthog-js": "^1.220.5",
+    "posthog-js": "^1.367.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
