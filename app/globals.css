@@ -38,17 +38,32 @@ body {
   animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Micro-animação no CTA button */
-@keyframes ctaPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(139,92,246,0); }
-  50%       { box-shadow: 0 0 0 8px rgba(139,92,246,0.12); }
+/* Hover premium nos cards — desktop only */
+.card-hover {
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 200ms ease,
+              box-shadow 200ms ease;
 }
-.btn-cta-primary:hover {
-  animation: ctaPulse 2s ease-in-out infinite;
+@media (hover: hover) {
+  .card-hover:hover {
+    transform: translateY(-2px);
+    border-color: rgba(139, 92, 246, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+}
+
+/* CTA Pulse — glow sutil no botão primário do Hero */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 rgba(139, 92, 246, 0); }
+  50%       { box-shadow: 0 0 24px rgba(139, 92, 246, 0.22); }
+}
+.cta-pulse {
+  animation: pulse-glow 3s ease-in-out infinite;
 }
 
 /* Reduzir movimento — respeitar preferência do usuário */
 @media (prefers-reduced-motion: reduce) {
-  .reveal, .btn-cta-primary:hover { animation: none; }
+  .reveal, .btn-cta-primary:hover, .cta-pulse { animation: none; }
   .reveal { opacity: 1; }
+  .card-hover { transition: none; }
 }

@@ -2,6 +2,7 @@
 
 import { useLocale } from '@/lib/context/LocaleContext'
 import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
+import { useStaggerReveal } from '@/hooks/useStaggerReveal'
 
 const steps = [
   {
@@ -23,6 +24,7 @@ const steps = [
 
 export default function HowItWorks() {
   const { locale } = useLocale()
+  const staggerRef = useStaggerReveal(110)
 
   if (locale === 'en') {
     return (
@@ -44,9 +46,9 @@ export default function HowItWorks() {
           De zero a relatório em 30 minutos
         </h2>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div ref={staggerRef} className="grid md:grid-cols-3 gap-8">
           {steps.map((step) => (
-            <div key={step.num} className="relative">
+            <div key={step.num} className="stagger-item relative">
               <div className="text-5xl font-bold text-accent/20 mb-4 font-mono">
                 {step.num}
               </div>

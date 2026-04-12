@@ -2,9 +2,11 @@
 
 import { useLocale } from '@/lib/context/LocaleContext'
 import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
+import { useStaggerReveal } from '@/hooks/useStaggerReveal'
 
 export default function Solution() {
   const { locale } = useLocale()
+  const staggerRef = useStaggerReveal(100)
 
   if (locale === 'en') {
     return (
@@ -37,8 +39,8 @@ export default function Solution() {
         </p>
 
         {/* Cards */}
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-background-secondary rounded-xl p-6 border border-white/5">
+        <div ref={staggerRef} className="grid md:grid-cols-3 gap-8">
+          <div className="stagger-item bg-background-secondary rounded-xl p-6 border border-white/5 card-hover">
             <div className="text-3xl mb-4">🧠</div>
             <h3 className="font-bold text-text-primary mb-2">Profundidade clínica</h3>
             <p className="text-text-secondary text-sm leading-relaxed mb-4">
@@ -51,7 +53,7 @@ export default function Solution() {
             </div>
           </div>
 
-          <div className="bg-background-secondary rounded-xl p-6 border border-white/5">
+          <div className="stagger-item bg-background-secondary rounded-xl p-6 border border-white/5 card-hover">
             <div className="text-3xl mb-4">⚡</div>
             <h3 className="font-bold text-text-primary mb-2">Entrega em 30 minutos</h3>
             <p className="text-text-secondary text-sm leading-relaxed mb-4">
@@ -65,7 +67,7 @@ export default function Solution() {
             </div>
           </div>
 
-          <div className="bg-background-secondary rounded-xl p-6 border border-white/5">
+          <div className="stagger-item bg-background-secondary rounded-xl p-6 border border-white/5 card-hover">
             <div className="text-3xl mb-4">🔌</div>
             <h3 className="font-bold text-text-primary mb-2">API-first</h3>
             <p className="text-text-secondary text-sm leading-relaxed mb-4">
