@@ -118,7 +118,7 @@ export default function Hero() {
           <a
             href="#waitlist"
             onClick={handleCta1Click}
-            className="btn-cta-primary bg-accent hover:bg-accent-dark text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors"
+            className="btn-cta-primary cta-pulse bg-accent hover:bg-accent-dark text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors"
           >
             {ctaLabel}
           </a>
