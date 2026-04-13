@@ -131,7 +131,7 @@ export default function Hero() {
           </a>
         </div>
         {/* GNO-45b FIX D: GnoScore mention + LinkedIn highlight */}
-        <p className="mt-2 text-xs text-white/50 text-center">
+        <p className="mt-8 text-xs text-white/50 text-center">
           Inclui seu GnoScore™ compartilhável no{' '}
           <span className="text-violet-400 font-semibold">LinkedIn</span>
         </p>
