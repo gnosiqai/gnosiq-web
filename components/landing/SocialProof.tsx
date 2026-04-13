@@ -4,26 +4,8 @@ import { useLocale } from '@/lib/context/LocaleContext'
 import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
 import AnimatedCounter from '@/components/ui/AnimatedCounter'
 
-const testimonials = [
-  {
-    quote: '"Finalmente entendi por que tomo decisões bem em algumas áreas e trava em outras. O relatório foi cirúrgico."',
-    author: 'R. Mendes',
-    role: 'Founder, SaaS B2B · São Paulo',
-    tag: 'Beta tester',
-  },
-  {
-    quote: '"Melhor R$97 que investi em autoconhecimento profissional. Mais útil que o MBTI que fiz por R$600."',
-    author: 'F. Oliveira',
-    role: 'Head de Produto · Belo Horizonte',
-    tag: 'Beta tester',
-  },
-  {
-    quote: '"Recebi o relatório e fiquei em silêncio por alguns minutos. Era a primeira vez que alguém descrevia como eu funciono sem que eu precisasse explicar."',
-    author: 'A. Torres',
-    role: 'Empreendedora · Remoto',
-    tag: 'Beta tester · Assessment B2C',
-  },
-]
+// GNO-45: testimonials removido até depoimentos reais disponíveis
+// const testimonials = [ ... ] — preservado no git history
 
 export default function SocialProof() {
   const { locale } = useLocale()

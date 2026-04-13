@@ -89,28 +89,30 @@ export default function WaitlistCTA() {
             <p className="text-semantic-success font-bold">{t.success}</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={placeholder}
-              disabled={status === 'loading'}
-              className="flex-1 bg-background-primary border border-white/10 focus:border-accent/50 rounded-xl px-5 py-4 text-text-primary placeholder-text-muted outline-none transition-colors disabled:opacity-50"
-            />
-            <button
-              type="submit"
-              disabled={status === 'loading'}
-              className="btn-cta-primary bg-accent hover:bg-accent-dark disabled:opacity-50 text-white font-bold px-8 py-4 rounded-xl transition-colors whitespace-nowrap"
-            >
-              {status === 'loading' ? t.loading : ctaLabel}
-            </button>
-          </form>
-          {/* GNO-45: GnoScore mention */}
-          <p className="mt-2 text-xs text-white/50 text-center">
-            Primeiros inscritos recebem o GnoScore™ em primeira mão.
-          </p>
+          <>
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder={placeholder}
+                disabled={status === 'loading'}
+                className="flex-1 bg-background-primary border border-white/10 focus:border-accent/50 rounded-xl px-5 py-4 text-text-primary placeholder-text-muted outline-none transition-colors disabled:opacity-50"
+              />
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="btn-cta-primary bg-accent hover:bg-accent-dark disabled:opacity-50 text-white font-bold px-8 py-4 rounded-xl transition-colors whitespace-nowrap"
+              >
+                {status === 'loading' ? t.loading : ctaLabel}
+              </button>
+            </form>
+            {/* GNO-45: GnoScore mention */}
+            <p className="mt-2 text-xs text-white/50 text-center">
+              Primeiros inscritos recebem o GnoScore™ em primeira mão.
+            </p>
+          </>
         )}
         {status === 'error' && (
           <p className="mt-4 text-semantic-error text-sm">{errorMsg || t.error}</p>
