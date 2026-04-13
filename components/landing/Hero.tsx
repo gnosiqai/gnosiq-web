@@ -1,14 +1,7 @@
 'use client'
+import posthog from 'posthog-js'
 import { useLocale } from '@/lib/context/LocaleContext'
 import HeroBackground from './HeroBackground'
-
-declare global {
-  interface Window {
-    posthog?: {
-      capture: (event: string, props: object) => void
-    }
-  }
-}
 
 export default function Hero() {
   const { locale } = useLocale()
@@ -35,17 +28,17 @@ export default function Hero() {
   const t = copy[locale]
 
   const handleCta1Click = () => {
-    if (typeof window !== 'undefined' && window.posthog) {
-      window.posthog.capture('waitlist_signup', {
-        source: locale === 'pt' ? 'landing_hero_pt' : 'landing_hero_en',
-      })
-    }
+    posthog.capture('cta clicked', {
+      label: 'hero_primary',
+      destination: '#waitlist',
+    })
   }
 
   const handleCta2Click = () => {
-    if (typeof window !== 'undefined' && window.posthog) {
-      window.posthog.capture('cta_click', { cta: 'developer_api', locale })
-    }
+    posthog.capture('cta clicked', {
+      label: 'hero_developer',
+      destination: '#como-funciona',
+    })
   }
 
   return (

@@ -1,14 +1,7 @@
 'use client'
 import { useState } from 'react'
+import posthog from 'posthog-js'
 import { useLocale } from '@/lib/context/LocaleContext'
-
-declare global {
-  interface Window {
-    posthog?: {
-      capture: (event: string, props: object) => void
-    }
-  }
-}
 
 export default function WaitlistCTA() {
   const { locale } = useLocale()
@@ -56,11 +49,11 @@ export default function WaitlistCTA() {
         throw new Error(data?.error ?? 'Request failed')
       }
       setStatus('success')
-      if (typeof window !== 'undefined' && window.posthog) {
-        window.posthog.capture('waitlist_signup', {
-          source: locale === 'pt' ? 'landing_cta_pt' : 'landing_cta_en',
-        })
-      }
+      // GNO-48: PostHog event — LGPD: apenas domínio do email, nunca PII completo
+      posthog.capture('waitlist signed_up', {
+        source: 'landing_cta',
+        email_domain: email.trim().split('@')[1],
+      })
     } catch {
       setStatus('error')
       // Nunca expor mensagem técnica ao usuário final
