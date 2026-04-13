@@ -1,6 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import posthog from 'posthog-js'
 import { useLocale } from '@/lib/context/LocaleContext'
 
 export default function Nav() {
@@ -78,9 +79,15 @@ export default function Nav() {
             </button>
           </div>
 
-          {/* CTA — FIX 3: scroll sem hash */}
+          {/* CTA — FIX 3: scroll sem hash + GNO-48: PostHog event */}
           <button
-            onClick={() => scrollTo('waitlist')}
+            onClick={() => {
+              posthog.capture('cta clicked', {
+                label: 'nav_primary',
+                destination: '#waitlist',
+              })
+              scrollTo('waitlist')
+            }}
             className="bg-accent hover:bg-accent-dark text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer"
           >
             {t.cta}
