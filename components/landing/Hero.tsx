@@ -130,9 +130,10 @@ export default function Hero() {
             {t.cta2}
           </a>
         </div>
-        {/* GNO-45: GnoScore mention */}
+        {/* GNO-45b FIX D: GnoScore mention + LinkedIn highlight */}
         <p className="mt-2 text-xs text-white/50 text-center">
-          Inclui seu GnoScore™ compartilhável no LinkedIn
+          Inclui seu GnoScore™ compartilhável no{' '}
+          <span className="text-violet-400 font-semibold">LinkedIn</span>
         </p>
         {/* Micro-copy */}
         <div className="flex flex-wrap justify-center gap-4">

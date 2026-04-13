@@ -18,7 +18,7 @@ const steps = [
   {
     num: '03',
     title: 'Receba seu relatório',
-    desc: '18 páginas cobrindo: Perfil Cognitivo, Mapa de Forças, Pontos Cegos, Recomendações de Carreira e GnoScore™. Inclui seu GnoScore™ verificado, pronto para compartilhar no LinkedIn.',
+    desc: null, // GNO-45b FIX B: renderizado como JSX para LinkedIn highlight
   },
 ]
 
@@ -53,7 +53,16 @@ export default function HowItWorks() {
                 {step.num}
               </div>
               <h3 className="font-bold text-text-primary mb-3">{step.title}</h3>
-              <p className="text-text-secondary text-sm leading-relaxed">{step.desc}</p>
+              {step.num === '03' ? (
+                <p className="text-text-secondary text-sm leading-relaxed">
+                  18 páginas cobrindo: Perfil Cognitivo, Mapa de Forças, Pontos Cegos,
+                  Recomendações de Carreira e GnoScore™. Inclui seu GnoScore™ verificado,
+                  pronto para compartilhar no{' '}
+                  <span className="text-violet-400 font-semibold">LinkedIn</span>.
+                </p>
+              ) : (
+                <p className="text-text-secondary text-sm leading-relaxed">{step.desc}</p>
+              )}
             </div>
           ))}
         </div>
