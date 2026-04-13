@@ -63,23 +63,12 @@ export default function SocialProof() {
           </div>
         </div>
 
-        {/* Testimonials */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((t) => (
-            <div
-              key={t.author}
-              className="bg-background-secondary rounded-xl p-6 border border-white/5 card-hover"
-            >
-              <p className="text-text-secondary text-sm leading-relaxed mb-6 italic">
-                {t.quote}
-              </p>
-              <div>
-                <p className="font-bold text-text-primary text-sm">{t.author}</p>
-                <p className="text-text-muted text-xs">{t.role}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* GNO-45: Testimonials removido até depoimentos reais disponíveis */}
+        <section className="py-4 text-center">
+          <p className="text-sm text-white/60 tracking-wide">
+            Early Access · Beta NPS 76 · Tempo médio: 22 min · Relatório: 18 páginas
+          </p>
+        </section>
       </div>
     </section>
   )
