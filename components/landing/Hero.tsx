@@ -131,12 +131,12 @@ export default function Hero() {
           </a>
         </div>
         {/* GNO-45b FIX D: GnoScore mention + LinkedIn highlight */}
-        <p className="mt-8 text-xs text-white/50 text-center">
+        <p className="mt-2 text-xs text-white/50 text-center">
           Inclui seu GnoScore™ compartilhável no{' '}
           <span className="text-violet-400 font-semibold">LinkedIn</span>
         </p>
         {/* Micro-copy */}
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="mt-4 flex flex-wrap justify-center gap-4">
           {t.micro.map((item) => (
             <span key={item} className="text-sm text-text-muted">
               {item}
