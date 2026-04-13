@@ -4,26 +4,8 @@ import { useLocale } from '@/lib/context/LocaleContext'
 import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
 import AnimatedCounter from '@/components/ui/AnimatedCounter'
 
-const testimonials = [
-  {
-    quote: '"Finalmente entendi por que tomo decisões bem em algumas áreas e trava em outras. O relatório foi cirúrgico."',
-    author: 'R. Mendes',
-    role: 'Founder, SaaS B2B · São Paulo',
-    tag: 'Beta tester',
-  },
-  {
-    quote: '"Melhor R$97 que investi em autoconhecimento profissional. Mais útil que o MBTI que fiz por R$600."',
-    author: 'F. Oliveira',
-    role: 'Head de Produto · Belo Horizonte',
-    tag: 'Beta tester',
-  },
-  {
-    quote: '"Recebi o relatório e fiquei em silêncio por alguns minutos. Era a primeira vez que alguém descrevia como eu funciono sem que eu precisasse explicar."',
-    author: 'A. Torres',
-    role: 'Empreendedora · Remoto',
-    tag: 'Beta tester · Assessment B2C',
-  },
-]
+// GNO-45: testimonials removido até depoimentos reais disponíveis
+// const testimonials = [ ... ] — preservado no git history
 
 export default function SocialProof() {
   const { locale } = useLocale()
@@ -63,23 +45,12 @@ export default function SocialProof() {
           </div>
         </div>
 
-        {/* Testimonials */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((t) => (
-            <div
-              key={t.author}
-              className="bg-background-secondary rounded-xl p-6 border border-white/5 card-hover"
-            >
-              <p className="text-text-secondary text-sm leading-relaxed mb-6 italic">
-                {t.quote}
-              </p>
-              <div>
-                <p className="font-bold text-text-primary text-sm">{t.author}</p>
-                <p className="text-text-muted text-xs">{t.role}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* GNO-45: Testimonials removido até depoimentos reais disponíveis */}
+        <section className="py-4 text-center">
+          <p className="text-sm text-white/60 tracking-wide">
+            Early Access · Beta NPS 76 · Tempo médio: 22 min · Relatório: 18 páginas
+          </p>
+        </section>
       </div>
     </section>
   )
