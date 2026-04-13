@@ -108,9 +108,9 @@ export default function WaitlistCTA() {
                 {status === 'loading' ? t.loading : ctaLabel}
               </button>
             </form>
-            {/* GNO-45: GnoScore mention */}
-            <p className="mt-2 text-xs text-white/50 text-center">
-              Primeiros inscritos recebem o GnoScore™ em primeira mão.
+            {/* GNO-45b FIX C: GnoScore mention — mt-6 spacing + copy atualizado */}
+            <p className="mt-6 text-xs text-white/50 text-center">
+              Primeiros 100 inscritos recebem o GnoScore™ e acesso beta com 50% de desconto.
             </p>
           </>
         )}
