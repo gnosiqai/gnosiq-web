@@ -44,8 +44,9 @@ export default function Problem() {
               <span className="text-accent font-bold text-sm">01</span>
             </div>
             <p className="text-text-secondary leading-relaxed">
-              Decisões estratégicas são tomadas com base em intuição, não em dados
-              cognitivos. O custo é invisível até aparecer no resultado.
+              Decisões estratégicas tomadas sem dados sobre o ativo mais
+              crítico: você mesmo. O resultado aparece depois, numa
+              demissão, num burnout, numa sociedade errada.
             </p>
           </div>
 
@@ -54,8 +55,9 @@ export default function Problem() {
               <span className="text-accent font-bold text-sm">02</span>
             </div>
             <p className="text-text-secondary leading-relaxed">
-              Testes de personalidade custam R$800 e entregam um PDF genérico.
-              Avaliações clínicas custam R$5.000 e levam meses. Há um vácuo entre os dois.
+              Testes de personalidade custam R$300 a R$600 e entregam um PDF
+              genérico. Avaliações clínicas custam R$4.000 ou mais e levam
+              meses. Há um vácuo entre os dois.
             </p>
           </div>
 
@@ -68,6 +70,101 @@ export default function Problem() {
               inacessíveis, ou acessíveis e superficiais. Nenhuma tem API.
             </p>
           </div>
+        </div>
+
+        {/* FIX 3 — Competitor table */}
+        <div className="mt-12 overflow-x-auto">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="border-b border-violet-500/30">
+                <th className="text-left py-3 px-4 text-white/60 font-medium">
+                  Solução
+                </th>
+                <th className="text-center py-3 px-4 text-white/60 font-medium">
+                  Preço
+                </th>
+                <th className="text-center py-3 px-4 text-white/60 font-medium">
+                  Profundidade
+                </th>
+                <th className="text-center py-3 px-4 text-white/60 font-medium">
+                  API
+                </th>
+                <th className="text-center py-3 px-4 text-white/60 font-medium">
+                  Entrega
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-white/5">
+                <td className="py-3 px-4 text-white font-medium">
+                  Hogan Assessments
+                </td>
+                <td className="py-3 px-4 text-center text-white/70">
+                  R$15.000/eval
+                </td>
+                <td className="py-3 px-4 text-center">
+                  <span className="text-[#22C55E]">&#10003; Profunda</span>
+                </td>
+                <td className="py-3 px-4 text-center">
+                  <span className="text-[#EF4444]">&#10007; Nenhuma</span>
+                </td>
+                <td className="py-3 px-4 text-center text-white/70">
+                  Semanas
+                </td>
+              </tr>
+              <tr className="border-b border-white/5">
+                <td className="py-3 px-4 text-white font-medium">
+                  Crystal Knows
+                </td>
+                <td className="py-3 px-4 text-center text-white/70">
+                  $49/mês
+                </td>
+                <td className="py-3 px-4 text-center">
+                  <span className="text-[#EF4444]">&#10007; Superficial</span>
+                </td>
+                <td className="py-3 px-4 text-center">
+                  <span className="text-[#EF4444]">&#10007; Nenhuma</span>
+                </td>
+                <td className="py-3 px-4 text-center text-white/70">
+                  Imediata
+                </td>
+              </tr>
+              <tr className="border-b border-white/5">
+                <td className="py-3 px-4 text-white font-medium">
+                  Avaliação Clínica
+                </td>
+                <td className="py-3 px-4 text-center text-white/70">
+                  R$4.000+
+                </td>
+                <td className="py-3 px-4 text-center">
+                  <span className="text-[#22C55E]">&#10003; Profunda</span>
+                </td>
+                <td className="py-3 px-4 text-center">
+                  <span className="text-[#EF4444]">&#10007; Nenhuma</span>
+                </td>
+                <td className="py-3 px-4 text-center text-white/70">
+                  2 a 4 meses
+                </td>
+              </tr>
+              <tr className="bg-violet-500/10">
+                <td className="py-3 px-4 text-white font-bold">
+                  GnosIQ
+                </td>
+                <td className="py-3 px-4 text-center text-white font-semibold">
+                  R$97
+                </td>
+                <td className="py-3 px-4 text-center">
+                  <span className="text-[#22C55E] font-semibold">&#10003; Profunda</span>
+                </td>
+                <td className="py-3 px-4 text-center">
+                  <span className="text-[#22C55E] font-semibold">&#10003; API-first</span>
+                </td>
+                <td className="py-3 px-4 text-center">
+                  <span className="text-[#22C55E] font-semibold">30 minutos</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
