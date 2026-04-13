@@ -28,13 +28,13 @@ export default function Problem() {
 
         {/* H2 */}
         <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-8">
-          Nenhum balanço captura capital cognitivo — até hoje
+          Nenhum balanço captura capital cognitivo, até hoje
         </h2>
 
         {/* Body */}
         <p className="text-lg text-text-secondary mb-12 leading-relaxed max-w-3xl">
           Você investe em infra, produto e time. Mas o ativo que dirige todas essas
-          decisões — como você pensa, processa e age — nunca foi medido com rigor.
+          decisões: como você pensa, processa e age, nunca foi medido com rigor.
         </p>
 
         {/* Pain points */}
@@ -64,7 +64,7 @@ export default function Problem() {
               <span className="text-accent font-bold text-sm">03</span>
             </div>
             <p className="text-text-secondary leading-relaxed">
-              Ferramentas existentes — Hogan, Crystal, BetterUp — ou são profundas e
+              Ferramentas existentes como Hogan, Crystal e BetterUp ou são profundas e
               inacessíveis, ou acessíveis e superficiais. Nenhuma tem API.
             </p>
           </div>

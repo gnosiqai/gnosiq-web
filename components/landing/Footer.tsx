@@ -60,7 +60,7 @@ export default function Footer() {
 
           {/* GitHub */}
           <a
-            href="https://github.com/gnosiqai"
+            href="https://github.com/gnosiqai/gnosiq-web"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GnosIQ no GitHub"
