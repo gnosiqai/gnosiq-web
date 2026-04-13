@@ -29,6 +29,7 @@ pnpm-debug.log*
 # Local env files — NUNCA commitar credenciais
 .env
 .env.*
+!.env.local.example
 .env.local
 .env.development.local
 .env.test.local
