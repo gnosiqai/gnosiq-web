@@ -17,7 +17,7 @@ export default function WaitlistCTA() {
   const [errorMsg, setErrorMsg] = useState('')
 
   const price       = locale === 'en' ? '$97'                       : 'R$97'
-  const ctaLabel    = locale === 'en' ? `Get My Report — ${price}`  : `Quero meu Relatório — ${price}`
+  const ctaLabel    = locale === 'en' ? `Get My Report: ${price}`  : `Quero meu Relatório: ${price}`
   const placeholder = locale === 'en' ? 'your@email.com'            : 'seu@email.com'
 
   const copy = {

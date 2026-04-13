@@ -14,7 +14,7 @@ export default function Hero() {
   const { locale } = useLocale()
 
   const price    = locale === 'en' ? '$97'                         : 'R$97'
-  const ctaLabel = locale === 'en' ? `Start Assessment — ${price}` : `Começar Avaliação — ${price}`
+  const ctaLabel = locale === 'en' ? `Start Assessment: ${price}` : `Começar Avaliação: ${price}`
 
   const copy = {
     pt: {

@@ -35,7 +35,7 @@ export default function Solution() {
         <p className="text-lg text-text-secondary mb-12 leading-relaxed max-w-3xl">
           A GnosIQ combina 12 instrumentos psicométricos validados internacionalmente
           com 3 agentes de IA especializados. O resultado: um relatório de 18 páginas
-          sobre seu perfil cognitivo completo — em 30 minutos, por R$97.
+          sobre seu perfil cognitivo completo, em 30 minutos, por R$97.
         </p>
 
         {/* Cards */}
