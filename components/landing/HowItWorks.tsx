@@ -18,7 +18,7 @@ const steps = [
   {
     num: '03',
     title: 'Receba seu relatório',
-    desc: '18 páginas cobrindo: Perfil Cognitivo, Mapa de Forças, Pontos Cegos, Recomendações de Carreira e Score GnosIQ. Inclui seu GnoScore™ verificado, pronto para compartilhar no LinkedIn.',
+    desc: '18 páginas cobrindo: Perfil Cognitivo, Mapa de Forças, Pontos Cegos, Recomendações de Carreira e GnoScore™. Inclui seu GnoScore™ verificado, pronto para compartilhar no LinkedIn.',
   },
 ]
 
