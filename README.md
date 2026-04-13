@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="./public/gnosiq-banner.png" alt="GnosIQ — The Cognitive Capital API" width="800" height="auto" />
-
 # GnosIQ
 [![Status](https://img.shields.io/badge/status-pre--launch-8B5CF6?style=flat-square)](https://gnosiq.ai)
 [![Beta NPS](https://img.shields.io/badge/beta%20NPS-76-8B5CF6?style=flat-square)](#)
@@ -216,21 +214,20 @@ leads live     sales +        MRR · 2–3      pipeline
                NPS≥60         partners
 ```
 
-### M1 — Landing + Waitlist *(now · IN PROGRESS)*
+## Status: M1 Pre-Launch — Live at gnosiq.ai
 
-| Task | Status |
-|---|---|
-| Repo scaffold (Next.js 15 + Tailwind + TypeScript) | ✅ Done |
-| Brand identity — 12/12 slides approved | ✅ Done |
-| Fix Lovart: favicon + remove teal #14B8A6 | ✅ Done |
-| Setup Vercel + DNS Cloudflare | ✅ Done (GNO-5) |
-| CI/CD GitHub Actions + Vercel CLI (`deploy.yml`) | ✅ Done (GNO-20) |
-| Backend waitlist: Cloud Run → Firestore → SendGrid | ✅ Done (GNO-7) — 2026-04-01 |
-| PostHog analytics | 🔲 Todo (GNO-8) |
-| Landing page: Nav + Hero + WaitlistForm + Footer | 🔲 Todo (GNO-9) |
-| SonarCloud on GitHub Actions | ✅ Done (GNO-6) — 2026-04-02 |
-| Google Workspace: carlos@gnosiq.ai | 🔲 Todo (GNO-12) |
-| Google for Startups — $350K GCP credits | 🔲 Todo (GNO-13) |
+### Delivered in M1
+- Full landing page (8 sections, PT/EN toggle)
+- Waitlist backend: Firestore + SendGrid (validated in production)
+- CI/CD: GitHub Actions + Vercel CLI (deploy.yml)
+- SonarCloud: Quality Gate A, 0 critical, 0 high vulnerabilities
+- GnoScore(tm): featured on landing as M2 capability
+- Beta NPS: 76 | Avg time: 22 min | Report: 18 pages
+
+### Next (M2)
+- Full B2C assessment ($97 one-time)
+- Cognitive Engine: 3 LLM agents + 12 psychometric instruments
+- GnoScore(tm) verifiable badge + LinkedIn Share
 
 ### M2 — API + First Customers *(Surface 1 · B2C)*
 
