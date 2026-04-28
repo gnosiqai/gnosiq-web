@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import { useLocale } from '@/lib/context/LocaleContext'
 import { DISCLAIMER_PT, DISCLAIMER_EN, LGPD_NOTICE_PT, LGPD_NOTICE_EN } from '@/lib/constants/legal'
 
@@ -11,23 +12,17 @@ export default function Footer() {
   const copy = {
     pt: {
       tagline: 'The Cognitive Capital API',
-      // M2: links: [
-      //   { label: 'Termos de Uso',  href: '/legal/terms'   },
-      //   { label: 'Privacidade',    href: '/legal/privacy'  },
-      //   { label: 'API Docs',       href: '/docs'           },
-      // ],
-      links: [] as { label: string; href: string }[],
+      links: [
+        { label: 'Política de Privacidade', href: '/privacy' },
+      ] as { label: string; href: string }[],
       rights: '© 2026 GnosIQ. Todos os direitos reservados.',
       feedback: 'Encontrou algo errado? Nos avise →',
     },
     en: {
       tagline: 'The Cognitive Capital API',
-      // M2: links: [
-      //   { label: 'Terms of Use',   href: '/legal/terms'   },
-      //   { label: 'Privacy Policy', href: '/legal/privacy'  },
-      //   { label: 'API Docs',       href: '/docs'           },
-      // ],
-      links: [] as { label: string; href: string }[],
+      links: [
+        { label: 'Privacy Policy', href: '/privacy' },
+      ] as { label: string; href: string }[],
       rights: '© 2026 GnosIQ. All rights reserved.',
       feedback: 'Found something wrong? Let us know →',
     },
@@ -119,13 +114,13 @@ export default function Footer() {
 
           <nav className="flex gap-6">
             {t.links.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 className="text-sm text-text-muted hover:text-text-primary transition-colors"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
