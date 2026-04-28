@@ -123,6 +123,10 @@ export default function Hero() {
             {t.cta2}
           </a>
         </div>
+        {/* GNO-59 T3: Price anchor — texto puro, sem wrapper, complementa preço do CTA */}
+        <p className="mt-2 text-sm text-white/40 text-center">
+          A partir de $97 · relatório cognitivo em 30 minutos
+        </p>
         {/* GNO-59 T1: Social proof substituta — texto corrido, sem badge */}
         <p className="mt-3 text-sm text-white/50 text-center">
           3 founders early-stage no beta privado · Acesso antecipado disponível
