@@ -123,6 +123,10 @@ export default function Hero() {
             {t.cta2}
           </a>
         </div>
+        {/* GNO-59 T1: Social proof substituta — texto corrido, sem badge */}
+        <p className="mt-3 text-sm text-white/50 text-center">
+          3 founders early-stage no beta privado · Acesso antecipado disponível
+        </p>
         {/* GNO-45b FIX D: GnoScore mention + LinkedIn highlight */}
         <p className="mt-2 text-xs text-white/50 text-center">
           Inclui seu GnoScore™ compartilhável no{' '}
