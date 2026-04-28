@@ -1,5 +1,5 @@
 # SSOT Reference
-version: 4.0.5
+version: 4.0.6
 updated: 2026-04-28
 milestone: M1 CLOSING
 next_issue: GNO-54
