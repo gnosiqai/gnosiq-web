@@ -36,3 +36,14 @@ export const CLINICAL_REFERRAL_TRIGGERS = {
   GAD7_THRESHOLD: 10,      // rastreio ansiedade moderada/grave
   ASRS_POSITIVE: true,     // padrão TDAH confirmado pelo ASRS
 } as const
+
+// ─── Privacy Policy ────────────────────────────────────────────────
+// GNO-49 | 2026-04-28
+export const PRIVACY_POLICY_VERSION = '1.0';
+export const PRIVACY_POLICY_DATE = '2026-04-28';
+export const PRIVACY_POLICY_URL = '/privacy';
+
+// Disclaimer canônico CFP/LGPD — usar em todos os relatórios de avaliação
+export const COGNITIVE_ASSESSMENT_DISCLAIMER =
+  'Este relatório é gerado por IA e não substitui diagnóstico clínico. ' +
+  'Os dados são confidenciais e nunca saem do perímetro GnosIQ.';
