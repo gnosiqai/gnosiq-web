@@ -11,17 +11,17 @@ export default function Hero() {
 
   const copy = {
     pt: {
-      eyebrow: 'Capital Cognitivo · Assessment com IA · Relatório em 30 minutos',
+      eyebrow: '3 founders early-stage no beta privado · Acesso antecipado disponível',
       h1: 'Desbloqueie o Capital Cognitivo escondido em você',
-      sub: 'A primeira API que transforma potencial humano em capital computável. Para founders e líderes que precisam de mais do que um teste de personalidade.',
-      cta2: 'Sou desenvolvedor → ver API',
+      sub: 'A primeira API que transforma potencial humano em capital computável. Para founders e líderes que precisam de mais do que um teste de personalidade. A partir de R$97 · relatório cognitivo completo em 30 minutos.',
+      cta2: 'Ver como funciona →',
       micro: ['✓ Pagamento único', '✓ Relatório de 18 páginas', '✓ Entrega em 30 minutos', '✓ Beta por convite'],
     },
     en: {
-      eyebrow: 'Cognitive Capital · AI Assessment · 30-minute Report',
+      eyebrow: '3 early-stage founders in private beta · Early access available',
       h1: 'Unlock the Cognitive Capital hidden in every human',
-      sub: 'The first API that turns human potential into computable capital. For founders and leaders who need more than a personality test.',
-      cta2: "I'm a developer → View API",
+      sub: 'The first API that turns human potential into computable capital. For founders and leaders who need more than a personality test. Starting at $97 · complete cognitive report in 30 minutes.',
+      cta2: 'See how it works →',
       micro: ['✓ One-time payment', '✓ 18-page report', '✓ Delivered in 30 minutes', '✓ Invite-only Beta'],
     },
   }
