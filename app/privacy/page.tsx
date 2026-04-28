@@ -111,7 +111,7 @@ export default function PrivacyPage() {
               5. Contato e Controlador de Dados
             </h2>
             <p style={{ color: '#D1D5DB' }}>
-              <strong>GnosIQ</strong> · CNPJ em processo de registro · São Paulo, SP — Brasil
+              <strong>GnosIQ</strong> · CNPJ 66.473.762/0001-13 · São Paulo, SP — Brasil
               <br />
               Responsável pelo tratamento de dados: Carlos Alberto Gomes
               <br />
