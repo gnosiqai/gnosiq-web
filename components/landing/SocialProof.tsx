@@ -23,14 +23,8 @@ export default function SocialProof() {
   return (
     <section className="reveal py-24 px-6">
       <div className="max-w-4xl mx-auto">
-        {/* Metrics */}
-        <div className="grid grid-cols-3 gap-8 mb-20 text-center">
-          <div>
-            <div className="text-4xl font-bold text-accent mb-2">
-              <AnimatedCounter value={76} duration={1200} />
-            </div>
-            <div className="text-sm text-text-muted">NPS Beta</div>
-          </div>
+        {/* Metrics — GNO-57: NPS counter removido (dado sem amostra válida · reintroduzir pós-M2) */}
+        <div className="grid grid-cols-2 gap-8 mb-20 text-center max-w-sm mx-auto">
           <div>
             <div className="text-4xl font-bold text-accent mb-2">
               <AnimatedCounter value={22} suffix="min" duration={1400} />
@@ -48,7 +42,7 @@ export default function SocialProof() {
         {/* GNO-45: Testimonials removido até depoimentos reais disponíveis */}
         <section className="py-4 text-center">
           <p className="text-sm text-white/60 tracking-wide">
-            Early Access · Beta NPS 76 · Tempo médio: 22 min · Relatório: 18 páginas
+            Early Access · Beta por convite · Tempo médio: 22 min · Relatório: 18 páginas
           </p>
         </section>
       </div>
