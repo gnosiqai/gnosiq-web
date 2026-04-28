@@ -14,14 +14,14 @@ export default function Hero() {
       eyebrow: 'Capital Cognitivo · Assessment com IA · Relatório em 30 minutos',
       h1: 'Desbloqueie o Capital Cognitivo escondido em você',
       sub: 'A primeira API que transforma potencial humano em capital computável. Para founders e líderes que precisam de mais do que um teste de personalidade.',
-      cta2: 'Sou desenvolvedor → ver API',
+      cta2: 'Ver como funciona →',
       micro: ['✓ Pagamento único', '✓ Relatório de 18 páginas', '✓ Entrega em 30 minutos', '✓ Beta por convite'],
     },
     en: {
       eyebrow: 'Cognitive Capital · AI Assessment · 30-minute Report',
       h1: 'Unlock the Cognitive Capital hidden in every human',
       sub: 'The first API that turns human potential into computable capital. For founders and leaders who need more than a personality test.',
-      cta2: "I'm a developer → View API",
+      cta2: 'Ver como funciona →',
       micro: ['✓ One-time payment', '✓ 18-page report', '✓ Delivered in 30 minutes', '✓ Invite-only Beta'],
     },
   }
@@ -115,10 +115,11 @@ export default function Hero() {
           >
             {ctaLabel}
           </a>
+          {/* GNO-59 T2: CTA secundário ghost — scroll para #como-funciona (id existe em HowItWorks.tsx) */}
           <a
             href="#como-funciona"
             onClick={handleCta2Click}
-            className="border border-white/20 hover:border-accent/50 text-text-secondary hover:text-text-primary font-bold px-8 py-4 rounded-xl text-lg transition-colors"
+            className="text-sm text-white/60 hover:text-white underline-offset-4 hover:underline transition-colors py-4 px-2"
           >
             {t.cta2}
           </a>
