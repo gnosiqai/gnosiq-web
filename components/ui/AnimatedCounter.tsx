@@ -6,6 +6,7 @@ interface AnimatedCounterProps {
   suffix?: string
   duration?: number
   className?: string
+  from?: number
 }
 
 function easeOutCubic(t: number): number {
@@ -17,8 +18,13 @@ export default function AnimatedCounter({
   suffix = '',
   duration = 1400,
   className = '',
+  from,
 }: AnimatedCounterProps) {
-  const [display, setDisplay] = useState(0)
+  // SSR fix (GNO-57): initialValue = from ?? Math.floor(value * 0.85)
+  // Crawlers OG (LinkedIn/WhatsApp/X) capturam HTML estático antes da hidratação.
+  // Partir de 85% do valor final garante que o HTML cru exiba número real, não zero.
+  const initialValue = from !== undefined ? from : Math.floor(value * 0.85)
+  const [display, setDisplay] = useState(initialValue)
   const [started, setStarted] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
   const rafRef = useRef<number | null>(null)
@@ -68,7 +74,8 @@ export default function AnimatedCounter({
       const elapsed = now - startTime
       const progress = Math.min(elapsed / duration, 1)
       const eased = easeOutCubic(progress)
-      setDisplay(Math.round(eased * value))
+      // Anima de initialValue até value
+      setDisplay(Math.round(initialValue + eased * (value - initialValue)))
 
       if (progress < 1) {
         rafRef.current = requestAnimationFrame(tick)
@@ -82,7 +89,7 @@ export default function AnimatedCounter({
         cancelAnimationFrame(rafRef.current)
       }
     }
-  }, [started, value, duration])
+  }, [started, value, duration, initialValue])
 
   return (
     <span ref={ref} className={className}>
