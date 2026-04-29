@@ -11,17 +11,17 @@ export default function Hero() {
 
   const copy = {
     pt: {
-      eyebrow: 'Capital Cognitivo · Assessment com IA · Relatório em 30 minutos',
+      eyebrow: '3 founders early-stage no beta privado · Acesso antecipado disponível',
       h1: 'Desbloqueie o Capital Cognitivo escondido em você',
-      sub: 'A primeira API que transforma potencial humano em capital computável. Para founders e líderes que precisam de mais do que um teste de personalidade.',
+      sub: 'A primeira API que transforma potencial humano em capital computável. Para founders e líderes que precisam de mais do que um teste de personalidade. A partir de R$97 · relatório cognitivo completo em 30 minutos.',
       cta2: 'Ver como funciona →',
       micro: ['✓ Pagamento único', '✓ Relatório de 18 páginas', '✓ Entrega em 30 minutos', '✓ Beta por convite'],
     },
     en: {
-      eyebrow: 'Cognitive Capital · AI Assessment · 30-minute Report',
+      eyebrow: '3 early-stage founders in private beta · Early access available',
       h1: 'Unlock the Cognitive Capital hidden in every human',
-      sub: 'The first API that turns human potential into computable capital. For founders and leaders who need more than a personality test.',
-      cta2: 'Ver como funciona →',
+      sub: 'The first API that turns human potential into computable capital. For founders and leaders who need more than a personality test. Starting at $97 · complete cognitive report in 30 minutes.',
+      cta2: 'See how it works →',
       micro: ['✓ One-time payment', '✓ 18-page report', '✓ Delivered in 30 minutes', '✓ Invite-only Beta'],
     },
   }
@@ -115,23 +115,14 @@ export default function Hero() {
           >
             {ctaLabel}
           </a>
-          {/* GNO-59 T2: CTA secundário ghost — scroll para #como-funciona (id existe em HowItWorks.tsx) */}
           <a
             href="#como-funciona"
             onClick={handleCta2Click}
-            className="text-sm text-white/60 hover:text-white underline-offset-4 hover:underline transition-colors py-4 px-2"
+            className="border border-white/20 hover:border-accent/50 text-text-secondary hover:text-text-primary font-bold px-8 py-4 rounded-xl text-lg transition-colors"
           >
             {t.cta2}
           </a>
         </div>
-        {/* GNO-59 T3: Price anchor — texto puro, sem wrapper, complementa preço do CTA */}
-        <p className="mt-2 text-sm text-white/40 text-center">
-          A partir de $97 · relatório cognitivo em 30 minutos
-        </p>
-        {/* GNO-59 T1: Social proof substituta — texto corrido, sem badge */}
-        <p className="mt-3 text-sm text-white/50 text-center">
-          3 founders early-stage no beta privado · Acesso antecipado disponível
-        </p>
         {/* GNO-45b FIX D: GnoScore mention + LinkedIn highlight */}
         <p className="mt-2 text-xs text-white/50 text-center">
           Inclui seu GnoScore™ compartilhável no{' '}
