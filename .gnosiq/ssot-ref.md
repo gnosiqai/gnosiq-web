@@ -1,8 +1,6 @@
 # SSOT Reference
-version: 4.0.6
-updated: 2026-04-28
-milestone: M1 CLOSING
-next_issue: GNO-54
-repos: gnosiq-web · gnosiq-internal (APENAS)
-stack: Next.js 15 · Cloud Run · Firestore · Vercel Hobby
-regra: Se esta versão diverge do Space Perplexity → parar e reportar ao Carlos
+version: 4.0.11
+source: Perplexity Space "GNOSIQ" > SSOT-dynamic-v4.0.11.json
+last_sync: 2026-04-28
+next_issue: GNO-62
+status: M1 CLOSING
