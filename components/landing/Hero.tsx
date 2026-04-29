@@ -13,14 +13,14 @@ export default function Hero() {
     pt: {
       eyebrow: '3 founders early-stage no beta privado · Acesso antecipado disponível',
       h1: 'Desbloqueie o Capital Cognitivo escondido em você',
-      sub: 'A primeira API que transforma potencial humano em capital computável. Para founders e líderes que precisam de mais do que um teste de personalidade. A partir de R$97 · relatório cognitivo completo em 30 minutos.',
+      sub: 'A primeira API que transforma potencial humano em capital computável. Para founders, líderes e qualquer pessoa que queira entender como pensa, decide e age — com a profundidade de uma avaliação clínica, na fração do tempo e do custo. A partir de R$97 · relatório entregue em até 30 minutos após o preenchimento.',
       cta2: 'Ver como funciona →',
       micro: ['✓ Pagamento único', '✓ Relatório de 18 páginas', '✓ Entrega em 30 minutos', '✓ Beta por convite'],
     },
     en: {
       eyebrow: '3 early-stage founders in private beta · Early access available',
       h1: 'Unlock the Cognitive Capital hidden in every human',
-      sub: 'The first API that turns human potential into computable capital. For founders and leaders who need more than a personality test. Starting at $97 · complete cognitive report in 30 minutes.',
+      sub: 'The first API that turns human potential into computable capital. For founders, leaders and anyone who wants to understand how they think, decide and act — with the depth of a clinical assessment, in a fraction of the time and cost. Starting at $97 · report delivered within 30 minutes of completion.',
       cta2: 'See how it works →',
       micro: ['✓ One-time payment', '✓ 18-page report', '✓ Delivered in 30 minutes', '✓ Invite-only Beta'],
     },
