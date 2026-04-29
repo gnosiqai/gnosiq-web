@@ -9,8 +9,9 @@ export default function Nav() {
   const { locale, switchLocale } = useLocale()
 
   const copy = {
-    pt: { links: ['Como funciona', 'API'], cta: 'Começar' },
-    en: { links: ['How it works', 'API'], cta: 'Get started' },
+    // GNO-65: API removido da navbar — reintroduzir quando rota /api existir em produção
+    pt: { howItWorks: 'Como funciona', cta: 'Começar' },
+    en: { howItWorks: 'How it works', cta: 'Get started' },
   }
   const t = copy[locale]
 
@@ -46,13 +47,7 @@ export default function Nav() {
             onClick={() => scrollTo('como-funciona')}
             className="hidden md:block text-sm text-text-secondary hover:text-text-primary transition-colors bg-transparent border-none cursor-pointer"
           >
-            {t.links[0]}
-          </button>
-          <button
-            onClick={() => scrollTo('api')}
-            className="hidden md:block text-sm text-text-secondary hover:text-text-primary transition-colors bg-transparent border-none cursor-pointer"
-          >
-            {t.links[1]}
+            {t.howItWorks}
           </button>
 
           {/* Locale toggle */}
