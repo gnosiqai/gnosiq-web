@@ -20,7 +20,7 @@ export default function WaitlistCTA() {
       loading: 'Enviando...',
       success: '✓ Você está na lista! Entraremos em contato em breve.',
       error: 'Algo deu errado. Tente novamente.',
-      vagas: 'de 100 vagas reservadas · Garanta a sua com 50% de desconto.',
+      vagas: 'de 100 vagas restantes · Garanta a sua com 50% de desconto.',
     },
     en: {
       eyebrow: 'Early Access · Limited Spots',
@@ -31,7 +31,7 @@ export default function WaitlistCTA() {
       loading: 'Sending...',
       success: '✓ You are on the list! We will be in touch soon.',
       error: 'Something went wrong. Please try again.',
-      vagas: 'of 100 spots reserved · Secure yours with 50% off.',
+      vagas: 'of 100 spots remaining · Secure yours with 50% off.',
     },
   }
   const t = copy[locale]

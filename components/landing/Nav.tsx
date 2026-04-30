@@ -10,8 +10,8 @@ export default function Nav() {
 
   const copy = {
     // GNO-65: API removido da navbar — reintroduzir quando rota /api existir em produção
-    pt: { howItWorks: 'Como funciona', cta: 'Começar' },
-    en: { howItWorks: 'How it works', cta: 'Get started' },
+    pt: { howItWorks: 'Como funciona', cta: 'Entrar na lista →' },
+    en: { howItWorks: 'How it works', cta: 'Join waitlist →' },
   }
   const t = copy[locale]
 
