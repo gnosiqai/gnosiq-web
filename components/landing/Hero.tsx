@@ -30,7 +30,7 @@ export default function Hero() {
       cta1: 'Entrar na lista de espera →',
       cta2: 'Ver como funciona →',
       disclaimer: 'Avaliação cognitiva · não substitui avaliação clínica.',
-      gnoscoreNote: 'Inclui seu GnoScore™ · badge verificado em breve ·',
+gnoscoreNote: 'Inclui GnoScore™ verificado',
       micro: ['✓ Pagamento único', '✓ Relatório de 18 páginas', '✓ Entrega em ~30 minutos', '✓ Acesso Antecipado · Vagas Limitadas'],
     },
     en: {
@@ -42,7 +42,7 @@ export default function Hero() {
       cta1: 'Join the waitlist →',
       cta2: 'See how it works →',
       disclaimer: 'Cognitive evaluation · does not replace clinical assessment.',
-      gnoscoreNote: 'Includes your GnoScore™ · verified badge coming soon ·',
+      gnoscoreNote: 'Includes verified GnoScore™',
       micro: ['✓ One-time payment', '✓ 18-page report', '✓ Delivered in ~30 minutes', '✓ Early Access · Limited Spots'],
     },
   }
@@ -148,10 +148,9 @@ export default function Hero() {
           </a>
         </div>
 
-        {/* GnoScore note */}
+        {/* GnoScore note — GNO-78: removido LinkedIn inline */}
         <p className="mt-2 text-xs text-white/50 text-center">
-          {t.gnoscoreNote}{' '}
-          <span className="text-violet-400 font-semibold">LinkedIn</span>
+          {t.gnoscoreNote}
         </p>
 
         {/* Disclaimer cognitivo */}

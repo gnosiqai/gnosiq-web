@@ -1,13 +1,10 @@
 # Current Task — GnosIQ
-
 ## Status
 IDLE — aguardando próxima tarefa
-
 ## Última tarefa concluída
-- **Issue:** GNO-71 (CLO Audit v2 — GNO-71→75)
-- **PR:** #57 squash merged → main (commit 4e74af3)
+- **Issue:** GNO-78 (Landing: og:image + hero copy cleanup + waitlist dedup)
+- **PR:** #63 merge commit → main (M1 closing)
 - **Data:** 2026-04-30
-- **SSOT:** v4.0.17
-
+- **SSOT:** v4.0.22
 ## Próxima issue disponível
-GNO-76
+GNO-79
