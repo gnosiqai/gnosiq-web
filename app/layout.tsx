@@ -34,6 +34,15 @@ export const metadata: Metadata = {
     siteName: "GnosIQ",
     locale: "pt_BR",
     type: "website",
+    // GNO-78: og:image via app/opengraph-image.tsx (next/og edge runtime)
+    images: [
+      {
+        url: "https://gnosiq.ai/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "GnosIQ — The Cognitive Capital API",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -41,6 +50,8 @@ export const metadata: Metadata = {
     description:
       "A primeira API que transforma potencial humano em capital computável. Relatório cognitivo completo em 30 minutos, por R$97.",
     creator: "@gnosiqai",
+    // GNO-78: twitter card image
+    images: ["https://gnosiq.ai/opengraph-image"],
   },
 };
 
