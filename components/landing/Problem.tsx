@@ -72,7 +72,8 @@ export default function Problem() {
           </div>
         </div>
 
-        {/* FIX 3 — Competitor table */}
+        {/* GNO-67 Fix 3.10: métricas de tempo/preço mantidas apenas na tabela comparativa abaixo */}
+        {/* Competitor table */}
         <div className="mt-12 overflow-x-auto">
           <table className="w-full text-sm border-collapse">
             <thead>

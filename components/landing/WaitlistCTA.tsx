@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import posthog from 'posthog-js'
 import { useLocale } from '@/lib/context/LocaleContext'
+import { VagasCounter } from '@/components/VagasCounter'
 
 export default function WaitlistCTA() {
   const { locale } = useLocale()
@@ -9,26 +10,28 @@ export default function WaitlistCTA() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
-  const price       = locale === 'en' ? '$97'                       : 'R$97'
-  const ctaLabel    = locale === 'en' ? `Get My Report: ${price}`  : `Quero meu Relatório: ${price}`
-  const placeholder = locale === 'en' ? 'your@email.com'            : 'seu@email.com'
-
   const copy = {
     pt: {
-      eyebrow: 'Acesso antecipado',
+      eyebrow: 'Acesso Antecipado · Vagas Limitadas',
       h2: 'Entre na lista de espera',
-      sub: 'Seja notificado quando o acesso beta abrir. Primeiros 100 usuários recebem 50% de desconto.',
+      sub: 'Seja notificado quando o acesso beta abrir.',
+      cta: 'Entrar na lista de espera →',
+      placeholder: 'seu@email.com',
       loading: 'Enviando...',
       success: '✓ Você está na lista! Entraremos em contato em breve.',
       error: 'Algo deu errado. Tente novamente.',
+      vagas: 'de 100 vagas reservadas · Garanta a sua com 50% de desconto.',
     },
     en: {
-      eyebrow: 'Early access',
+      eyebrow: 'Early Access · Limited Spots',
       h2: 'Join the waitlist',
-      sub: 'Get notified when beta access opens. First 100 users receive 50% off.',
+      sub: 'Get notified when beta access opens.',
+      cta: 'Join the waitlist →',
+      placeholder: 'your@email.com',
       loading: 'Sending...',
       success: '✓ You are on the list! We will be in touch soon.',
       error: 'Something went wrong. Please try again.',
+      vagas: 'of 100 spots reserved · Secure yours with 50% off.',
     },
   }
   const t = copy[locale]
@@ -56,7 +59,6 @@ export default function WaitlistCTA() {
       })
     } catch {
       setStatus('error')
-      // Nunca expor mensagem técnica ao usuário final
       setErrorMsg(
         locale === 'en'
           ? 'Service temporarily unavailable. Please try again in a moment.'
@@ -74,8 +76,12 @@ export default function WaitlistCTA() {
         <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
           {t.h2}
         </h2>
-        <p className="text-lg text-text-secondary mb-10 leading-relaxed">
+        <p className="text-lg text-text-secondary mb-4 leading-relaxed">
           {t.sub}
+        </p>
+        {/* VagasCounter — Fix 3.5 */}
+        <p className="text-sm text-text-muted mb-8">
+          <VagasCounter /> {t.vagas}
         </p>
         {status === 'success' ? (
           <div className="bg-semantic-success/10 border border-semantic-success/30 rounded-xl p-6">
@@ -89,7 +95,7 @@ export default function WaitlistCTA() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={placeholder}
+                placeholder={t.placeholder}
                 disabled={status === 'loading'}
                 className="flex-1 bg-background-primary border border-white/10 focus:border-accent/50 rounded-xl px-5 py-4 text-text-primary placeholder-text-muted outline-none transition-colors disabled:opacity-50"
               />
@@ -98,10 +104,9 @@ export default function WaitlistCTA() {
                 disabled={status === 'loading'}
                 className="btn-cta-primary bg-accent hover:bg-accent-dark disabled:opacity-50 text-white font-bold px-8 py-4 rounded-xl transition-colors whitespace-nowrap"
               >
-                {status === 'loading' ? t.loading : ctaLabel}
+                {status === 'loading' ? t.loading : t.cta}
               </button>
             </form>
-            {/* GNO-45b FIX C: GnoScore mention — mt-6 spacing + copy atualizado */}
             <p className="mt-6 text-xs text-white/50 text-center">
               Primeiros 100 inscritos recebem o GnoScore™ e acesso beta com 50% de desconto.
             </p>
