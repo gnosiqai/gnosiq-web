@@ -16,7 +16,7 @@ export default function Footer() {
         { label: 'Política de Privacidade', href: '/privacy' },
         { label: 'Termos de Uso', href: '/terms' },
       ] as { label: string; href: string }[],
-      rights: '© 2026 GnosIQ. Todos os direitos reservados.',
+      rights: '© 2026 GnosIQ · GnosIQ Inteligência Cognitiva Ltda. · CNPJ 66.473.762/0001-13',
       feedback: 'Encontrou algo errado? Nos avise →',
     },
     en: {
@@ -25,7 +25,7 @@ export default function Footer() {
         { label: 'Privacy Policy', href: '/privacy' },
         { label: 'Terms of Use', href: '/terms' },
       ] as { label: string; href: string }[],
-      rights: '© 2026 GnosIQ. All rights reserved.',
+      rights: '© 2026 GnosIQ · GnosIQ Inteligência Cognitiva Ltda. · CNPJ 66.473.762/0001-13',
       feedback: 'Found something wrong? Let us know →',
     },
   }
