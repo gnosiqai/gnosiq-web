@@ -2,7 +2,6 @@
 import { useState } from 'react'
 import posthog from 'posthog-js'
 import { useLocale } from '@/lib/context/LocaleContext'
-import { VagasCounter } from '@/components/VagasCounter'
 
 export default function WaitlistCTA() {
   const { locale } = useLocale()
@@ -20,7 +19,7 @@ export default function WaitlistCTA() {
       loading: 'Enviando...',
       success: '✓ Você está na lista! Entraremos em contato em breve.',
       error: 'Algo deu errado. Tente novamente.',
-      vagas: 'de 100 vagas restantes · Garanta a sua com 50% de desconto.',
+      vagas: 'Acesso antecipado · vagas limitadas · 50% de desconto para os primeiros inscritos.',
     },
     en: {
       eyebrow: 'Early Access · Limited Spots',
@@ -31,7 +30,7 @@ export default function WaitlistCTA() {
       loading: 'Sending...',
       success: '✓ You are on the list! We will be in touch soon.',
       error: 'Something went wrong. Please try again.',
-      vagas: 'of 100 spots remaining · Secure yours with 50% off.',
+      vagas: 'Early access · limited spots · 50% off for first subscribers.',
     },
   }
   const t = copy[locale]
@@ -79,9 +78,8 @@ export default function WaitlistCTA() {
         <p className="text-lg text-text-secondary mb-4 leading-relaxed">
           {t.sub}
         </p>
-        {/* VagasCounter — Fix 3.5 */}
         <p className="text-sm text-text-muted mb-8">
-          <VagasCounter /> {t.vagas}
+          {t.vagas}
         </p>
         {status === 'success' ? (
           <div className="bg-semantic-success/10 border border-semantic-success/30 rounded-xl p-6">

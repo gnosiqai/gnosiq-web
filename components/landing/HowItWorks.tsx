@@ -57,9 +57,10 @@ export default function HowItWorks() {
               {step.num === '03' ? (
                 <p className="text-text-secondary text-sm leading-relaxed">
                   18 páginas cobrindo: Perfil Cognitivo, Mapa de Forças, Pontos Cegos
-                  e Recomendações de Carreira. Inclui seu GnoScore™ verificado,
-                  pronto para compartilhar no{' '}
-                  <span className="text-violet-400 font-semibold">LinkedIn</span>.
+                  e Recomendações de Carreira. Inclui seu GnoScore™ verificado.
+                  Compartilhamento{' '}
+                  <span className="text-violet-400 font-semibold">LinkedIn</span>{' '}
+                  disponível em breve.
                 </p>
               ) : (
                 <p className="text-text-secondary text-sm leading-relaxed">{step.desc}</p>
