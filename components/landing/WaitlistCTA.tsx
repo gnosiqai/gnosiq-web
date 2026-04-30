@@ -107,6 +107,13 @@ export default function WaitlistCTA() {
                 {status === 'loading' ? t.loading : t.cta}
               </button>
             </form>
+            <p className="mt-3 text-xs text-white/40 text-center">
+              Ao se inscrever, você concorda com nossa{' '}
+              <a href="/privacy" className="text-accent/70 hover:text-accent underline">
+                Política de Privacidade
+              </a>
+              . Seus dados não serão compartilhados com terceiros.
+            </p>
             <p className="mt-6 text-xs text-white/50 text-center">
               Primeiros 100 inscritos recebem o GnoScore™ e acesso beta com 50% de desconto.
             </p>
