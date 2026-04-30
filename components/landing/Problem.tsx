@@ -101,7 +101,7 @@ export default function Problem() {
                   Hogan Assessments
                 </td>
                 <td className="py-3 px-4 text-center text-white/70">
-                  R$15.000/eval
+                  R$8K–R$15K/eval
                 </td>
                 <td className="py-3 px-4 text-center">
                   <span className="text-[#22C55E]">&#10003; Profunda</span>

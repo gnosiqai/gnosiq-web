@@ -1,12 +1,11 @@
 'use client'
 import { useState } from 'react'
-import posthog from 'posthog-js'
 import { useLocale } from '@/lib/context/LocaleContext'
-import { VagasCounter } from '@/components/VagasCounter'
 
 export default function WaitlistCTA() {
   const { locale } = useLocale()
   const [email, setEmail] = useState('')
+  const [icpSegment, setIcpSegment] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -18,9 +17,9 @@ export default function WaitlistCTA() {
       cta: 'Entrar na lista de espera →',
       placeholder: 'seu@email.com',
       loading: 'Enviando...',
-      success: '✓ Você está na lista! Entraremos em contato em breve.',
       error: 'Algo deu errado. Tente novamente.',
-      vagas: 'de 100 vagas restantes · Garanta a sua com 50% de desconto.',
+      vagas: 'Primeiros 100 inscritos: acesso beta por R$97 (preço de lançamento).',
+      icpPlaceholder: 'Sou um... (opcional)',
     },
     en: {
       eyebrow: 'Early Access · Limited Spots',
@@ -29,9 +28,9 @@ export default function WaitlistCTA() {
       cta: 'Join the waitlist →',
       placeholder: 'your@email.com',
       loading: 'Sending...',
-      success: '✓ You are on the list! We will be in touch soon.',
       error: 'Something went wrong. Please try again.',
-      vagas: 'of 100 spots remaining · Secure yours with 50% off.',
+      vagas: 'First 100 subscribers: beta access for R$97 (launch price).',
+      icpPlaceholder: 'I am a... (optional)',
     },
   }
   const t = copy[locale]
@@ -41,22 +40,40 @@ export default function WaitlistCTA() {
     if (!email.trim()) return
     setStatus('loading')
     setErrorMsg('')
+
+    // GNO-76: EVENTO 1 — captura intenção ANTES do await (não depende de sucesso da API)
+    // window.posthog?.capture evita falha silenciosa em SSR/edge
+    if (icpSegment) {
+      window.posthog?.capture('icp_selected', {
+        icp_type: icpSegment,
+        email: email.trim(),
+        source: 'waitlist_form',
+      })
+    }
+
     try {
       const res = await fetch('/api/waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim() }),
+        body: JSON.stringify({
+          email: email.trim(),
+          icp_segment: icpSegment || null,
+        }),
       })
-      if (!res.ok) {
+
+      if (res.ok) {
+        // GNO-76: EVENTO 2 — captura conversão APENAS após confirmação da API
+        window.posthog?.capture('waitlist_signed_up', {
+          icp_type: icpSegment || null,
+          email: email.trim(),
+          source: 'waitlist_form',
+        })
+        setStatus('success')
+      } else {
         const data = await res.json().catch(() => ({}))
+        console.error('[Waitlist] API error:', res.status, data)
         throw new Error(data?.error ?? 'Request failed')
       }
-      setStatus('success')
-      // GNO-48: PostHog event — LGPD: apenas domínio do email, nunca PII completo
-      posthog.capture('waitlist signed_up', {
-        source: 'landing_cta',
-        email_domain: email.trim().split('@')[1],
-      })
     } catch {
       setStatus('error')
       setErrorMsg(
@@ -79,34 +96,61 @@ export default function WaitlistCTA() {
         <p className="text-lg text-text-secondary mb-4 leading-relaxed">
           {t.sub}
         </p>
-        {/* VagasCounter — Fix 3.5 */}
         <p className="text-sm text-text-muted mb-8">
-          <VagasCounter /> {t.vagas}
+          {t.vagas}
         </p>
         {status === 'success' ? (
           <div className="bg-semantic-success/10 border border-semantic-success/30 rounded-xl p-6">
-            <p className="text-semantic-success font-bold">{t.success}</p>
+            <p className="font-semibold text-semantic-success">Você está na lista. ✓</p>
+            <p className="text-text-secondary mt-2">Assim que o beta abrir, você recebe o link direto no e-mail.</p>
+            <p className="text-sm text-text-muted mt-2">
+              Primeiros 100 inscritos garantem acesso ao preço de lançamento.
+            </p>
           </div>
         ) : (
           <>
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={t.placeholder}
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+              <select
+                name="icp_segment"
+                value={icpSegment}
+                onChange={(e) => setIcpSegment(e.target.value)}
                 disabled={status === 'loading'}
                 className="flex-1 bg-background-primary border border-white/10 focus:border-accent/50 rounded-xl px-5 py-4 text-text-primary placeholder-text-muted outline-none transition-colors disabled:opacity-50"
-              />
-              <button
-                type="submit"
-                disabled={status === 'loading'}
-                className="btn-cta-primary bg-accent hover:bg-accent-dark disabled:opacity-50 text-white font-bold px-8 py-4 rounded-xl transition-colors whitespace-nowrap"
               >
-                {status === 'loading' ? t.loading : t.cta}
-              </button>
+                <option value="">{t.icpPlaceholder}</option>
+                <option value="founder">Founder / CEO</option>
+                <option value="product">Gestor de Produto / CPO</option>
+                <option value="coach">Coach Executivo</option>
+                <option value="dev">Desenvolvedor / CTO</option>
+                <option value="hr">RH / People</option>
+                <option value="other">Outro</option>
+              </select>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={t.placeholder}
+                  disabled={status === 'loading'}
+                  className="flex-1 bg-background-primary border border-white/10 focus:border-accent/50 rounded-xl px-5 py-4 text-text-primary placeholder-text-muted outline-none transition-colors disabled:opacity-50"
+                />
+                <button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="btn-cta-primary bg-accent hover:bg-accent-dark disabled:opacity-50 text-white font-bold px-8 py-4 rounded-xl transition-colors whitespace-nowrap"
+                >
+                  {status === 'loading' ? t.loading : t.cta}
+                </button>
+              </div>
             </form>
+            <p className="mt-3 text-xs text-white/40 text-center">
+              Ao se inscrever, você concorda com nossa{' '}
+              <a href="/privacy" className="text-accent/70 hover:text-accent underline">
+                Política de Privacidade
+              </a>
+              . Seus dados não serão compartilhados com terceiros.
+            </p>
             {/* GNO-78: deduplicado — 1ª ocorrência mantida acima do form */}
             <p className="mt-6 text-xs text-white/50 text-center">
               Sem cobrança agora. Você decide quando o beta abrir.

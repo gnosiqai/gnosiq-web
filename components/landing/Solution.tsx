@@ -93,8 +93,9 @@ export default function Solution() {
             <div className="text-3xl mb-4">📊</div>
             <h3 className="font-bold text-text-primary mb-2">Entrega em ~30 minutos</h3>
             <p className="text-text-secondary text-sm leading-relaxed">
-              Relatório de 18 páginas com seu GnoScore™ verificado, pronto para compartilhar
-              no <span className="text-violet-400 font-semibold">LinkedIn</span>.
+              Relatório de 18 páginas com seu GnoScore™ verificado. Compartilhamento{' '}
+              <span className="text-violet-400 font-semibold">LinkedIn</span>{' '}
+              disponível em breve.
             </p>
           </div>
         </div>

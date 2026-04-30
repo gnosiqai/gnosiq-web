@@ -6,6 +6,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const email: string = body?.email ?? ''
     const name: string = body?.name ?? ''
+    const icpSegment: string | null = body?.icp_segment ?? null
 
     // Validação de e-mail
     if (!email || typeof email !== 'string' || email.length > 254) {
@@ -22,7 +23,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Persistir no Firestore
-    const { alreadyExists } = await addToWaitlist({ email, name })
+    const { alreadyExists } = await addToWaitlist({ email, name, icpSegment })
 
     // Envio de e-mail — instanciar SendGrid DENTRO do handler (serverless safe)
     if (!alreadyExists) {
