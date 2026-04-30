@@ -19,7 +19,7 @@ export default function WaitlistCTA() {
       loading: 'Enviando...',
       success: '✓ Você está na lista! Entraremos em contato em breve.',
       error: 'Algo deu errado. Tente novamente.',
-      vagas: 'Acesso antecipado · vagas limitadas · 50% de desconto para os primeiros inscritos.',
+      vagas: 'Primeiros 100 inscritos: acesso beta por R$97 (preço de lançamento).',
     },
     en: {
       eyebrow: 'Early Access · Limited Spots',
@@ -30,7 +30,7 @@ export default function WaitlistCTA() {
       loading: 'Sending...',
       success: '✓ You are on the list! We will be in touch soon.',
       error: 'Something went wrong. Please try again.',
-      vagas: 'Early access · limited spots · 50% off for first subscribers.',
+      vagas: 'First 100 subscribers: beta access for R$97 (launch price).',
     },
   }
   const t = copy[locale]
@@ -113,7 +113,7 @@ export default function WaitlistCTA() {
               . Seus dados não serão compartilhados com terceiros.
             </p>
             <p className="mt-6 text-xs text-white/50 text-center">
-              Primeiros 100 inscritos recebem o GnoScore™ e acesso beta com 50% de desconto.
+              Primeiros 100 inscritos: acesso beta por R$97 (preço de lançamento).
             </p>
           </>
         )}
