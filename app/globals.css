@@ -61,6 +61,14 @@ body {
   animation: pulse-glow 3s ease-in-out infinite;
 }
 
+/* Hero disclaimer — aviso cognitivo abaixo do CTA (GNO-67) */
+.hero-disclaimer {
+  font-style: italic;
+  font-size: clamp(0.70rem, 1.5vw, 0.875rem);
+  color: var(--text-muted, #9ca3af);
+  margin-top: 0.5rem;
+}
+
 /* Reduzir movimento — respeitar preferência do usuário */
 @media (prefers-reduced-motion: reduce) {
   .reveal, .btn-cta-primary:hover, .cta-pulse { animation: none; }

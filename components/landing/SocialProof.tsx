@@ -5,7 +5,10 @@ import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
 import AnimatedCounter from '@/components/ui/AnimatedCounter'
 
 // GNO-45: testimonials removido até depoimentos reais disponíveis
-// const testimonials = [ ... ] — preservado no git history
+// GNO-57: NPS counter removido (dado sem amostra válida · reintroduzir pós-M2)
+// GNO-65: label "Tempo médio de assessment" → "Tempo de preenchimento" (22 min)
+//         novo stat "Entrega do relatório" (30 min) adicionado · grid-cols-2 → grid-cols-3
+// GNO-67: badge "Beta por convite" → "Acesso Antecipado · Vagas Limitadas"
 
 export default function SocialProof() {
   const { locale } = useLocale()
@@ -23,9 +26,7 @@ export default function SocialProof() {
   return (
     <section className="reveal py-24 px-6">
       <div className="max-w-4xl mx-auto">
-        {/* Metrics — GNO-57: NPS counter removido (dado sem amostra válida · reintroduzir pós-M2)
-            GNO-65: label "Tempo médio de assessment" → "Tempo de preenchimento" (22 min)
-                    novo stat "Entrega do relatório" (30 min) adicionado · grid-cols-2 → grid-cols-3 */}
+        {/* Metrics */}
         <div className="grid grid-cols-3 gap-8 mb-20 text-center max-w-lg mx-auto">
           <div>
             <div className="text-4xl font-bold text-accent mb-2">
@@ -47,10 +48,10 @@ export default function SocialProof() {
           </div>
         </div>
 
-        {/* GNO-45: Testimonials removido até depoimentos reais disponíveis */}
+        {/* Trust bar */}
         <section className="py-4 text-center">
           <p className="text-sm text-white/60 tracking-wide">
-            Early Access · Beta por convite · Preenchimento: 22 min · Entrega: 30 min · Relatório: 18 páginas
+            Acesso Antecipado · Vagas Limitadas · Preenchimento: 22 min · Entrega: 30 min · Relatório: 18 páginas
           </p>
         </section>
       </div>
