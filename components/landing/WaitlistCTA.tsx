@@ -107,8 +107,9 @@ export default function WaitlistCTA() {
                 {status === 'loading' ? t.loading : t.cta}
               </button>
             </form>
+            {/* GNO-78: deduplicado — 1ª ocorrência mantida acima do form */}
             <p className="mt-6 text-xs text-white/50 text-center">
-              Primeiros 100 inscritos recebem o GnoScore™ e acesso beta com 50% de desconto.
+              Sem cobrança agora. Você decide quando o beta abrir.
             </p>
           </>
         )}
