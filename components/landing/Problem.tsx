@@ -161,7 +161,7 @@ export default function Problem() {
                   <span className="text-[#22C55E] font-semibold">&#10003; API-first</span>
                 </td>
                 <td className="py-3 px-4 text-center">
-                  <span className="text-[#22C55E] font-semibold">30 minutos</span>
+                  <span className="text-[#22C55E] font-semibold">~30 minutos</span>
                 </td>
               </tr>
             </tbody>

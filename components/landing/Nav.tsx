@@ -74,19 +74,21 @@ export default function Nav() {
             </button>
           </div>
 
-          {/* CTA — FIX 3: scroll sem hash + GNO-48: PostHog event */}
-          <button
-            onClick={() => {
+          {/* CTA — GNO-69: <a href> + PostHog tracking preservado */}
+          <a
+            href="#waitlist"
+            onClick={(e) => {
+              e.preventDefault()
               posthog.capture('cta clicked', {
                 label: 'nav_primary',
                 destination: '#waitlist',
               })
               scrollTo('waitlist')
             }}
-            className="bg-accent hover:bg-accent-dark text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer"
+            className="bg-accent hover:bg-accent-dark text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors"
           >
             {t.cta}
-          </button>
+          </a>
         </div>
       </div>
     </nav>

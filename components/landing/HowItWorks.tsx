@@ -9,7 +9,7 @@ const steps = [
   {
     num: '01',
     title: 'Responda a avaliação',
-    desc: 'Formulário adaptativo de 40 a 60 perguntas. Tempo médio: 22 minutos. Mobile-first, sem login necessário.',
+    desc: 'Formulário adaptativo de 40 a 60 perguntas. Tempo médio: ~22 minutos. Mobile-first, sem login necessário.',
   },
   {
     num: '02',
@@ -44,7 +44,7 @@ export default function HowItWorks() {
           Como funciona
         </p>
         <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-16">
-          De zero a relatório em 30 minutos
+          De zero a relatório em ~30 minutos
         </h2>
 
         <div ref={staggerRef} className="grid md:grid-cols-3 gap-8">
