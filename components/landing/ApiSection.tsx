@@ -4,7 +4,7 @@ import { useLocale } from '@/lib/context/LocaleContext'
 import posthog from 'posthog-js'
 
 // GNO-67 Seção 2 — Bloco API independente, abaixo do hero
-// Fix 3.7: badge "Beta fechado · Acesso para devs em breve"
+// Fix 3.7: badge "Beta fechado · Acesso antecipado" (GNO-68: atualizado de 'Acesso para devs em breve')
 // CTA: ghost/outlined — NUNCA primário
 // NÃO lista preço nesta seção
 
@@ -19,7 +19,7 @@ export default function ApiSection() {
       body: 'Integre avaliação cognitiva profunda diretamente na sua plataforma.',
       tagline: 'A primeira API que transforma potencial humano em capital computável. Acesso direto via API, resposta em tempo real, escalabilidade massiva. Da avaliação individual ao uso corporativo.',
       cta: 'Solicitar acesso beta →',
-      badge: 'Beta fechado · Acesso para devs em breve',
+      badge: 'Beta fechado · Acesso antecipado',
       validado: 'API validada do mercado',
     },
     en: {
@@ -29,7 +29,7 @@ export default function ApiSection() {
       body: 'Integrate deep cognitive evaluation directly into your platform.',
       tagline: 'The first API that turns human potential into computable capital. Direct API access, real-time response, massive scalability. From individual evaluation to enterprise use.',
       cta: 'Request beta access →',
-      badge: 'Closed beta · Dev access coming soon',
+      badge: 'Closed beta · Early access',
       validado: 'Market-validated API',
     },
   }

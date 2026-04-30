@@ -56,8 +56,8 @@ export default function HowItWorks() {
               <h3 className="font-bold text-text-primary mb-3">{step.title}</h3>
               {step.num === '03' ? (
                 <p className="text-text-secondary text-sm leading-relaxed">
-                  18 páginas cobrindo: Perfil Cognitivo, Mapa de Forças, Pontos Cegos,
-                  Recomendações de Carreira e GnoScore™. Inclui seu GnoScore™ verificado,
+                  18 páginas cobrindo: Perfil Cognitivo, Mapa de Forças, Pontos Cegos
+                  e Recomendações de Carreira. Inclui seu GnoScore™ verificado,
                   pronto para compartilhar no{' '}
                   <span className="text-violet-400 font-semibold">LinkedIn</span>.
                 </p>
