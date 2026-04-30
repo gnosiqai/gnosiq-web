@@ -1,52 +1,38 @@
-// GNO-78: og:image serverless via next/og — edge runtime, zero infra
-// Next.js 15 auto-registra /opengraph-image sem config adicional
+// GNO-79: og:image estático — serve public/og-image.png (1200×630)
+// Substituiu a versão dinâmica next/og do GNO-78 pela imagem oficial da marca
 import { ImageResponse } from 'next/og'
+import fs from 'fs'
+import path from 'path'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 export const alt = 'GnosIQ — The Cognitive Capital API'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
-export default function OgImage() {
+export default async function OgImage() {
+  const imgPath = path.join(process.cwd(), 'public', 'og-image.png')
+  const imgData = fs.readFileSync(imgPath)
+  const base64 = imgData.toString('base64')
+  const dataUrl = `data:image/png;base64,${base64}`
+
   return new ImageResponse(
     (
       <div
         style={{
-          background: '#0D0D14',
           width: '100%',
           height: '100%',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 24,
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            fontSize: 96,
-            fontWeight: 700,
-            color: '#FFFFFF',
-            letterSpacing: '-2px',
-          }}
-        >
-          <span>Gnos</span>
-          <span style={{ color: '#8B5CF6' }}>IQ</span>
-        </div>
-        <div style={{ fontSize: 32, color: '#A78BFA', fontWeight: 400 }}>
-          The Cognitive Capital API
-        </div>
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 40,
-            fontSize: 20,
-            color: 'rgba(255,255,255,0.35)',
-          }}
-        >
-          gnosiq.ai
-        </div>
+        <img
+          src={dataUrl}
+          alt="GnosIQ — The Cognitive Capital API"
+          width={1200}
+          height={630}
+          style={{ objectFit: 'cover' }}
+        />
       </div>
     ),
     { ...size },
