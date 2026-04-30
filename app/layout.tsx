@@ -22,14 +22,14 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "GnosIQ — The Cognitive Capital API",
   description:
-    "The first API that turns human potential into computable capital.",
+    "A primeira API que transforma potencial humano em capital computável. Relatório cognitivo completo em 30 minutos, por R$97.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL ?? "https://gnosiq.ai"
   ),
   openGraph: {
     title: "GnosIQ — The Cognitive Capital API",
     description:
-      "The first API that turns human potential into computable capital.",
+      "A primeira API que transforma potencial humano em capital computável. Relatório cognitivo completo em 30 minutos, por R$97.",
     url: process.env.NEXT_PUBLIC_APP_URL ?? "https://gnosiq.ai",
     siteName: "GnosIQ",
     locale: "pt_BR",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "GnosIQ — The Cognitive Capital API",
     description:
-      "The first API that turns human potential into computable capital.",
+      "A primeira API que transforma potencial humano em capital computável. Relatório cognitivo completo em 30 minutos, por R$97.",
     creator: "@gnosiqai",
   },
 };
