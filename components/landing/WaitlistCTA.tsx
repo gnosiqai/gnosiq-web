@@ -151,8 +151,9 @@ export default function WaitlistCTA() {
               </a>
               . Seus dados não serão compartilhados com terceiros.
             </p>
+            {/* GNO-78: deduplicado — 1ª ocorrência mantida acima do form */}
             <p className="mt-6 text-xs text-white/50 text-center">
-              Primeiros 100 inscritos: acesso beta por R$97 (preço de lançamento).
+              Sem cobrança agora. Você decide quando o beta abrir.
             </p>
           </>
         )}
