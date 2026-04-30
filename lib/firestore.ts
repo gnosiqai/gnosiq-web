@@ -47,9 +47,10 @@ export const COLLECTIONS = {
 interface WaitlistEntry {
   email: string
   name: string
+  icpSegment?: string | null
 }
 
-export async function addToWaitlist({ email, name }: WaitlistEntry): Promise<{ alreadyExists: boolean }> {
+export async function addToWaitlist({ email, name, icpSegment }: WaitlistEntry): Promise<{ alreadyExists: boolean }> {
   const db = getFirestore()
   const ref = db.collection(COLLECTIONS.WAITLIST)
 
@@ -59,6 +60,7 @@ export async function addToWaitlist({ email, name }: WaitlistEntry): Promise<{ a
   await ref.add({
     email: email.toLowerCase(),
     name: name.trim(),
+    icp_segment: icpSegment ?? null,
     createdAt: Timestamp.now(),
     source: 'landing_page',
     milestone: 'M1',
