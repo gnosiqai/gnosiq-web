@@ -8,6 +8,7 @@ import HowItWorks from '@/components/landing/HowItWorks'
 import SocialProof from '@/components/landing/SocialProof'
 import WaitlistCTA from '@/components/landing/WaitlistCTA'
 import Footer from '@/components/landing/Footer'
+import ApiSection from '@/components/landing/ApiSection'
 
 export default function Home() {
   useEffect(() => {
@@ -24,6 +25,7 @@ export default function Home() {
     <main className="bg-background-primary min-h-screen">
       <Nav />
       <Hero />
+      <ApiSection />
       <Problem />
       <Solution />
       <HowItWorks />

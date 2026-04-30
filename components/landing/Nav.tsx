@@ -9,8 +9,9 @@ export default function Nav() {
   const { locale, switchLocale } = useLocale()
 
   const copy = {
-    pt: { links: ['Como funciona', 'API'], cta: 'Começar' },
-    en: { links: ['How it works', 'API'], cta: 'Get started' },
+    // GNO-65: API removido da navbar — reintroduzir quando rota /api existir em produção
+    pt: { howItWorks: 'Como funciona', cta: 'Entrar na lista →' },
+    en: { howItWorks: 'How it works', cta: 'Join waitlist →' },
   }
   const t = copy[locale]
 
@@ -46,13 +47,7 @@ export default function Nav() {
             onClick={() => scrollTo('como-funciona')}
             className="hidden md:block text-sm text-text-secondary hover:text-text-primary transition-colors bg-transparent border-none cursor-pointer"
           >
-            {t.links[0]}
-          </button>
-          <button
-            onClick={() => scrollTo('api')}
-            className="hidden md:block text-sm text-text-secondary hover:text-text-primary transition-colors bg-transparent border-none cursor-pointer"
-          >
-            {t.links[1]}
+            {t.howItWorks}
           </button>
 
           {/* Locale toggle */}
@@ -79,19 +74,21 @@ export default function Nav() {
             </button>
           </div>
 
-          {/* CTA — FIX 3: scroll sem hash + GNO-48: PostHog event */}
-          <button
-            onClick={() => {
+          {/* CTA — GNO-69: <a href> + PostHog tracking preservado */}
+          <a
+            href="#waitlist"
+            onClick={(e) => {
+              e.preventDefault()
               posthog.capture('cta clicked', {
                 label: 'nav_primary',
                 destination: '#waitlist',
               })
               scrollTo('waitlist')
             }}
-            className="bg-accent hover:bg-accent-dark text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer"
+            className="bg-accent hover:bg-accent-dark text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors"
           >
             {t.cta}
-          </button>
+          </a>
         </div>
       </div>
     </nav>

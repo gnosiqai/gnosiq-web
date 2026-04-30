@@ -4,21 +4,22 @@ import { useLocale } from '@/lib/context/LocaleContext'
 import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
 import { useStaggerReveal } from '@/hooks/useStaggerReveal'
 
+// GNO-67: assessment → avaliação · Agent1/2/3 removidos (tags internas)
 const steps = [
   {
     num: '01',
-    title: 'Responda o assessment',
-    desc: 'Formulário adaptativo de 40–60 perguntas. Tempo médio: 22 minutos. Mobile-first, sem login necessário.',
+    title: 'Responda a avaliação',
+    desc: 'Formulário adaptativo de 40 a 60 perguntas. Tempo médio: ~22 minutos. Mobile-first, sem login necessário.',
   },
   {
     num: '02',
     title: 'IA processa em 3 camadas',
-    desc: 'Agent1 extrai padrões brutos. Agent2 cruza com banco psicométrico. Agent3 sintetiza o relatório narrativo.',
+    desc: 'Extração de padrões cognitivos, cruzamento com banco psicométrico validado e síntese do relatório narrativo.',
   },
   {
     num: '03',
     title: 'Receba seu relatório',
-    desc: null, // GNO-45b FIX B: renderizado como JSX para LinkedIn highlight
+    desc: null, // renderizado como JSX para LinkedIn highlight
   },
 ]
 
@@ -43,7 +44,7 @@ export default function HowItWorks() {
           Como funciona
         </p>
         <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-16">
-          De zero a relatório em 30 minutos
+          De zero a relatório em ~30 minutos
         </h2>
 
         <div ref={staggerRef} className="grid md:grid-cols-3 gap-8">
@@ -55,8 +56,8 @@ export default function HowItWorks() {
               <h3 className="font-bold text-text-primary mb-3">{step.title}</h3>
               {step.num === '03' ? (
                 <p className="text-text-secondary text-sm leading-relaxed">
-                  18 páginas cobrindo: Perfil Cognitivo, Mapa de Forças, Pontos Cegos,
-                  Recomendações de Carreira e GnoScore™. Inclui seu GnoScore™ verificado,
+                  18 páginas cobrindo: Perfil Cognitivo, Mapa de Forças, Pontos Cegos
+                  e Recomendações de Carreira. Inclui seu GnoScore™ verificado,
                   pronto para compartilhar no{' '}
                   <span className="text-violet-400 font-semibold">LinkedIn</span>.
                 </p>

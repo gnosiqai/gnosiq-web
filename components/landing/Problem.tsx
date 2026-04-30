@@ -72,7 +72,8 @@ export default function Problem() {
           </div>
         </div>
 
-        {/* FIX 3 — Competitor table */}
+        {/* GNO-67 Fix 3.10: métricas de tempo/preço mantidas apenas na tabela comparativa abaixo */}
+        {/* Competitor table */}
         <div className="mt-12 overflow-x-auto">
           <table className="w-full text-sm border-collapse">
             <thead>
@@ -160,7 +161,7 @@ export default function Problem() {
                   <span className="text-[#22C55E] font-semibold">&#10003; API-first</span>
                 </td>
                 <td className="py-3 px-4 text-center">
-                  <span className="text-[#22C55E] font-semibold">30 minutos</span>
+                  <span className="text-[#22C55E] font-semibold">~30 minutos</span>
                 </td>
               </tr>
             </tbody>
