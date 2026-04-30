@@ -1,6 +1,6 @@
 # SSOT Reference
-version: 4.0.11
-source: Perplexity Space "GNOSIQ" > SSOT-dynamic-v4.0.11.json
-last_sync: 2026-04-28
-next_issue: GNO-62
+version: 4.0.15
+source: Perplexity Space "GNOSIQ" > SSOT-dynamic-v4.0.15.json
+last_sync: 2026-04-30
+next_issue: GNO-70
 status: M1 CLOSING

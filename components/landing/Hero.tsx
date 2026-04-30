@@ -6,23 +6,32 @@ import HeroBackground from './HeroBackground'
 export default function Hero() {
   const { locale } = useLocale()
 
-  const price    = locale === 'en' ? '$97'                         : 'R$97'
-  const ctaLabel = locale === 'en' ? `Start Assessment: ${price}` : `Começar Avaliação: ${price}`
-
   const copy = {
     pt: {
-      eyebrow: '3 founders early-stage no beta privado · Acesso antecipado disponível',
-      h1: 'Desbloqueie o Capital Cognitivo escondido em você',
-      sub: 'A primeira API que transforma potencial humano em capital computável. Para founders e líderes que precisam de mais do que um teste de personalidade. A partir de R$97 · relatório cognitivo completo em 30 minutos.',
+      eyebrow: 'Beta Privado · Acesso Antecipado',
+      h1: 'GnosIQ. O Manual de Instruções da sua mente.',
+      sub1: 'A inteligência humana é o único ativo que nenhum balanço patrimonial consegue capturar. Até agora.',
+      sub2: 'O autoconhecimento científico era caro, demorado e inacessível. Isso mudou.',
+      sub3: 'Para founders, líderes e profissionais de alta performance: a profundidade de uma avaliação clínica psicométrica cientificamente validada pela fração do tempo e do custo.',
+      price: 'A partir de R$97 · relatório online em até ~30 minutos.',
+      cta1: 'Entrar na lista de espera →',
       cta2: 'Ver como funciona →',
-      micro: ['✓ Pagamento único', '✓ Relatório de 18 páginas', '✓ Entrega em 30 minutos', '✓ Beta por convite'],
+      disclaimer: 'Avaliação cognitiva · não substitui avaliação clínica.',
+      gnoscoreNote: 'Inclui seu GnoScore™ compartilhável no',
+      micro: ['✓ Pagamento único', '✓ Relatório de 18 páginas', '✓ Entrega em ~30 minutos', '✓ Acesso Antecipado · Vagas Limitadas'],
     },
     en: {
-      eyebrow: '3 early-stage founders in private beta · Early access available',
-      h1: 'Unlock the Cognitive Capital hidden in every human',
-      sub: 'The first API that turns human potential into computable capital. For founders and leaders who need more than a personality test. Starting at $97 · complete cognitive report in 30 minutes.',
+      eyebrow: 'Private Beta · Early Access',
+      h1: 'GnosIQ. The Instruction Manual for your mind.',
+      sub1: 'Human intelligence is the only asset no balance sheet can capture. Until now.',
+      sub2: 'Scientific self-knowledge was expensive, slow and inaccessible. That changed.',
+      sub3: 'For founders, leaders and high-performance professionals: the depth of a scientifically validated psychometric evaluation at a fraction of the time and cost.',
+      price: 'Starting at $97 · online report in up to ~30 minutes.',
+      cta1: 'Join the waitlist →',
       cta2: 'See how it works →',
-      micro: ['✓ One-time payment', '✓ 18-page report', '✓ Delivered in 30 minutes', '✓ Invite-only Beta'],
+      disclaimer: 'Cognitive evaluation · does not replace clinical assessment.',
+      gnoscoreNote: 'Includes your shareable GnoScore™ on',
+      micro: ['✓ One-time payment', '✓ 18-page report', '✓ Delivered in ~30 minutes', '✓ Early Access · Limited Spots'],
     },
   }
   const t = copy[locale]
@@ -36,7 +45,7 @@ export default function Hero() {
 
   const handleCta2Click = () => {
     posthog.capture('cta clicked', {
-      label: 'hero_developer',
+      label: 'hero_secondary',
       destination: '#como-funciona',
     })
   }
@@ -101,10 +110,13 @@ export default function Hero() {
           {t.h1}
         </h1>
 
-        {/* Subtitle */}
-        <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-10 leading-relaxed">
-          {t.sub}
-        </p>
+        {/* Subtitle — 3 parágrafos + preço */}
+        <div className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-10 leading-relaxed space-y-4">
+          <p>{t.sub1}</p>
+          <p>{t.sub2}</p>
+          <p>{t.sub3}</p>
+          <p className="font-semibold text-text-primary">{t.price}</p>
+        </div>
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
@@ -113,7 +125,7 @@ export default function Hero() {
             onClick={handleCta1Click}
             className="btn-cta-primary cta-pulse bg-accent hover:bg-accent-dark text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors"
           >
-            {ctaLabel}
+            {t.cta1}
           </a>
           <a
             href="#como-funciona"
@@ -123,11 +135,18 @@ export default function Hero() {
             {t.cta2}
           </a>
         </div>
-        {/* GNO-45b FIX D: GnoScore mention + LinkedIn highlight */}
+
+        {/* GnoScore note */}
         <p className="mt-2 text-xs text-white/50 text-center">
-          Inclui seu GnoScore™ compartilhável no{' '}
+          {t.gnoscoreNote}{' '}
           <span className="text-violet-400 font-semibold">LinkedIn</span>
         </p>
+
+        {/* Disclaimer cognitivo */}
+        <p className="hero-disclaimer mt-2 text-center">
+          {t.disclaimer}
+        </p>
+
         {/* Micro-copy */}
         <div className="mt-4 flex flex-wrap justify-center gap-4">
           {t.micro.map((item) => (

@@ -14,6 +14,7 @@ export default function Footer() {
       tagline: 'The Cognitive Capital API',
       links: [
         { label: 'Política de Privacidade', href: '/privacy' },
+        { label: 'Termos de Uso', href: '/terms' },
       ] as { label: string; href: string }[],
       rights: '© 2026 GnosIQ. Todos os direitos reservados.',
       feedback: 'Encontrou algo errado? Nos avise →',
@@ -22,6 +23,7 @@ export default function Footer() {
       tagline: 'The Cognitive Capital API',
       links: [
         { label: 'Privacy Policy', href: '/privacy' },
+        { label: 'Terms of Use', href: '/terms' },
       ] as { label: string; href: string }[],
       rights: '© 2026 GnosIQ. All rights reserved.',
       feedback: 'Found something wrong? Let us know →',
