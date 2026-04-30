@@ -51,8 +51,10 @@ export default function PrivacyPage() {
               A GnosIQ coleta exclusivamente o <strong>domínio do seu e-mail</strong> (ex:{' '}
               <code style={{ color: '#8B5CF6', fontSize: '0.9em' }}>gmail.com</code>,{' '}
               <code style={{ color: '#8B5CF6', fontSize: '0.9em' }}>empresa.com</code>) no momento
-              do cadastro na lista de espera. Não coletamos nome, CPF, telefone ou qualquer outro
-              dado pessoal identificável (PII) nesta fase.
+              do cadastro na lista de espera. Opcionalmente, coletamos a{' '}
+              <strong>área de atuação</strong> (campo opcional informado no formulário de acesso
+              beta). Não coletamos nome, CPF, telefone ou qualquer outro dado pessoal identificável
+              (PII) nesta fase.
             </p>
           </div>
 
@@ -147,8 +149,10 @@ export default function PrivacyPage() {
             <p style={{ color: '#D1D5DB' }}>
               GnosIQ collects only the <strong>email domain</strong> (e.g.,{' '}
               <code style={{ color: '#8B5CF6', fontSize: '0.9em' }}>gmail.com</code>) when you
-              join the waitlist. No name, national ID, phone, or other personally identifiable
-              information (PII) is collected at this stage.
+              join the waitlist. Optionally, we collect the{' '}
+              <strong>area of expertise</strong> (optional field provided in the beta access form).
+              No name, national ID, phone, or other personally identifiable information (PII) is
+              collected at this stage.
             </p>
           </div>
 

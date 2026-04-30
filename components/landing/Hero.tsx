@@ -1,31 +1,43 @@
 'use client'
 import posthog from 'posthog-js'
+import { useFeatureFlagVariantKey } from 'posthog-js/react'
 import { useLocale } from '@/lib/context/LocaleContext'
 import HeroBackground from './HeroBackground'
 
 export default function Hero() {
   const { locale } = useLocale()
 
+  // GNO-74: A/B test — flag ativado manualmente pelo Carlos no PostHog
+  const headlineVariant = useFeatureFlagVariantKey('headline_ab_test')
+  const headlines = {
+    control: locale === 'pt'
+      ? 'GnosIQ. O Manual de Instruções da sua mente.'
+      : 'GnosIQ. The Instruction Manual for your mind.',
+    variant_a: locale === 'pt'
+      ? 'Você toma decisões estratégicas sem dados sobre como você pensa. Isso muda agora.'
+      : 'You make strategic decisions without data on how you think. That changes now.',
+  } as const
+  const activeHeadline =
+    headlines[headlineVariant as keyof typeof headlines] ?? headlines.control
+
   const copy = {
     pt: {
       eyebrow: 'Beta Privado · Acesso Antecipado',
-      h1: 'GnosIQ. O Manual de Instruções da sua mente.',
-      sub1: 'A inteligência humana é o único ativo que nenhum balanço patrimonial consegue capturar. Até agora.',
-      sub2: 'O autoconhecimento científico era caro, demorado e inacessível. Isso mudou.',
-      sub3: 'Para founders, líderes e profissionais de alta performance: a profundidade de uma avaliação clínica psicométrica cientificamente validada pela fração do tempo e do custo.',
+      sub1: 'Para founders e líderes técnicos que tomam decisões de alta consequência: o autoconhecimento científico era caro, demorado e inacessível. Isso mudou.',
+      sub2: 'A inteligência humana é o único ativo que nenhum balanço patrimonial consegue capturar. Até agora.',
+      sub3: 'A profundidade de uma avaliação baseada em instrumentos psicométricos validados internacionalmente pela fração do tempo e do custo.',
       price: 'A partir de R$97 · relatório online em até ~30 minutos.',
       cta1: 'Entrar na lista de espera →',
       cta2: 'Ver como funciona →',
       disclaimer: 'Avaliação cognitiva · não substitui avaliação clínica.',
-      gnoscoreNote: 'Inclui GnoScore™ verificado',
+gnoscoreNote: 'Inclui GnoScore™ verificado',
       micro: ['✓ Pagamento único', '✓ Relatório de 18 páginas', '✓ Entrega em ~30 minutos', '✓ Acesso Antecipado · Vagas Limitadas'],
     },
     en: {
       eyebrow: 'Private Beta · Early Access',
-      h1: 'GnosIQ. The Instruction Manual for your mind.',
-      sub1: 'Human intelligence is the only asset no balance sheet can capture. Until now.',
-      sub2: 'Scientific self-knowledge was expensive, slow and inaccessible. That changed.',
-      sub3: 'For founders, leaders and high-performance professionals: the depth of a scientifically validated psychometric evaluation at a fraction of the time and cost.',
+      sub1: 'For founders and technical leaders who make high-consequence decisions: scientific self-knowledge was expensive, slow and inaccessible. That changed.',
+      sub2: 'Human intelligence is the only asset no balance sheet can capture. Until now.',
+      sub3: 'The depth of an evaluation based on internationally validated psychometric instruments at a fraction of the time and cost.',
       price: 'Starting at $97 · online report in up to ~30 minutes.',
       cta1: 'Join the waitlist →',
       cta2: 'See how it works →',
@@ -105,9 +117,9 @@ export default function Hero() {
           </span>
         </div>
 
-        {/* H1 */}
+        {/* H1 — A/B test via PostHog feature flag headline_ab_test */}
         <h1 className="text-4xl md:text-6xl font-bold text-text-primary leading-tight mb-6">
-          {t.h1}
+          {activeHeadline}
         </h1>
 
         {/* Subtitle — 3 parágrafos + preço */}
