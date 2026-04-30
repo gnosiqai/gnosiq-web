@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import posthog from 'posthog-js'
 import { useLocale } from '@/lib/context/LocaleContext'
 
 export default function WaitlistCTA() {
@@ -41,6 +40,17 @@ export default function WaitlistCTA() {
     if (!email.trim()) return
     setStatus('loading')
     setErrorMsg('')
+
+    // GNO-76: EVENTO 1 — captura intenção ANTES do await (não depende de sucesso da API)
+    // window.posthog?.capture evita falha silenciosa em SSR/edge
+    if (icpSegment) {
+      window.posthog?.capture('icp_selected', {
+        icp_type: icpSegment,
+        email: email.trim(),
+        source: 'waitlist_form',
+      })
+    }
+
     try {
       const res = await fetch('/api/waitlist', {
         method: 'POST',
@@ -50,19 +60,19 @@ export default function WaitlistCTA() {
           icp_segment: icpSegment || null,
         }),
       })
-      if (!res.ok) {
+
+      if (res.ok) {
+        // GNO-76: EVENTO 2 — captura conversão APENAS após confirmação da API
+        window.posthog?.capture('waitlist_signed_up', {
+          icp_type: icpSegment || null,
+          email: email.trim(),
+          source: 'waitlist_form',
+        })
+        setStatus('success')
+      } else {
         const data = await res.json().catch(() => ({}))
+        console.error('[Waitlist] API error:', res.status, data)
         throw new Error(data?.error ?? 'Request failed')
-      }
-      setStatus('success')
-      // GNO-48: PostHog event — LGPD: apenas domínio do email, nunca PII completo
-      posthog.capture('waitlist signed_up', {
-        source: 'landing_cta',
-        email_domain: email.trim().split('@')[1],
-      })
-      // GNO-74: PostHog icp_selected — guard obrigatório: só dispara se preenchido
-      if (icpSegment) {
-        posthog.capture('icp_selected', { segment: icpSegment })
       }
     } catch {
       setStatus('error')
