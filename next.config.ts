@@ -6,6 +6,30 @@ const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
   },
+  async headers() {
+    return [
+      {
+        // Aplicar a todas as rotas
+        source: '/:path*',
+        headers: [
+          // GNO-80: Fix B — headers de segurança para in-app browsers
+          // NÃO adicionar Content-Security-Policy restritivo — pode quebrar scripts
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+        ],
+      },
+    ]
+  },
   async rewrites() {
     return [
       {
