@@ -86,7 +86,25 @@ export default function PrivacyPage() {
 
           <div>
             <h2 className="text-xl font-semibold mb-3" style={{ color: '#8B5CF6' }}>
-              4. Seus Direitos (LGPD — Lei nº 13.709/2018)
+              4. Compartilhamento com Terceiros
+            </h2>
+            <p className="mb-3 leading-relaxed" style={{ color: '#D1D5DB' }}>
+              Para operar o serviço, a GnosIQ utiliza os seguintes sub-processadores de dados,
+              todos operando sob acordos de confidencialidade e em conformidade com a LGPD:
+            </p>
+            <ul className="space-y-2" style={{ color: '#D1D5DB' }}>
+              <li>✦ <strong>PostHog</strong> — analytics de uso (dados pseudonimizados; sem PII exposta)</li>
+              <li>✦ <strong>SendGrid / Resend</strong> — envio de e-mail transacional (confirmação de cadastro e comunicações de lançamento)</li>
+            </ul>
+            <p className="mt-3 leading-relaxed" style={{ color: '#D1D5DB' }}>
+              Nenhum dado pessoal é vendido ou compartilhado com terceiros para fins comerciais
+              ou publicitários.
+            </p>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-semibold mb-3" style={{ color: '#8B5CF6' }}>
+              5. Seus Direitos (LGPD — Lei nº 13.709/2018)
             </h2>
             <p className="mb-3" style={{ color: '#D1D5DB' }}>
               Nos termos da Lei Geral de Proteção de Dados Pessoais, você tem direito a:
@@ -110,7 +128,7 @@ export default function PrivacyPage() {
 
           <div>
             <h2 className="text-xl font-semibold mb-3" style={{ color: '#8B5CF6' }}>
-              5. Contato e Controlador de Dados
+              6. Contato e Controlador de Dados
             </h2>
             <p style={{ color: '#D1D5DB' }}>
               <strong>GnosIQ</strong> · CNPJ 66.473.762/0001-13 · São Paulo, SP — Brasil
