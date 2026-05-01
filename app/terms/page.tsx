@@ -173,7 +173,7 @@ export default function TermsPage() {
           </p>
         </div>
 
-        {/* Cláusula 5 — Jurisdição */}
+        {/* Cláusula 5 — Limitação de Responsabilidade */}
         <div style={{ marginBottom: '2.5rem' }}>
           <h2
             style={{
@@ -183,7 +183,26 @@ export default function TermsPage() {
               marginBottom: '0.75rem',
             }}
           >
-            5. Jurisdição e Foro
+            5. Limitação de Responsabilidade
+          </h2>
+          <p style={{ lineHeight: 1.7 }}>
+            Os relatórios GnosIQ são instrumentos de autoconhecimento e desenvolvimento.
+            Não substituem avaliação clínica, diagnóstico psicológico ou psiquiátrico,
+            nem devem ser usados como base para decisões médicas ou jurídicas.
+          </p>
+        </div>
+
+        {/* Cláusula 6 — Jurisdição */}
+        <div style={{ marginBottom: '2.5rem' }}>
+          <h2
+            style={{
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              color: '#8B5CF6',
+              marginBottom: '0.75rem',
+            }}
+          >
+            6. Jurisdição e Foro
           </h2>
           <p style={{ lineHeight: 1.7 }}>
             Estes Termos são regidos pelas leis da{' '}
@@ -194,7 +213,7 @@ export default function TermsPage() {
           </p>
         </div>
 
-        {/* Cláusula 6 — Controlador dos dados */}
+        {/* Cláusula 7 — Controlador dos dados */}
         <div style={{ marginBottom: '3rem' }}>
           <h2
             style={{
@@ -204,7 +223,7 @@ export default function TermsPage() {
               marginBottom: '0.75rem',
             }}
           >
-            6. Controlador dos Dados e Contato
+            7. Controlador dos Dados e Contato
           </h2>
           <p style={{ lineHeight: 1.7 }}>
             O controlador dos dados pessoais tratados pela GnosIQ é:

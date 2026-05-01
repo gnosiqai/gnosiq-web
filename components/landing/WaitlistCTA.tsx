@@ -151,6 +151,9 @@ export default function WaitlistCTA() {
               </a>
               . Seus dados não serão compartilhados com terceiros.
             </p>
+            <p className="text-xs text-white/40 mt-1 text-center">
+              Tratamento com base no legítimo interesse (LGPD Art.&nbsp;7º, IX) para comunicação sobre o acesso beta.
+            </p>
             {/* GNO-78: deduplicado — 1ª ocorrência mantida acima do form */}
             <p className="mt-6 text-xs text-white/50 text-center">
               Sem cobrança agora. Você decide quando o beta abrir.
