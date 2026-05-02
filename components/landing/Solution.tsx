@@ -82,7 +82,7 @@ export default function Solution() {
             <div className="text-3xl mb-4">🔍</div>
             <h3 className="font-bold text-text-primary mb-2">Onde estão seus pontos cegos</h3>
             <p className="text-text-secondary text-sm leading-relaxed">
-              Mapeie os padrões que surgem sob pressão de decisão, os que afetam contratações,
+              Mapeie os padrões que surgem sob pressão de decisão: os que afetam contratações,
               co-founders e pivôs antes que você perceba.
             </p>
           </div>
