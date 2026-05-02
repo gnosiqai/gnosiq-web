@@ -9,10 +9,20 @@ export default function Hero() {
 
   // GNO-74: A/B test — flag ativado manualmente pelo Carlos no PostHog
   const headlineVariant = useFeatureFlagVariantKey('headline_ab_test')
+  const headlineControlPt = (
+    <>
+      GnosIQ<br />O Manual de Instruções da<br />sua mente.
+    </>
+  )
+  const headlineControlEn = (
+    <>
+      GnosIQ<br />The Instruction Manual for<br />your mind.
+    </>
+  )
   const headlines = {
     control: locale === 'pt'
-      ? 'GnosIQ — O Manual de Instruções da sua mente.'
-      : 'GnosIQ — The Instruction Manual for your mind.',
+      ? headlineControlPt
+      : headlineControlEn,
     variant_a: locale === 'pt'
       ? 'Você toma decisões estratégicas sem dados sobre como você pensa. Isso muda agora.'
       : 'You make strategic decisions without data on how you think. That changes now.',
