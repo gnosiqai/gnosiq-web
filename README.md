@@ -62,12 +62,8 @@ The same cognitive engine powering all 3 surfaces operates via
 to activate based on the response profile — no instrument is applied
 blindly.
 
-| Layer | Frameworks | Milestone | License |
-|---|---|---|---|
-| **A — Core** | WAIS-IV (inspired) · Big Five NEO | M2+ | Public domain |
-| **B — Expansion** | ASRS-v1.1 · AQ-10 · PHQ-9 · GAD-7 · BRIEF-A | M3+ | Public domain |
-| **C — Premium** | EQ-i 2.0 · MSCEIT · RAADS-R · Hogan HDS | M4+ | Paid license (BNDES/FINEP) |
-| **D — Contextual** | Gardner IM · Renzulli · PTG · Brief Resilience Scale | M2+ conditional | Public domain |
+12+ validated psychometric instruments across 4 progressive assessment layers —
+activated adaptively based on each individual's response profile.
 
 
 > ⚕️ **Clinical Disclaimer:** This engine identifies cognitive and behavioral patterns
@@ -79,9 +75,9 @@ blindly.
 
 ### Surface 1 — B2C Assessment *(M2)*
 
-> **Who:** Founders, Tech Leaders, Executive Coaches  
-> **Where:** [gnosiq.ai](https://gnosiq.ai) — direct landing page  
-> **Price:** $97 one-time · $29/mo Pro
+> **Who:** Founders, Tech Leaders, Executive Coaches
+> **Where:** [gnosiq.ai](https://gnosiq.ai) — direct landing page
+> **Price:** [gnosiq.ai/pricing](https://gnosiq.ai/pricing)
 
 The individual buys directly. Answers a 30-minute adaptive session.
 Receives an **18-page Cognitive Capital Report** by email — covering
@@ -94,25 +90,23 @@ No enterprise contract. No waiting list. No therapist required.
 
 ### Surface 2 — White-Label B2B *(M3)*
 
-> **Who:** HR Consultancies, Accelerators, EdTechs, Executive Coaches  
-> **Where:** Custom-branded dashboard — GnosIQ invisible on the front  
-> **Price:** Starter $2.5K/mo · Professional $5K/mo · Enterprise $12K/mo
+> **Who:** HR Consultancies, Accelerators, EdTechs, Executive Coaches
+> **Where:** Custom-branded dashboard — GnosIQ invisible on the front
+> **Price:** [gnosiq.ai/pricing](https://gnosiq.ai/pricing)
 
 Partners configure their own logo, colors, and domain.
 Their clients take the assessment. Results land in the partner's dashboard.
 GnosIQ is the invisible infrastructure — like Stripe is to payments.
 
-Setup fee: $1,250 · $2,500 · $6,000 (one-time per tier).
-
 ---
 
 ### Surface 3 — Public API L0 *(M4+)*
 
-> **Who:** Developers, Cognitive Fintechs, HRTechs, EdTechs  
-> **Where:** `api.gnosiq.ai` · `npm install @gnosiqai/sdk`  
-> **Price:** $0.50–$2.00/eval · Free sandbox (3 evals)
+> **Who:** Developers, Cognitive Fintechs, HRTechs, EdTechs
+> **Where:** `api.gnosiq.ai` · `npm install @gnosiqai/sdk`
+> **Price:** [gnosiq.ai/pricing](https://gnosiq.ai/pricing)
 
-> ⚠️ **Not started.** Prerequisite: $30K+ MRR validated at M3.
+> ⚠️ **Not started.** Prerequisite: M3 gate validated.
 
 ```typescript
 import { GnosIQ } from '@gnosiqai/sdk';
@@ -164,7 +158,7 @@ const report = await client.evaluate({
                 └─────────────────────┘
 ```
 
-**Design principles (from the [GnosIQ Architecture Manifesto](docs/ARCHITECTURE.md)):**  
+**Design principles (GnosIQ Architecture Manifesto v1.0):**  
 100% Cloud · 100% Serverless · Minimum Cost Max Profit ·  
 Privacy Sovereign · Solo Founder Scalable · API-First · Async-First
 
@@ -198,11 +192,10 @@ M1 ──────────► M2 ──────────► M3 ─
 Landing        Surface 1      Surface 2      Surface 3
 
 Waitlist       B2C Live       White-Label    Public API
-               $97/eval       $2.5K–12K/mo   $0.50–2/eval
 
-Gate: 10       Gate: 10       Gate: $30K     Gate: Series A
-leads live     sales +        MRR · 2–3      pipeline
-               NPS≥60         partners
+Gate:          Gate:          Gate:          Gate:
+waitlist       B2C            B2B            Series A
+validated      validated      validated      pipeline
 ```
 
 ## Status: M1 Pre-Launch — Live at gnosiq.ai
@@ -216,20 +209,20 @@ leads live     sales +        MRR · 2–3      pipeline
 - Beta feedback: Avg session 22 min · 18-page report delivered
 
 ### Next (M2)
-- Full B2C assessment ($97 one-time)
+- Full B2C assessment
 - Cognitive Engine: 3 LLM agents + 12 psychometric instruments
 - GnoScore(tm) verifiable badge + LinkedIn Share
 
 ### M2 — API + First Customers *(Surface 1 · B2C)*
 
 - Stripe payment flow → async processing → PDF delivery
-- Target: 10 paying customers · NPS ≥ 60
+- Target: B2C revenue validated
 - Linear: [GNO-14](https://linear.app/gnosiq/issue/GNO-14)
 
 ### M3 — White-Label + B2B *(Surface 2)*
 
 - Multi-tenant dashboard · partner onboarding · custom branding
-- Target: 2–3 white-label partners signed · $30K+ MRR
+- Target: B2B revenue validated · partners signed
 - Linear: [GNO-15](https://linear.app/gnosiq/issue/GNO-15)
 
 ### M4+ — Public API + International Scale *(Surface 3)*
@@ -256,7 +249,7 @@ leads live     sales +        MRR · 2–3      pipeline
   licensed psychometrician accuracy at 1/1000th the cost
 - No competitor has combined: deep assessment + API + affordable pricing
 - Remote-first work created permanent demand for async cognitive tools
-- Founder is ICP — the $97 report maps exactly this cognitive profile.
+- Founder is ICP — the report maps exactly this cognitive profile.
   Living proof of concept.
 
 ---
@@ -339,12 +332,12 @@ gnosiq-web/
 GnosIQ is a **solo-founder proprietary product**, not an open-source project.
 
 This repository is public for **transparency and developer trust** — consistent
-with our API-first positioning and the [GnosIQ Architecture Manifesto](docs/ARCHITECTURE.md).
+with our API-first positioning and the GnosIQ Architecture Manifesto.
 
 **What this means:**
 - Pull requests from external contributors are **not accepted** at this stage
 - Issues and bug reports are **welcome** via [GitHub Issues](https://github.com/gnosiqai/gnosiq-web/issues)
-- Architecture decisions are documented in [`docs/ADR/`](docs/ADR/)
+- Architecture decisions are documented in `docs/ADR/` *(coming M2)*
 - All production merges require approval from [@gnosiqai](https://github.com/gnosiqai)
 
 If you're a developer interested in integrating GnosIQ into your product,
