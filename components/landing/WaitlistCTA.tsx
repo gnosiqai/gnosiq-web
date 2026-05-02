@@ -167,10 +167,10 @@ export default function WaitlistCTA() {
         {/* GNO-84: FIX-05b — Founder note */}
         <div className="mt-8 max-w-xl mx-auto text-center">
           <p className="text-sm text-white/60 leading-relaxed italic">
-            &ldquo;Construí a GnosIQ porque fui o primeiro a precisar disso. Fiz minha própria avaliação cognitiva — e o que aprendi sobre meus padrões de decisão mudou como opero como founder.&rdquo;
+            &ldquo;Construí a GnosIQ porque fui o primeiro a precisar disso. Fiz minha própria avaliação cognitiva, e o que aprendi sobre meus padrões de decisão mudou como opero como founder.&rdquo;
           </p>
           <p className="text-xs text-white/40 mt-2">
-            — Carlos Gomes, founder &amp; primeiro usuário da GnosIQ
+            <strong>Carlos Gomes</strong>, founder &amp; primeiro usuário da GnosIQ
           </p>
         </div>
       </div>
