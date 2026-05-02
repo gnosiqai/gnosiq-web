@@ -7,13 +7,14 @@ import posthog from 'posthog-js'
 // Fix 3.7: badge "Beta fechado · Acesso antecipado" (GNO-68: atualizado de 'Acesso para devs em breve')
 // CTA: ghost/outlined — NUNCA primário
 // NÃO lista preço nesta seção
+// GNO-84: FIX-06 eyebrow ICP atualizado
 
 export default function ApiSection() {
   const { locale } = useLocale()
 
   const copy = {
     pt: {
-      eyebrow: 'Para RHs, times de produto, empresas, devs',
+      eyebrow: 'Para founders, tech leaders e times de produto',
       h2: 'The Cognitive Capital API',
       problem: 'Contratações equivocadas. Funcionários em posições erradas. Talentos desperdiçados. Isso acabou.',
       body: 'Integre avaliação cognitiva profunda diretamente na sua plataforma.',
