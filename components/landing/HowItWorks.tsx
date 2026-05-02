@@ -5,6 +5,7 @@ import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
 import { useStaggerReveal } from '@/hooks/useStaggerReveal'
 
 // GNO-67: assessment → avaliação · Agent1/2/3 removidos (tags internas)
+// GNO-84: FIX-02 cleanup LinkedIn passo 03 · FIX-07 título e descrição passo 02
 const steps = [
   {
     num: '01',
@@ -13,8 +14,8 @@ const steps = [
   },
   {
     num: '02',
-    title: 'IA processa em 3 camadas',
-    desc: 'Extração de padrões cognitivos, cruzamento com banco psicométrico validado e síntese do relatório narrativo.',
+    title: '3 agentes de IA especializados analisam em conjunto',
+    desc: 'Extração de padrões cognitivos, cruzamento com base psicométrica validada e síntese narrativa — processados em conjunto.'
   },
   {
     num: '03',
@@ -58,9 +59,6 @@ export default function HowItWorks() {
                 <p className="text-text-secondary text-sm leading-relaxed">
                   18 páginas cobrindo: Perfil Cognitivo, Mapa de Forças, Pontos Cegos
                   e Recomendações de Carreira. Inclui seu GnoScore™ verificado.
-                  Compartilhamento{' '}
-                  <span className="text-violet-400 font-semibold">LinkedIn</span>{' '}
-                  disponível em breve.
                 </p>
               ) : (
                 <p className="text-text-secondary text-sm leading-relaxed">{step.desc}</p>
