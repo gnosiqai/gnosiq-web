@@ -78,8 +78,11 @@ export default function ApiSection() {
           {t.tagline}
         </p>
 
-        {/* CTA ghost/outlined */}
-        <div className="flex flex-col sm:flex-row items-center text-center gap-4">
+        {/* CTA ghost/outlined + Badge — centralizados, badge acima do CTA */}
+        <div className="flex flex-col items-center text-center gap-3">
+          <p className="text-xs text-text-muted">
+            {t.badge}
+          </p>
           <a
             href="#waitlist"
             onClick={handleCtaClick}
@@ -88,11 +91,6 @@ export default function ApiSection() {
             {t.cta}
           </a>
         </div>
-
-        {/* Badge Fix 3.7 */}
-        <p className="mt-4 text-xs text-text-muted">
-          {t.badge}
-        </p>
       </div>
     </section>
   )
