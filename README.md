@@ -3,8 +3,8 @@
 # GnosIQ
 [![Status](https://img.shields.io/badge/status-pre--launch-8B5CF6?style=flat-square)](https://gnosiq.ai)
 [![Beta NPS](https://img.shields.io/badge/beta%20NPS-76-8B5CF6?style=flat-square)](#)
-[![Quality](https://img.shields.io/badge/code%20quality-SonarCloud-6D28D9?style=flat-square)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
-[![Security](https://img.shields.io/badge/security-SonarCloud-6D28D9?style=flat-square)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
+[![Quality](https://img.shields.io/badge/code%20quality-SonarCloud%20A-8B5CF6?style=flat-square)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
+[![Security](https://img.shields.io/badge/security-0%20vulnerabilities-8B5CF6?style=flat-square)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
 
 **The Cognitive Capital API**
 
@@ -144,28 +144,20 @@ const report = await client.evaluate({
                      │ HTTPS
           ┌──────────▼──────────┐
           │   Cloud Run Gen2    │
-          │   Node.js 22 LTS    │
-          │ southamerica-east1  │
+          │   southamerica-east1│
           │                     │
           │  POST /api/waitlist │
           │  POST /api/evaluate │◄── Surface 1 · 2 · 3
           │  POST /api/webhook  │
           └──┬───────┬──────────┘
              │       │
-  ┌──────────▼─┐  ┌──▼────────────────────────┐
-  │  Firestore │  │     AI Router (CAT)       │
-  │ Native Mode│  │                           │
-  │            │  │                           │
-  │  reports/  │  │                           │
-  │  partners/ │  │                           │
-  └────────────┘  │                           │
-                  │                           │
-                  │                           │
-                  │                           │
-                  │ 12 instruments · 4 layers │
-                  │                           │
-                  └───────────────────────────┘
-                           │
+  ┌──────────▼─┐  ┌──▼─────────────────────┐
+  │  Firestore │  │   AI Cognitive Engine  │
+  │ Native Mode│  │  Adaptive CAT · 3 LLM  │
+  │            │  │  agents · 12 instruments│
+  │  reports/  │  │  4 layers (A/B/C/D)    │
+  │  partners/ │  └────────────────────────┘
+  └────────────┘           │
                 ┌──────────▼──────────┐
                 │      SendGrid       │
                 │   Report delivery   │
@@ -191,7 +183,7 @@ Privacy Sovereign · Solo Founder Scalable · API-First · Async-First
 | Email | SendGrid API v3 | 100/day free · reliable delivery |
 | Analytics | PostHog Cloud | 1M events/mo free · session replay |
 | DNS / CDN | Cloudflare | DDoS · SSL · proxy · free |
-| CI/CD | GitHub Actions → Vercel | Auto-deploy on push to main |
+| CI/CD | GitHub Actions → Vercel | Automated deploy on push to `main` |
 | Code Quality | SonarCloud | AI code trust mitigation · Quality Gate ✅ · A/A/A (Security / Reliability / Maintainability) |
 | Package Manager | npm (only) | yarn/pnpm not used in this repo |
 
@@ -333,8 +325,7 @@ gnosiq-web/
 │   │   └── legal.ts        # Canonical clinical disclaimers (LGPD · CFP · GDPR)
 │   ├── firestore.ts        # DB client (canonical pattern — GoogleAuth anti-pattern banned)
 │   └── sendgrid.ts         # Email client
-├── prompts/
-│                           # Cognitive Engine (proprietary · not documented)
+├── prompts/                # Cognitive Engine (proprietary · not documented)
 ├── public/
 │   ├── gnosiq-logo.png     # Brand logo — LOCKED, do not replace
 │   └── logo-placeholder.svg
