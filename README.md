@@ -2,7 +2,6 @@
 
 # GnosIQ
 [![Status](https://img.shields.io/badge/status-pre--launch-8B5CF6?style=flat-square)](https://gnosiq.ai)
-[![Beta NPS](https://img.shields.io/badge/beta%20NPS-76-8B5CF6?style=flat-square)](#)
 [![Quality](https://img.shields.io/badge/code%20quality-SonarCloud%20A-8B5CF6?style=flat-square)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
 [![Security](https://img.shields.io/badge/security-0%20vulnerabilities-8B5CF6?style=flat-square)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
 
@@ -179,7 +178,7 @@ Privacy Sovereign · Solo Founder Scalable · API-First · Async-First
 | Styling | Tailwind CSS | Design tokens · zero runtime CSS |
 | Backend | Cloud Run Gen2 · Node.js 22 LTS | Serverless · scales to zero · ~$0 |
 | Database | Firestore Native Mode | Realtime · free tier · no ORM needed |
-| AI Orchestration | Claude (Anthropic) + Gemini 2.5 Flash | Metabolic routing · cost/quality tradeoff |
+| AI Orchestration | Multi-LLM adaptive routing | Cost/quality optimization per cognitive layer |
 | Email | SendGrid API v3 | 100/day free · reliable delivery |
 | Analytics | PostHog Cloud | 1M events/mo free · session replay |
 | DNS / CDN | Cloudflare | DDoS · SSL · proxy · free |
@@ -214,7 +213,7 @@ leads live     sales +        MRR · 2–3      pipeline
 - CI/CD: GitHub Actions + Vercel CLI
 - SonarCloud: Quality Gate A, 0 critical, 0 high vulnerabilities
 - GnoScore(tm): featured on landing as M2 capability
-- Beta NPS: 76 | Avg time: 22 min | Report: 18 pages
+- Beta feedback: Avg session 22 min · 18-page report delivered
 
 ### Next (M2)
 - Full B2C assessment ($97 one-time)
@@ -290,7 +289,7 @@ npm run dev
 | Variable | Required | Description |
 |---|---|---|
 | `SENDGRID_API_KEY` | M1 | Waitlist confirmation + report delivery |
-| `SENDGRID_FROM_EMAIL` | M1 | `carlos@gnosiq.ai` |
+| `SENDGRID_FROM_EMAIL` | M1 | Sender email address |
 | `NEXT_PUBLIC_POSTHOG_KEY` | M1 | Analytics |
 | `FIRESTORE_PROJECT_ID` | M1 | Waitlist + sessions persistence |
 | `STRIPE_SECRET_KEY` | M2+ | Payment processing |
@@ -321,8 +320,7 @@ gnosiq-web/
 ├── components/
 │   └── sections/           # Nav · Hero · WaitlistForm · Footer · ...
 ├── lib/
-│   ├── constants/
-│   │   └── legal.ts        # Canonical clinical disclaimers (LGPD · CFP · GDPR)
+│   ├── constants/           # App constants (proprietary)
 │   ├── firestore.ts        # DB client (canonical pattern — GoogleAuth anti-pattern banned)
 │   └── sendgrid.ts         # Email client
 ├── prompts/                # Cognitive Engine (proprietary · not documented)
@@ -389,12 +387,12 @@ property of GnosIQ.
 
 *The first API that turns human potential into computable capital.*
 
-[gnosiq.ai](https://gnosiq.ai) · [carlos@gnosiq.ai](mailto:carlos@gnosiq.ai)  
+[gnosiq.ai](https://gnosiq.ai) · [contact](https://gnosiq.ai#waitlist)  
 [@gnosiqai](https://x.com/gnosiqai) on X · GitHub · ProductHunt · Bluesky  
 [@gnosiq.ai](https://instagram.com/gnosiq.ai) on Instagram · YouTube · Threads
 
 ---
 
-*Pre-launch · Beta NPS 76 · Sao Paulo → Silicon Valley* 
+*Pre-launch · Sao Paulo → Silicon Valley*
 
 </div>
