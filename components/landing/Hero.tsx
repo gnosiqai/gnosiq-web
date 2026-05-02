@@ -11,7 +11,7 @@ export default function Hero() {
   const headlineVariant = useFeatureFlagVariantKey('headline_ab_test')
   const headlineControlPt = (
     <>
-      GnosIQ<br />O Manual de Instruções da<br />sua mente.
+      GnosIQ<br />O Manual de Instruções da<br />sua mente
     </>
   )
   const headlineControlEn = (
