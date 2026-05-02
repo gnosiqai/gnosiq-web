@@ -51,7 +51,7 @@ export default function HowItWorks() {
         <div ref={staggerRef} className="grid md:grid-cols-3 gap-8">
           {steps.map((step) => (
             <div key={step.num} className="stagger-item relative">
-              <div className="text-5xl font-bold text-accent/20 mb-4 font-mono">
+              <div className="text-4xl md:text-5xl font-bold text-accent/20 mb-4 font-mono">
                 {step.num}
               </div>
               <h3 className="font-bold text-text-primary mb-3">{step.title}</h3>
