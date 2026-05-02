@@ -11,8 +11,8 @@ export default function Hero() {
   const headlineVariant = useFeatureFlagVariantKey('headline_ab_test')
   const headlines = {
     control: locale === 'pt'
-      ? 'GnosIQ. O Manual de Instruções da sua mente.'
-      : 'GnosIQ. The Instruction Manual for your mind.',
+      ? 'GnosIQ — O Manual de Instruções da sua mente.'
+      : 'GnosIQ — The Instruction Manual for your mind.',
     variant_a: locale === 'pt'
       ? 'Você toma decisões estratégicas sem dados sobre como você pensa. Isso muda agora.'
       : 'You make strategic decisions without data on how you think. That changes now.',
@@ -23,24 +23,28 @@ export default function Hero() {
   const copy = {
     pt: {
       eyebrow: 'Beta Privado · Acesso Antecipado',
-      sub1: 'Para founders e líderes técnicos que tomam decisões de alta consequência: o diagnóstico cognitivo profundo era caro, demorado e inacessível. Isso mudou.',
-      sub2: 'A inteligência humana é o único ativo que nenhum balanço patrimonial consegue capturar. Até agora.',
+      sub1: 'Para founders e líderes técnicos que tomam decisões de alta consequência: o diagnóstico cognitivo profundo era caro, demorado e inacessível.',
+      sub1b: 'Isso mudou.',
+      sub2: 'A inteligência humana é o único ativo que nenhum balanço patrimonial capturou.',
+      sub2b: 'Até agora.',
       sub3: 'A profundidade de uma avaliação baseada em instrumentos psicométricos validados internacionalmente pela fração do tempo e do custo.',
       price: 'A partir de R$97 · relatório online em até ~30 minutos.',
-      cta1: 'Entrar na lista de espera →',
-      cta2: 'Ver como funciona →',
+      cta1: 'Entrar na lista de espera',
+      cta2: 'Ver como funciona',
       disclaimer: 'Avaliação cognitiva · não substitui avaliação clínica.',
 gnoscoreNote: 'Inclui GnoScore™ verificado',
       micro: ['✓ Pagamento único', '✓ Relatório de 18 páginas', '✓ Entrega em ~30 minutos', '✓ Acesso Antecipado · Vagas Limitadas'],
     },
     en: {
       eyebrow: 'Private Beta · Early Access',
-      sub1: 'For founders and technical leaders who make high-consequence decisions: deep cognitive diagnosis was expensive, slow and inaccessible. That changed.',
-      sub2: 'Human intelligence is the only asset no balance sheet can capture. Until now.',
+      sub1: 'For founders and technical leaders who make high-consequence decisions: deep cognitive diagnosis was expensive, slow and inaccessible.',
+      sub1b: 'That changed.',
+      sub2: 'Human intelligence is the only asset no balance sheet has captured.',
+      sub2b: 'Until now.',
       sub3: 'The depth of an evaluation based on internationally validated psychometric instruments at a fraction of the time and cost.',
       price: 'Starting at $97 · online report in up to ~30 minutes.',
-      cta1: 'Join the waitlist →',
-      cta2: 'See how it works →',
+      cta1: 'Join the waitlist',
+      cta2: 'See how it works',
       disclaimer: 'Cognitive evaluation · does not replace clinical assessment.',
       gnoscoreNote: 'Includes verified GnoScore™',
       micro: ['✓ One-time payment', '✓ 18-page report', '✓ Delivered in ~30 minutes', '✓ Early Access · Limited Spots'],
@@ -125,7 +129,9 @@ gnoscoreNote: 'Inclui GnoScore™ verificado',
         {/* Subtitle — 3 parágrafos + preço */}
         <div className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-10 leading-relaxed space-y-4">
           <p>{t.sub1}</p>
+          <p className="font-medium text-text-primary">{t.sub1b}</p>
           <p>{t.sub2}</p>
+          <p className="font-medium text-text-primary">{t.sub2b}</p>
           <p>{t.sub3}</p>
           <p className="font-semibold text-text-primary">{t.price}</p>
         </div>

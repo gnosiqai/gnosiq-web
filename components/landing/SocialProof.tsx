@@ -51,7 +51,7 @@ export default function SocialProof() {
         {/* Trust bar */}
         <section className="py-4 text-center">
           <p className="text-sm text-white/60 tracking-wide">
-            Acesso Antecipado · Vagas Limitadas · Preenchimento: ~22 min · Entrega: ~30 min · Relatório: 18 páginas
+            Acesso Antecipado · Vagas Limitadas
           </p>
         </section>
       </div>

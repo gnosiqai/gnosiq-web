@@ -16,9 +16,9 @@ export default function Footer() {
         { label: 'Política de Privacidade', href: '/privacy' },
         { label: 'Termos de Uso', href: '/terms' },
       ] as { label: string; href: string }[],
-      rights: '© 2026 GnosIQ · GnosIQ Inteligência Cognitiva Ltda. · CNPJ 66.473.762/0001-13',
-      address: 'Rua Cristóvão Colombo, 2144, Sala 408, Floresta · Porto Alegre, RS · CEP 90560-001 · Brasil',
-      feedback: 'Encontrou algo errado? Nos avise →',
+      rights: '© 2026 GnosIQ Tecnologia Ltda. · CNPJ 66.473.762/0001-13',
+      address: 'Rua Cristóvão Colombo, 2144, Sala 408, Floresta, Porto Alegre, RS, CEP 90560-001, Brasil',
+      feedback: 'Encontrou algo errado? Nos avise',
     },
     en: {
       tagline: 'The Cognitive Capital API',
@@ -26,9 +26,9 @@ export default function Footer() {
         { label: 'Privacy Policy', href: '/privacy' },
         { label: 'Terms of Use', href: '/terms' },
       ] as { label: string; href: string }[],
-      rights: '© 2026 GnosIQ · GnosIQ Inteligência Cognitiva Ltda. · CNPJ 66.473.762/0001-13',
-      address: 'Rua Cristóvão Colombo, 2144, Suite 408, Porto Alegre, RS 90560-001 · Brazil',
-      feedback: 'Found something wrong? Let us know →',
+      rights: '© 2026 GnosIQ Tecnologia Ltda. · CNPJ 66.473.762/0001-13',
+      address: 'Rua Cristóvão Colombo, 2144, Suite 408, Porto Alegre, RS 90560-001, Brazil',
+      feedback: 'Found something wrong? Let us know',
     },
   }
   const t = copy[locale]
@@ -108,7 +108,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom row */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="flex flex-col items-center text-center gap-6">
           <div className="flex items-center gap-2">
             <span className="opacity-70 font-display text-lg font-bold tracking-tight text-white select-none">
               Gnos<span className="text-accent">IQ</span>
