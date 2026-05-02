@@ -15,7 +15,7 @@ const steps = [
   {
     num: '02',
     title: '3 agentes de IA especializados analisam em conjunto',
-    desc: 'Extração de padrões cognitivos, cruzamento com base psicométrica validada e síntese narrativa — processados em conjunto.'
+    desc: 'Extração de padrões cognitivos, cruzamento com base psicométrica validada e síntese narrativa, processados em conjunto.'
   },
   {
     num: '03',

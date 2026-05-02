@@ -17,7 +17,7 @@ export default function Footer() {
         { label: 'Termos de Uso', href: '/terms' },
       ] as { label: string; href: string }[],
       rights: '© 2026 GnosIQ · GnosIQ Inteligência Cognitiva Ltda. · CNPJ 66.473.762/0001-13',
-      address: 'Rua Cristóvão Colombo, 2144, Sala 408 — Floresta · Porto Alegre, RS · CEP 90560-001 · Brasil',
+      address: 'Rua Cristóvão Colombo, 2144, Sala 408, Floresta · Porto Alegre, RS · CEP 90560-001 · Brasil',
       feedback: 'Encontrou algo errado? Nos avise →',
     },
     en: {
@@ -27,7 +27,7 @@ export default function Footer() {
         { label: 'Terms of Use', href: '/terms' },
       ] as { label: string; href: string }[],
       rights: '© 2026 GnosIQ · GnosIQ Inteligência Cognitiva Ltda. · CNPJ 66.473.762/0001-13',
-      address: 'Rua Cristóvão Colombo, 2144, Suite 408 — Porto Alegre, RS 90560-001 · Brazil',
+      address: 'Rua Cristóvão Colombo, 2144, Suite 408, Porto Alegre, RS 90560-001 · Brazil',
       feedback: 'Found something wrong? Let us know →',
     },
   }
