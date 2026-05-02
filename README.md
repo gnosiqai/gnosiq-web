@@ -3,15 +3,15 @@
 # GnosIQ
 [![Status](https://img.shields.io/badge/status-pre--launch-8B5CF6?style=flat-square)](https://gnosiq.ai)
 [![Beta NPS](https://img.shields.io/badge/beta%20NPS-76-8B5CF6?style=flat-square)](#)
-[![Quality](https://img.shields.io/badge/code%20quality-review%20M2-6D28D9?style=flat-square)](#)
-[![Security](https://img.shields.io/badge/security-audit%20M2-6D28D9?style=flat-square)](#)
+[![Quality](https://img.shields.io/badge/code%20quality-SonarCloud-6D28D9?style=flat-square)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
+[![Security](https://img.shields.io/badge/security-SonarCloud-6D28D9?style=flat-square)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
 
 **The Cognitive Capital API**
 
 *We don't assess people. We unlock the cognitive capital hidden in every human.*
 
 [![Stack](https://img.shields.io/badge/stack-Next.js%2015%20%7C%20Vercel%20%7C%20Cloud%20Run%20%7C%20Firestore-0D0B1E?style=flat-square)](#tech-stack)
-[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions%20→%20Vercel%20(deploy.yml)-0D0B1E?style=flat-square)](#tech-stack)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions%20→%20Vercel-0D0B1E?style=flat-square)](#tech-stack)
 [![License](https://img.shields.io/badge/license-Proprietary-6D28D9?style=flat-square)](#legal)
 
 [gnosiq.ai](https://gnosiq.ai) · [@gnosiqai](https://x.com/gnosiqai) · [Docs](https://docs.gnosiq.ai) *(coming M4)*
@@ -154,16 +154,16 @@ const report = await client.evaluate({
              │       │
   ┌──────────▼─┐  ┌──▼────────────────────────┐
   │  Firestore │  │     AI Router (CAT)       │
-  │ Native Mode│  │   (Metabolic AI v2.0)     │
+  │ Native Mode│  │                           │
   │            │  │                           │
-  │  reports/  │  │  (Pattern Extractor)      │
-  │  partners/ │  │         2.5 Flash         │
-  └────────────┘  │  (Psychometrician AI)     │
-                  │        Sonnet             │
-                  │  (Synthetic Neuropsy.)    │
+  │  reports/  │  │                           │
+  │  partners/ │  │                           │
+  └────────────┘  │                           │
+                  │                           │
+                  │                           │
                   │                           │
                   │ 12 instruments · 4 layers │
-                  │  98.1% margin             │
+                  │                           │
                   └───────────────────────────┘
                            │
                 ┌──────────▼──────────┐
@@ -174,7 +174,7 @@ const report = await client.evaluate({
 ```
 
 **Design principles (from the [GnosIQ Architecture Manifesto](docs/ARCHITECTURE.md)):**  
-100% Cloud · 100% Serverless · Minimum Cost Max Profit · Metabolic AI ·  
+100% Cloud · 100% Serverless · Minimum Cost Max Profit ·  
 Privacy Sovereign · Solo Founder Scalable · API-First · Async-First
 
 ---
@@ -191,7 +191,7 @@ Privacy Sovereign · Solo Founder Scalable · API-First · Async-First
 | Email | SendGrid API v3 | 100/day free · reliable delivery |
 | Analytics | PostHog Cloud | 1M events/mo free · session replay |
 | DNS / CDN | Cloudflare | DDoS · SSL · proxy · free |
-| CI/CD | GitHub Actions → Vercel CLI (native) | `vercel pull → vercel build --prod → vercel deploy --prebuilt --prod` on push main · workflow: `deploy.yml` |
+| CI/CD | GitHub Actions → Vercel | Auto-deploy on push to main |
 | Code Quality | SonarCloud | AI code trust mitigation · Quality Gate ✅ · A/A/A (Security / Reliability / Maintainability) |
 | Package Manager | npm (only) | yarn/pnpm not used in this repo |
 
@@ -219,7 +219,7 @@ leads live     sales +        MRR · 2–3      pipeline
 ### Delivered in M1
 - Full landing page (8 sections, PT/EN toggle)
 - Waitlist backend: Firestore + SendGrid (validated in production)
-- CI/CD: GitHub Actions + Vercel CLI (deploy.yml)
+- CI/CD: GitHub Actions + Vercel CLI
 - SonarCloud: Quality Gate A, 0 critical, 0 high vulnerabilities
 - GnoScore(tm): featured on landing as M2 capability
 - Beta NPS: 76 | Avg time: 22 min | Report: 18 pages
@@ -247,24 +247,6 @@ leads live     sales +        MRR · 2–3      pipeline
 - Geo expansion: US 50% · UK 30% · DE 20%
 - Prerequisite: M3 gate validated
 - Linear: [GNO-16](https://linear.app/gnosiq/issue/GNO-16)
-
----
-
-## Unit Economics
-
-> Numbers at current optimized stack. No hockey-stick assumptions.
-
-```
-
-White-Label MRR model (M3 target)
-──────────────────────────────────────
-2 Starter partners      2 × $2,500 = $5,000/mo
-1 Professional          1 × $5,000 = $5,000/mo
-                                    ──────────
-Minimum M3 floor MRR              $10,000/mo
-
-3 Professional + 1 Enterprise     $27,000/mo   ← $30K gate
-```
 
 ---
 
@@ -305,8 +287,7 @@ npm install
 
 # Copy environment variables
 cp .env.example .env.local
-# → fill ANTHROPIC_API_KEY, GOOGLE_AI_API_KEY, SENDGRID_API_KEY,
-#   NEXT_PUBLIC_POSTHOG_KEY, FIRESTORE_PROJECT_ID
+# → fill all required variables documented in .env.example
 
 npm run dev
 # → http://localhost:3000
@@ -322,20 +303,15 @@ npm run dev
 | `FIRESTORE_PROJECT_ID` | M1 | Waitlist + sessions persistence |
 | `STRIPE_SECRET_KEY` | M2+ | Payment processing |
 | `STRIPE_WEBHOOK_SECRET` | M2+ | Async payment confirmation |
-| `VERCEL_TOKEN` | CI/CD | Deploy token GitHub Actions |
-| `VERCEL_ORG_ID` | CI/CD | Vercel Organization ID |
-| `VERCEL_PROJECT_ID` | CI/CD | Vercel Project ID |
+| CI/CD secrets | CI/CD | Configured in GitHub Actions · not documented here |
 
 ### Deploy
 
 ```bash
-# Frontend → Vercel (auto-deploy via GitHub Actions on push to main)
-# Workflow: .github/workflows/deploy.yml
-# Pipeline: vercel pull → vercel build --prod → vercel deploy --prebuilt --prod
+# Frontend → auto-deploy via GitHub Actions on push to main
 git push origin main
 
-# Backend → Cloud Run (GNO-7 · M1 backend)
-# See: .github/workflows/deploy-cloud-run.yml (pending M1)
+# Backend → Cloud Run · auto-deploy via GitHub Actions on push to main
 ```
 
 ---
@@ -358,12 +334,12 @@ gnosiq-web/
 │   ├── firestore.ts        # DB client (canonical pattern — GoogleAuth anti-pattern banned)
 │   └── sendgrid.ts         # Email client
 ├── prompts/
-│   └── base.ts             # Cognitive Engine agents foundation (GNO-26)
+│                           # Cognitive Engine (proprietary · not documented)
 ├── public/
 │   ├── gnosiq-logo.png     # Brand logo — LOCKED, do not replace
 │   └── logo-placeholder.svg
 ├── .github/
-│   └── workflows/          # deploy.yml (sole authorized workflow)
+│   └── workflows/          # CI/CD workflows
 └── .env.example            # All required vars documented
 ```
 
