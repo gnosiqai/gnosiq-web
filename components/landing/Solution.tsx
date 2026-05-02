@@ -46,7 +46,7 @@ export default function Solution() {
         {/* FIX-05: Bloco exemplo de insight — relatório real */}
         <div className="bg-background-secondary border border-accent/20 rounded-xl p-5 mb-10 max-w-2xl mx-auto text-left">
           <p className="text-xs font-bold text-accent uppercase tracking-widest mb-3">
-            Exemplo de insight — relatório real
+            Exemplo de insight: relatório real
           </p>
 
           <p className="text-sm text-text-secondary leading-relaxed italic">
@@ -82,7 +82,7 @@ export default function Solution() {
             <div className="text-3xl mb-4">🔍</div>
             <h3 className="font-bold text-text-primary mb-2">Onde estão seus pontos cegos</h3>
             <p className="text-text-secondary text-sm leading-relaxed">
-              Mapeie os padrões que surgem sob pressão de decisão — os que afetam contratações,
+              Mapeie os padrões que surgem sob pressão de decisão, os que afetam contratações,
               co-founders e pivôs antes que você perceba.
             </p>
           </div>

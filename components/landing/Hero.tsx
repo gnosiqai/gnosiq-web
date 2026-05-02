@@ -23,7 +23,7 @@ export default function Hero() {
   const copy = {
     pt: {
       eyebrow: 'Beta Privado · Acesso Antecipado',
-      sub1: 'Para founders e líderes técnicos que tomam decisões de alta consequência: o autoconhecimento científico era caro, demorado e inacessível. Isso mudou.',
+      sub1: 'Para founders e líderes técnicos que tomam decisões de alta consequência: o diagnóstico cognitivo profundo era caro, demorado e inacessível. Isso mudou.',
       sub2: 'A inteligência humana é o único ativo que nenhum balanço patrimonial consegue capturar. Até agora.',
       sub3: 'A profundidade de uma avaliação baseada em instrumentos psicométricos validados internacionalmente pela fração do tempo e do custo.',
       price: 'A partir de R$97 · relatório online em até ~30 minutos.',
@@ -35,7 +35,7 @@ gnoscoreNote: 'Inclui GnoScore™ verificado',
     },
     en: {
       eyebrow: 'Private Beta · Early Access',
-      sub1: 'For founders and technical leaders who make high-consequence decisions: scientific self-knowledge was expensive, slow and inaccessible. That changed.',
+      sub1: 'For founders and technical leaders who make high-consequence decisions: deep cognitive diagnosis was expensive, slow and inaccessible. That changed.',
       sub2: 'Human intelligence is the only asset no balance sheet can capture. Until now.',
       sub3: 'The depth of an evaluation based on internationally validated psychometric instruments at a fraction of the time and cost.',
       price: 'Starting at $97 · online report in up to ~30 minutes.',
