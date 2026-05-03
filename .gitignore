@@ -89,3 +89,9 @@ venv/
 .terraform/
 *.tfstate
 *.tfstate.*
+
+# GNO-90 — Proprietary IP (never commit to public repo)
+prompts/
+docs/architecture/
+.gnosiq/
+sonar-project.properties
