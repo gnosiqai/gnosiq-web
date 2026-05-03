@@ -137,8 +137,8 @@ export default function TermsPage() {
           </ul>
           <p style={{ lineHeight: 1.7, marginTop: '1rem' }}>
             Você pode revogar seu consentimento a qualquer momento enviando e-mail para{' '}
-            <a href="mailto:carlos@gnosiq.ai" style={{ color: '#8B5CF6' }}>
-              carlos@gnosiq.ai
+            <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
+              hello@gnosiq.ai
             </a>{' '}
             com o assunto <strong style={{ color: '#FFFFFF' }}>&ldquo;LGPD &mdash; Revogar Consentimento&rdquo;</strong>.
           </p>
@@ -165,8 +165,8 @@ export default function TermsPage() {
           </p>
           <p style={{ lineHeight: 1.7 }}>
             Para solicitar reembolso, envie e-mail para{' '}
-            <a href="mailto:carlos@gnosiq.ai" style={{ color: '#8B5CF6' }}>
-              carlos@gnosiq.ai
+            <a href="mailto:support@gnosiq.ai" style={{ color: '#8B5CF6' }}>
+              support@gnosiq.ai
             </a>{' '}
             com o assunto <strong style={{ color: '#FFFFFF' }}>&ldquo;Reembolso &mdash; [seu pedido]&rdquo;</strong>. O valor será
             estornado em até 5 dias úteis.
@@ -244,8 +244,8 @@ export default function TermsPage() {
             <br />
             São Paulo, SP — Brasil
             <br />
-            <a href="mailto:carlos@gnosiq.ai" style={{ color: '#8B5CF6' }}>
-              carlos@gnosiq.ai
+            <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
+              hello@gnosiq.ai
             </a>{' '}
             ·{' '}
             <a href="https://gnosiq.ai" style={{ color: '#8B5CF6' }}>

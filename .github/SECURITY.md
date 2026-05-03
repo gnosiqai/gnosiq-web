@@ -10,7 +10,7 @@
 
 **Do NOT open a public GitHub issue for security vulnerabilities.**
 
-Report security issues privately via email: **carlos@gnosiq.ai**
+Report security issues privately via email: **security@gnosiq.ai**
 
 Include:
 - Description of the vulnerability

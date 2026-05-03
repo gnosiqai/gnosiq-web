@@ -118,8 +118,8 @@ export default function PrivacyPage() {
             </ul>
             <p className="mt-4" style={{ color: '#D1D5DB' }}>
               Para exercer qualquer direito, envie um e-mail para{' '}
-              <a href="mailto:carlos@gnosiq.ai" style={{ color: '#8B5CF6' }}>
-                carlos@gnosiq.ai
+              <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
+                hello@gnosiq.ai
               </a>{' '}
               com o assunto <strong>&quot;LGPD — [seu direito]&quot;</strong>. Respondemos em até 15 dias
               úteis.
@@ -136,8 +136,8 @@ export default function PrivacyPage() {
               Responsável pelo tratamento de dados: Carlos Alberto Gomes
               <br />
               E-mail:{' '}
-              <a href="mailto:carlos@gnosiq.ai" style={{ color: '#8B5CF6' }}>
-                carlos@gnosiq.ai
+              <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
+                hello@gnosiq.ai
               </a>
               <br />
               Site:{' '}
@@ -204,8 +204,8 @@ export default function PrivacyPage() {
             <p style={{ color: '#D1D5DB' }}>
               You have the right to access, correct, delete, or port your data, and to revoke
               consent at any time. Email{' '}
-              <a href="mailto:carlos@gnosiq.ai" style={{ color: '#8B5CF6' }}>
-                carlos@gnosiq.ai
+              <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
+                hello@gnosiq.ai
               </a>{' '}
               with subject <strong>&quot;Privacy — [your request]&quot;</strong>. Response within 15
               business days.
@@ -221,8 +221,8 @@ export default function PrivacyPage() {
               <br />
               Data Controller: Carlos Alberto Gomes
               <br />
-              <a href="mailto:carlos@gnosiq.ai" style={{ color: '#8B5CF6' }}>
-                carlos@gnosiq.ai
+              <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
+                hello@gnosiq.ai
               </a>{' '}
               ·{' '}
               <a href="https://gnosiq.ai" style={{ color: '#8B5CF6' }}>
