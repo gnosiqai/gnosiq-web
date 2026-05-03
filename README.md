@@ -354,7 +354,7 @@ to external developers after M3 validation.
 - No PII is stored beyond what is strictly necessary for report delivery
 - LGPD (BR) · GDPR (EU) compliant by design
 
-Found a vulnerability? Email **carlos@gnosiq.ai** with subject `[SECURITY]`.
+Found a vulnerability? Email **security@gnosiq.ai** with subject `[SECURITY]`.
 We respond within 24 hours.
 
 ---

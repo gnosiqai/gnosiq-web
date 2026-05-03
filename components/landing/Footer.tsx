@@ -100,10 +100,10 @@ export default function Footer() {
         {/* FIX 5 — Contato mailto */}
         <div className="flex justify-center mb-8">
           <a
-            href="mailto:carlos@gnosiq.ai"
+            href="mailto:hello@gnosiq.ai"
             className="text-white/50 hover:text-accent transition-colors text-sm"
           >
-            carlos@gnosiq.ai
+            hello@gnosiq.ai
           </a>
         </div>
 
@@ -137,7 +137,7 @@ export default function Footer() {
         {/* FIX 6 — Feedback link discreto */}
         <div className="flex justify-center mt-6">
           <a
-            href="mailto:carlos@gnosiq.ai?subject=Feedback%20gnosiq.ai"
+            href="mailto:hello@gnosiq.ai?subject=Feedback%20gnosiq.ai"
             className="text-white/30 hover:text-white/60 text-xs transition-colors"
           >
             {t.feedback}
