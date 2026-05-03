@@ -184,53 +184,15 @@ Privacy Sovereign · Solo Founder Scalable · API-First · Async-First
 
 ## Roadmap
 
-GnosIQ ships in four sequential milestones. Each unlocks the next surface.
-No milestone starts before the previous gate is validated — solo founder filter.
+GnosIQ ships in sequential milestones, each unlocking the next access surface.
 
-```
-M1 ──────────► M2 ──────────► M3 ──────────► M4+
-Landing        Surface 1      Surface 2      Surface 3
+**Coming soon:**
+- API access for individual developers and teams
+- Team plans with collaborative cognitive insights
+- Enterprise tier with custom branding and white-label deployment
+- Public API with SDK support for third-party integrations
 
-Waitlist       B2C Live       White-Label    Public API
-
-Gate:          Gate:          Gate:          Gate:
-waitlist       B2C            B2B            Series A
-validated      validated      validated      pipeline
-```
-
-## Status: M1 Pre-Launch — Live at gnosiq.ai
-
-### Delivered in M1
-- Full landing page (8 sections, PT/EN toggle)
-- Waitlist backend: Firestore + SendGrid (validated in production)
-- CI/CD: GitHub Actions + Vercel CLI
-- SonarCloud: Quality Gate A, 0 critical, 0 high vulnerabilities
-- GnoScore(tm): featured on landing as M2 capability
-- Beta feedback: Avg session 22 min · 18-page report delivered
-
-### Next (M2)
-- Full B2C assessment
-- Cognitive Engine: 3 LLM agents + 12 psychometric instruments
-- GnoScore(tm) verifiable badge + LinkedIn Share
-
-### M2 — API + First Customers *(Surface 1 · B2C)*
-
-- Stripe payment flow → async processing → PDF delivery
-- Target: B2C revenue validated
-- Linear: [GNO-14](https://linear.app/gnosiq/issue/GNO-14)
-
-### M3 — White-Label + B2B *(Surface 2)*
-
-- Multi-tenant dashboard · partner onboarding · custom branding
-- Target: B2B revenue validated · partners signed
-- Linear: [GNO-15](https://linear.app/gnosiq/issue/GNO-15)
-
-### M4+ — Public API + International Scale *(Surface 3)*
-
-- API key auth · rate limiting · Swagger docs · Node.js SDK
-- Geo expansion: US 50% · UK 30% · DE 20%
-- Prerequisite: M3 gate validated
-- Linear: [GNO-16](https://linear.app/gnosiq/issue/GNO-16)
+> For early access and updates, join the waitlist at [gnosiq.ai](https://gnosiq.ai).
 
 ---
 
