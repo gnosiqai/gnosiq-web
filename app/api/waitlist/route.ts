@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
           await sgMail.send({
             to: email,
             from: {
-              email: process.env.SENDGRID_FROM_EMAIL || 'carlos@gnosiq.ai',
+              email: process.env.SENDGRID_FROM_EMAIL || 'noreply@gnosiq.ai',
               name: 'Carlos @ GnosIQ',
             },
             subject: "You're on the GnosIQ waitlist 🧠",
