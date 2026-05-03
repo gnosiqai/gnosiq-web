@@ -103,4 +103,3 @@ GNOSIQ-SSOT-*.json
 prompts/
 docs/architecture/
 .gnosiq/
-sonar-project.properties
