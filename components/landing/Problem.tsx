@@ -28,13 +28,13 @@ export default function Problem() {
 
         {/* H2 */}
         <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-8">
-          Nenhum balanço captura capital cognitivo, até hoje
+          Nenhum balanço captura capital cognitivo<br />Até hoje
         </h2>
 
         {/* Body */}
         <p className="text-lg text-text-secondary mb-12 leading-relaxed max-w-3xl">
           Você investe em infra, produto e time. Mas o ativo que dirige todas essas
-          decisões: como você pensa, processa e age, nunca foi medido com rigor.
+          decisões:<br />como você pensa, processa e age, nunca foi medido com rigor
         </p>
 
         {/* Pain points */}

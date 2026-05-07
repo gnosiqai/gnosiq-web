@@ -21,6 +21,17 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "GnosIQ — The Cognitive Capital API",
+  // GNO-92: favicon implementation
+  icons: {
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   description:
     "A primeira API que transforma potencial humano em capital computável. Relatório cognitivo completo em 30 minutos, por R$97.",
   metadataBase: new URL(
