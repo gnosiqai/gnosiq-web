@@ -11,12 +11,12 @@ export default function Hero() {
   const headlineVariant = useFeatureFlagVariantKey('headline_ab_test')
   const headlineControlPt = (
     <>
-      GnosIQ<br />O Manual de Instruções da<br />sua mente
+      GnosIQ<br />O Manual de Instruções<br />da sua Mente
     </>
   )
   const headlineControlEn = (
     <>
-      GnosIQ<br />The Instruction Manual for<br />your mind.
+      GnosIQ<br />The Instruction Manual for<br />your mind
     </>
   )
   const headlines = {
@@ -33,7 +33,7 @@ export default function Hero() {
   const copy = {
     pt: {
       eyebrow: 'Beta Privado · Acesso Antecipado',
-      sub1: 'Para founders e líderes técnicos que tomam decisões de alta consequência: o diagnóstico cognitivo profundo era caro, demorado e inacessível.',
+      sub1: 'Para founders e líderes técnicos e outros que tomam decisões de alta consequência: o diagnóstico cognitivo profundo era caro, demorado e inacessível.',
       sub1b: 'Isso mudou.',
       sub2: 'A inteligência humana é o único ativo que nenhum balanço patrimonial capturou.',
       sub2b: 'Até agora.',

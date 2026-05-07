@@ -14,23 +14,33 @@ export default function ApiSection() {
 
   const copy = {
     pt: {
-      eyebrow: 'Para founders, tech leaders e times de produto',
-      h2: 'The Cognitive Capital API',
-      problem: 'Contratações equivocadas. Funcionários em posições erradas. Talentos desperdiçados.',
-      problemPunch: 'Isso acabou.',
+      eyebrow: 'Para founders, tech leaders e RH de alta performance',
+      h2: <>The Cognitive Capital API 🔬 <em>em desenvolvimento</em></>,
+      problem: 'Contratações equivocadas. Funcionários em posições erradas.',
+      problemPunch: '',
+      problemExtra: (
+        <>
+          <br /><br />Talentos desperdiçados.<br /><br />Isso acabou.
+        </>
+      ),
       body: 'Integre avaliação cognitiva profunda diretamente na sua plataforma.',
-      tagline: 'A primeira API que transforma potencial humano em capital computável. Acesso direto via API, resposta em tempo real, escalabilidade massiva. Da avaliação individual ao uso corporativo.',
+      tagline: 'A primeira API que transforma potencial humano em capital computável.\n~30 minutos. Mapeamento profundo. Escala ilimitada.\nDa avaliação individual ao uso corporativo.',
       cta: 'Solicitar acesso beta',
       badge: 'Beta fechado · Acesso antecipado',
       validado: 'API validada do mercado',
     },
     en: {
-      eyebrow: 'For HR, product teams, companies, devs',
-      h2: 'The Cognitive Capital API',
-      problem: 'Wrong hires. Employees in wrong positions. Wasted talent.',
-      problemPunch: 'That ends now.',
+      eyebrow: 'For founders, tech leaders and high-performance HR',
+      h2: <>The Cognitive Capital API 🔬 <em>under development</em></>,
+      problem: 'Wrong hires. Employees in wrong positions.',
+      problemPunch: '',
+      problemExtra: (
+        <>
+          <br /><br />Wasted talent.<br /><br />That ends now.
+        </>
+      ),
       body: 'Integrate deep cognitive evaluation directly into your platform.',
-      tagline: 'The first API that turns human potential into computable capital. Direct API access, real-time response, massive scalability. From individual evaluation to enterprise use.',
+      tagline: 'The first API that turns human potential into computable capital.\n~30 minutes. Deep mapping. Unlimited scale.\nFrom individual evaluation to enterprise use.',
       cta: 'Request beta access',
       badge: 'Closed beta · Early access',
       validado: 'Market-validated API',
@@ -59,8 +69,7 @@ export default function ApiSection() {
         {/* Problem statement */}
         <p className="text-lg text-text-secondary mb-4 leading-relaxed max-w-2xl">
           {t.problem}
-          <br />
-          {t.problemPunch}
+          {t.problemExtra}
         </p>
 
         {/* Body */}
@@ -74,7 +83,7 @@ export default function ApiSection() {
         </h2>
 
         {/* Tagline */}
-        <p className="text-lg text-text-secondary mb-10 leading-relaxed max-w-3xl">
+        <p className="text-lg text-text-secondary mb-10 leading-relaxed max-w-3xl" style={{ whiteSpace: 'pre-line' }}>
           {t.tagline}
         </p>
 
