@@ -29,6 +29,7 @@ pnpm-debug.log*
 # Local env files — NUNCA commitar credenciais
 .env
 .env.*
+!.env.example
 !.env.local.example
 .env.local
 .env.development.local
@@ -46,13 +47,16 @@ next-env.d.ts
 
 # IDE
 .vscode/
+.vscode/settings.json
 .idea/
 *.swp
 *.swo
 
 # GCP / Firebase credentials — padrões explícitos (não usar *.json amplo)
 service-account*.json
+*-service-account.json
 gcp-key*.json
+gcp-credentials*.json
 firebase-admin*.json
 credentials*.json
 secrets*.json
@@ -89,3 +93,13 @@ venv/
 .terraform/
 *.tfstate
 *.tfstate.*
+
+# SSOT e arquivos internos (NUNCA no repo público)
+SSOT-dynamic*.json
+*-SSOT-*.json
+GNOSIQ-SSOT-*.json
+
+# GNO-90 — Proprietary IP (never commit to public repo)
+prompts/
+docs/architecture/
+.gnosiq/
