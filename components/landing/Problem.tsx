@@ -34,7 +34,7 @@ export default function Problem() {
         {/* Body */}
         <p className="text-lg text-text-secondary mb-12 leading-relaxed max-w-3xl">
           Você investe em infra, produto e time. Mas o ativo que dirige todas essas
-          decisões:<br />como você pensa, processa e age, nunca foi medido com rigor
+          decisões:<br />como você pensa, processa e age, nunca foi medido com rigor.
         </p>
 
         {/* Pain points */}

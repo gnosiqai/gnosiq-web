@@ -8,6 +8,7 @@ import posthog from 'posthog-js'
 // CTA: ghost/outlined — NUNCA primário
 // NÃO lista preço nesta seção
 // GNO-84: FIX-06 eyebrow ICP atualizado
+// GNO-92b: dores sem linhas em branco; h2 badge em desenvolvimento com mesmo estilo do body
 
 export default function ApiSection() {
   const { locale } = useLocale()
@@ -15,12 +16,19 @@ export default function ApiSection() {
   const copy = {
     pt: {
       eyebrow: 'Para founders, tech leaders e RH de alta performance',
-      h2: <>The Cognitive Capital API 🔬 <em>em desenvolvimento</em></>,
-      problem: 'Contratações equivocadas. Funcionários em posições erradas.',
-      problemPunch: '',
-      problemExtra: (
+      h2: (
         <>
-          <br /><br />Talentos desperdiçados.<br /><br />Isso acabou.
+          The Cognitive Capital API 🔬{' '}
+          <em className="text-base text-text-muted font-normal not-italic" style={{ fontSize: 'inherit' }}>
+            em desenvolvimento
+          </em>
+        </>
+      ),
+      problem: (
+        <>
+          Contratações equivocadas. Funcionários em posições erradas.
+          <br />Talentos desperdiçados.
+          <br />Isso acabou.
         </>
       ),
       body: 'Integre avaliação cognitiva profunda diretamente na sua plataforma.',
@@ -31,12 +39,19 @@ export default function ApiSection() {
     },
     en: {
       eyebrow: 'For founders, tech leaders and high-performance HR',
-      h2: <>The Cognitive Capital API 🔬 <em>under development</em></>,
-      problem: 'Wrong hires. Employees in wrong positions.',
-      problemPunch: '',
-      problemExtra: (
+      h2: (
         <>
-          <br /><br />Wasted talent.<br /><br />That ends now.
+          The Cognitive Capital API 🔬{' '}
+          <em className="text-base text-text-muted font-normal not-italic" style={{ fontSize: 'inherit' }}>
+            under development
+          </em>
+        </>
+      ),
+      problem: (
+        <>
+          Wrong hires. Employees in wrong positions.
+          <br />Wasted talent.
+          <br />That ends now.
         </>
       ),
       body: 'Integrate deep cognitive evaluation directly into your platform.',
@@ -66,10 +81,9 @@ export default function ApiSection() {
           {t.eyebrow}
         </p>
 
-        {/* Problem statement */}
+        {/* Problem statement — sem linhas em branco entre as frases */}
         <p className="text-lg text-text-secondary mb-4 leading-relaxed max-w-2xl">
           {t.problem}
-          {t.problemExtra}
         </p>
 
         {/* Body */}
@@ -77,7 +91,7 @@ export default function ApiSection() {
           {t.body}
         </p>
 
-        {/* H2 */}
+        {/* H2 — "em desenvolvimento" com mesmo estilo visual do body */}
         <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6">
           {t.h2}
         </h2>
