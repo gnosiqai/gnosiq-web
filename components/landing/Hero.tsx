@@ -35,7 +35,7 @@ export default function Hero() {
       eyebrow: 'Beta Privado · Acesso Antecipado',
       sub1: (
         <>
-          Para <u>founders</u> e líderes técnicos e outros que tomam decisões de
+          Para founders e líderes técnicos e outros que tomam decisões de
           <br />alta consequência: o diagnóstico cognitivo profundo
           <br />era caro, demorado e inacessível.
         </>
@@ -66,7 +66,7 @@ export default function Hero() {
       eyebrow: 'Private Beta · Early Access',
       sub1: (
         <>
-          For <u>founders</u> and technical leaders and others who make
+          For founders and technical leaders and others who make
           <br />high-consequence decisions: deep cognitive diagnosis
           <br />was expensive, slow and inaccessible.
         </>

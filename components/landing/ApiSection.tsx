@@ -19,7 +19,7 @@ export default function ApiSection() {
       h2: (
         <>
           The Cognitive Capital API 🔬{' '}
-          <em className="text-base text-text-muted font-normal not-italic" style={{ fontSize: 'inherit' }}>
+          <em className="text-sm text-text-muted font-normal not-italic">
             em desenvolvimento
           </em>
         </>
@@ -42,7 +42,7 @@ export default function ApiSection() {
       h2: (
         <>
           The Cognitive Capital API 🔬{' '}
-          <em className="text-base text-text-muted font-normal not-italic" style={{ fontSize: 'inherit' }}>
+          <em className="text-sm text-text-muted font-normal not-italic">
             under development
           </em>
         </>

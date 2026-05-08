@@ -28,7 +28,7 @@ export default function Problem() {
 
         {/* H2 */}
         <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-8">
-          Nenhum balanço captura capital cognitivo<br />Até hoje
+          Nenhum balanço captura capital cognitivo.<br />Até hoje
         </h2>
 
         {/* Body */}
