@@ -18,8 +18,9 @@ export default function ApiSection() {
       eyebrow: 'Para founders, tech leaders e RH de alta performance',
       h2: (
         <>
-          The Cognitive Capital API 🔬{' '}
-          <em className="text-sm text-text-muted font-normal not-italic">
+          The Cognitive Capital API 🔬
+          <br />
+          <em className="text-base text-text-muted font-normal not-italic">
             em desenvolvimento
           </em>
         </>
@@ -41,8 +42,9 @@ export default function ApiSection() {
       eyebrow: 'For founders, tech leaders and high-performance HR',
       h2: (
         <>
-          The Cognitive Capital API 🔬{' '}
-          <em className="text-sm text-text-muted font-normal not-italic">
+          The Cognitive Capital API 🔬
+          <br />
+          <em className="text-base text-text-muted font-normal not-italic">
             under development
           </em>
         </>
