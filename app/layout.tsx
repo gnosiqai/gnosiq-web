@@ -21,6 +21,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "GnosIQ — The Cognitive Capital API",
+  // GNO-93: indexação explícita (remoção de sinais de stealth)
+  robots: { index: true, follow: true },
   // GNO-92: favicon implementation
   icons: {
     icon: [
@@ -81,6 +83,7 @@ export default function RootLayout({
       className={`dark ${inter.variable} ${jetbrainsMono.variable}`}
     >
       <head>
+        <link rel="sitemap" href="/sitemap.xml" type="application/xml" />
         {posthogKey && (
           <Script
             id="posthog-init"

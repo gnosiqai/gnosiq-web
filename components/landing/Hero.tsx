@@ -32,7 +32,7 @@ export default function Hero() {
 
   const copy = {
     pt: {
-      eyebrow: 'Beta Privado · Acesso Antecipado',
+      eyebrow: 'Acesso Antecipado',
       sub1: (
         <>
           Para founders e líderes técnicos e outros que tomam decisões de
@@ -63,7 +63,7 @@ export default function Hero() {
       micro: ['✓ Pagamento único', '✓ Relatório de 18 páginas', '✓ Entrega em ~30 minutos', '✓ Acesso Antecipado · Vagas Limitadas'],
     },
     en: {
-      eyebrow: 'Private Beta · Early Access',
+      eyebrow: 'Early Access',
       sub1: (
         <>
           For founders and technical leaders and others who make
