@@ -1,0 +1,15 @@
+## Git & Linear — convenção obrigatória
+
+1. BRANCH: Se a tarefa referencia uma issue Linear (GNO-xx), NUNCA gerar
+   nome de branch próprio. Buscar o `gitBranchName` da issue via Linear MCP
+   (get_issue) e criar/usar exatamente essa branch.
+   Se a branch de trabalho já existir com outro nome (sessão herdada),
+   NÃO renomear — compensar via magic word (regra 3).
+2. Se a tarefa NÃO tem issue Linear associada, perguntar ao founder se
+   deve existir uma antes de commitar (Regra 14: validar maior ID no
+   Linear antes de criar — nunca confiar em número herdado de documento).
+3. PULL REQUEST: título no formato `tipo(escopo): GNO-xx — descrição`
+   e corpo contendo `Fixes GNO-xx` na primeira linha. Sem exceção —
+   é isso que garante o vínculo e o auto-close no Linear mesmo quando
+   a branch fugiu do padrão.
+4. Nunca abrir PR sem aprovação explícita do founder ("approved").
