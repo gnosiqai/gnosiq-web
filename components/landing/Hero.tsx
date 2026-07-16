@@ -3,6 +3,7 @@ import posthog from 'posthog-js'
 import { useFeatureFlagVariantKey } from 'posthog-js/react'
 import { useLocale } from '@/lib/context/LocaleContext'
 import HeroBackground from './HeroBackground'
+import { DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 
 export default function Hero() {
   const { locale } = useLocale()
@@ -55,12 +56,12 @@ export default function Hero() {
           <br />pela fração do custo e tempo.
         </>
       ),
-      price: 'A partir de R$97 · relatório online em até ~30 minutos.',
+      price: `A partir de R$97 · relatório online em até ~${DELIVERY_MINUTES} minutos.`,
       cta1: 'Entrar na lista de espera',
       cta2: 'Ver como funciona',
       disclaimer: 'Avaliação cognitiva · não substitui avaliação clínica.',
       gnoscoreNote: 'Inclui GnoScore™ verificado',
-      micro: ['✓ Pagamento único', '✓ Relatório de 18 páginas', '✓ Entrega em ~30 minutos', '✓ Acesso Antecipado · Vagas Limitadas'],
+      micro: ['✓ Pagamento único', `✓ Relatório de ${REPORT_PAGES} páginas`, `✓ Entrega em ~${DELIVERY_MINUTES} minutos`, '✓ Acesso Antecipado · Vagas Limitadas'],
     },
     en: {
       eyebrow: 'Early Access',
@@ -86,12 +87,12 @@ export default function Hero() {
           <br />at a fraction of the cost and time.
         </>
       ),
-      price: 'Starting at $97 · online report in up to ~30 minutes.',
+      price: `Starting at $97 · online report in up to ~${DELIVERY_MINUTES} minutes.`,
       cta1: 'Join the waitlist',
       cta2: 'See how it works',
       disclaimer: 'Cognitive evaluation · does not replace clinical assessment.',
       gnoscoreNote: 'Includes verified GnoScore™',
-      micro: ['✓ One-time payment', '✓ 18-page report', '✓ Delivered in ~30 minutes', '✓ Early Access · Limited Spots'],
+      micro: ['✓ One-time payment', `✓ ${REPORT_PAGES}-page report`, `✓ Delivered in ~${DELIVERY_MINUTES} minutes`, '✓ Early Access · Limited Spots'],
     },
   }
   const t = copy[locale]

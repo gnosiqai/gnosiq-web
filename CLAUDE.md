@@ -13,3 +13,6 @@
    é isso que garante o vínculo e o auto-close no Linear mesmo quando
    a branch fugiu do padrão.
 4. Nunca abrir PR sem aprovação explícita do founder ("approved").
+7. FECHAMENTO DE ISSUE: usar `Fixes GNO-xx` somente quando o merge conclui
+   TODO o DoD da issue. Issues com entregáveis além do código: usar
+   `Refs GNO-xx` — fechamento é decisão do founder.

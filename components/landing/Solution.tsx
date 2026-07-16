@@ -3,6 +3,7 @@
 import { useLocale } from '@/lib/context/LocaleContext'
 import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
 import { useStaggerReveal } from '@/hooks/useStaggerReveal'
+import { DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 
 // GNO-67: Fix 3.6 — Agent1/2/3, L0/M3/$0.50/eval removidos (tags internas)
 //          Fix 3.8 — assessment → avaliação
@@ -39,8 +40,8 @@ export default function Solution() {
         {/* Body */}
         <p className="text-lg text-text-secondary mb-12 leading-relaxed max-w-3xl">
           A GnosIQ combina instrumentos psicométricos validados internacionalmente
-          com inteligência artificial especializada. O resultado: um relatório de 18 páginas
-          sobre seu perfil cognitivo completo, em ~30 minutos, por R$97.
+          com inteligência artificial especializada. O resultado: um relatório de {REPORT_PAGES} páginas
+          sobre seu perfil cognitivo completo, em ~{DELIVERY_MINUTES} minutos, por R$97.
         </p>
 
         {/* FIX-05: Bloco exemplo de insight — relatório real */}
@@ -54,7 +55,7 @@ export default function Solution() {
           </p>
 
           <p className="text-xs text-white/40 mt-3">
-            ↑ Tipo de insight presente no relatório de 18 páginas. Exemplo ilustrativo para demonstração.
+            ↑ Tipo de insight presente no relatório de {REPORT_PAGES} páginas. Exemplo ilustrativo para demonstração.
           </p>
         </div>
 
@@ -107,9 +108,9 @@ export default function Solution() {
 
           <div className="stagger-item bg-background-secondary rounded-xl p-6 border border-white/5 card-hover">
             <div className="text-3xl mb-4">📊</div>
-            <h3 className="font-bold text-text-primary mb-2">Entrega em ~30 minutos</h3>
+            <h3 className="font-bold text-text-primary mb-2">Entrega em ~{DELIVERY_MINUTES} minutos</h3>
             <p className="text-text-secondary text-sm leading-relaxed">
-              Relatório de 18 páginas com seu GnoScore™ verificado. Compartilhamento de resultados disponível no lançamento.
+              Relatório de {REPORT_PAGES} páginas com seu GnoScore™ verificado. Compartilhamento de resultados disponível no lançamento.
             </p>
           </div>
         </div>

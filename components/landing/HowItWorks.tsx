@@ -3,6 +3,7 @@
 import { useLocale } from '@/lib/context/LocaleContext'
 import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
 import { useStaggerReveal } from '@/hooks/useStaggerReveal'
+import { FILL_MINUTES, DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 
 // GNO-67: assessment → avaliação · Agent1/2/3 removidos (tags internas)
 // GNO-84: FIX-02 cleanup LinkedIn passo 03 · FIX-07 título e descrição passo 02
@@ -12,7 +13,7 @@ const steps = [
     title: 'Responda a avaliação',
     descJSX: (
       <>
-        Formulário adaptativo de 40 a 60 perguntas. Tempo médio: <span className="text-xs">~22 minutos</span>. Mobile-first, sem login necessário.
+        Formulário adaptativo de 40 a 60 perguntas. Tempo médio: <span className="text-xs">~{FILL_MINUTES} minutos</span>. Mobile-first, sem login necessário.
       </>
     ),
     desc: null,
@@ -50,7 +51,7 @@ export default function HowItWorks() {
           Como funciona
         </p>
         <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-16">
-          De zero a relatório em <span className="text-xl md:text-2xl">~30 minutos</span>
+          De zero a relatório em <span className="text-xl md:text-2xl">~{DELIVERY_MINUTES} minutos</span>
         </h2>
 
         <div ref={staggerRef} className="grid md:grid-cols-3 gap-8">
@@ -62,7 +63,7 @@ export default function HowItWorks() {
               <h3 className="font-bold text-text-primary mb-3">{step.title}</h3>
               {step.num === '03' ? (
                 <p className="text-text-secondary text-sm leading-relaxed">
-                  <span className="text-xs">18 páginas</span> cobrindo: Perfil Cognitivo, Mapa de Forças, Pontos Cegos
+                  <span className="text-xs">{REPORT_PAGES} páginas</span> cobrindo: Perfil Cognitivo, Mapa de Forças, Pontos Cegos
                   e Recomendações de Carreira. Inclui seu GnoScore™ verificado.
                 </p>
               ) : step.descJSX ? (

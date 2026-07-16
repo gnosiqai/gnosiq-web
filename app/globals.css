@@ -31,7 +31,12 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* GNO-93: visível por padrão (SSR/no-JS safe) — opacity:0 só é aplicado via
+   JS (.reveal-armed) quando o IntersectionObserver está de fato observando */
 .reveal {
+  opacity: 1;
+}
+.reveal.reveal-armed {
   opacity: 0;
 }
 .reveal.visible {
@@ -72,6 +77,6 @@ body {
 /* Reduzir movimento — respeitar preferência do usuário */
 @media (prefers-reduced-motion: reduce) {
   .reveal, .btn-cta-primary:hover, .cta-pulse { animation: none; }
-  .reveal { opacity: 1; }
+  .reveal.reveal-armed { opacity: 1; }
   .card-hover { transition: none; }
 }

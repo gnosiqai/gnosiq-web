@@ -2,6 +2,7 @@
 
 import { useLocale } from '@/lib/context/LocaleContext'
 import posthog from 'posthog-js'
+import { DELIVERY_MINUTES } from '@/lib/constants/metrics'
 
 // GNO-67 Seção 2 — Bloco API independente, abaixo do hero
 // CTA: ghost/outlined — NUNCA primário
@@ -24,7 +25,7 @@ export default function ApiSection() {
         </>
       ),
       body: 'Integre avaliação cognitiva profunda diretamente na sua plataforma.',
-      tagline: 'A primeira API que transforma potencial humano em capital computável.\n~30 minutos. Mapeamento profundo. Escala ilimitada.\nDa avaliação individual ao uso corporativo.',
+      tagline: `A primeira API que transforma potencial humano em capital computável.\n~${DELIVERY_MINUTES} minutos. Mapeamento profundo. Escala ilimitada.\nDa avaliação individual ao uso corporativo.`,
       cta: 'Solicitar acesso beta',
       badge: 'Solicitar acesso à API',
       validado: 'API validada do mercado',
@@ -40,7 +41,7 @@ export default function ApiSection() {
         </>
       ),
       body: 'Integrate deep cognitive evaluation directly into your platform.',
-      tagline: 'The first API that turns human potential into computable capital.\n~30 minutes. Deep mapping. Unlimited scale.\nFrom individual evaluation to enterprise use.',
+      tagline: `The first API that turns human potential into computable capital.\n~${DELIVERY_MINUTES} minutes. Deep mapping. Unlimited scale.\nFrom individual evaluation to enterprise use.`,
       cta: 'Request beta access',
       badge: 'Request API access',
       validado: 'Market-validated API',
