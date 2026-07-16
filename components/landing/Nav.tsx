@@ -6,7 +6,7 @@ import { useLocale } from '@/lib/context/LocaleContext'
 
 export default function Nav() {
   const router = useRouter()
-  const { locale, switchLocale } = useLocale()
+  const { locale } = useLocale()
 
   const copy = {
     // GNO-65: API removido da navbar — reintroduzir quando rota /api existir em produção
@@ -50,29 +50,7 @@ export default function Nav() {
             {t.howItWorks}
           </button>
 
-          {/* Locale toggle */}
-          <div className="flex items-center gap-1 bg-background-secondary rounded-full px-1 py-1 text-xs font-bold">
-            <button
-              onClick={() => switchLocale('pt')}
-              className={`px-3 py-1 rounded-full transition-colors ${
-                locale === 'pt'
-                  ? 'bg-accent text-white'
-                  : 'text-text-muted hover:text-text-primary'
-              }`}
-            >
-              PT
-            </button>
-            <button
-              onClick={() => switchLocale('en')}
-              className={`px-3 py-1 rounded-full transition-colors ${
-                locale === 'en'
-                  ? 'bg-accent text-white'
-                  : 'text-text-muted hover:text-text-primary'
-              }`}
-            >
-              EN
-            </button>
-          </div>
+          {/* GNO-93: toggle PT/EN removido da UI até M2 — locale forçado em PT (ver LocaleContext) */}
 
           {/* CTA — GNO-69: <a href> + PostHog tracking preservado */}
           <a

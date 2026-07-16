@@ -20,17 +20,18 @@ export default function AnimatedCounter({
   className = '',
   from,
 }: AnimatedCounterProps) {
-  // SSR fix (GNO-57): initialValue = from ?? Math.floor(value * 0.85)
-  // Crawlers OG (LinkedIn/WhatsApp/X) capturam HTML estático antes da hidratação.
-  // Partir de 85% do valor final garante que o HTML cru exiba número real, não zero.
-  const initialValue = from !== undefined ? from : Math.floor(value * 0.85)
-  const [display, setDisplay] = useState(initialValue)
+  // GNO-93: SSR/hidratação inicial SEMPRE mostram o valor final — crawlers
+  // (Googlebot, OG de LinkedIn/WhatsApp/X) e qualquer captura antes do JS
+  // rodar veem o número real, nunca um frame intermediário. A contagem
+  // (progressive enhancement) só reinicia do zero/from depois que o
+  // IntersectionObserver dispara, cliente-side.
+  const [display, setDisplay] = useState(value)
   const [started, setStarted] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
   const rafRef = useRef<number | null>(null)
 
   useEffect(() => {
-    // prefers-reduced-motion: mostrar valor final imediatamente
+    // prefers-reduced-motion: manter o valor final, sem animação
     const prefersReduced =
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -44,6 +45,7 @@ export default function AnimatedCounter({
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !started) {
+            setDisplay(from ?? 0)
             setStarted(true)
             observer.disconnect()
           }
@@ -68,14 +70,15 @@ export default function AnimatedCounter({
   useEffect(() => {
     if (!started) return
 
+    const startValue = from ?? 0
     const startTime = performance.now()
 
     const tick = (now: number) => {
       const elapsed = now - startTime
       const progress = Math.min(elapsed / duration, 1)
       const eased = easeOutCubic(progress)
-      // Anima de initialValue até value
-      setDisplay(Math.round(initialValue + eased * (value - initialValue)))
+      // Anima de startValue até value
+      setDisplay(Math.round(startValue + eased * (value - startValue)))
 
       if (progress < 1) {
         rafRef.current = requestAnimationFrame(tick)
@@ -89,7 +92,7 @@ export default function AnimatedCounter({
         cancelAnimationFrame(rafRef.current)
       }
     }
-  }, [started, value, duration, initialValue])
+  }, [started, value, duration, from])
 
   return (
     <span ref={ref} className={className}>

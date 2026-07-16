@@ -3,6 +3,7 @@
 import { useLocale } from '@/lib/context/LocaleContext'
 import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
 import AnimatedCounter from '@/components/ui/AnimatedCounter'
+import { FILL_MINUTES, DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 
 // GNO-45: testimonials removido até depoimentos reais disponíveis
 // GNO-57: NPS counter removido (dado sem amostra válida · reintroduzir pós-M2)
@@ -30,19 +31,19 @@ export default function SocialProof() {
         <div className="grid grid-cols-3 gap-8 mb-20 text-center max-w-lg mx-auto">
           <div>
             <div className="text-4xl font-bold text-accent mb-2">
-              ~<AnimatedCounter value={22} suffix="min" duration={1400} />
+              ~<AnimatedCounter value={FILL_MINUTES} suffix="min" duration={1400} />
             </div>
             <div className="text-sm text-text-muted">Tempo de preenchimento</div>
           </div>
           <div>
             <div className="text-4xl font-bold text-accent mb-2">
-              ~<AnimatedCounter value={30} suffix="min" duration={1600} />
+              ~<AnimatedCounter value={DELIVERY_MINUTES} suffix="min" duration={1600} />
             </div>
             <div className="text-sm text-text-muted">Entrega do relatório</div>
           </div>
           <div>
             <div className="text-4xl font-bold text-accent mb-2">
-              <AnimatedCounter value={18} duration={1800} />
+              <AnimatedCounter value={REPORT_PAGES} duration={1800} />
             </div>
             <div className="text-sm text-text-muted">Páginas de relatório</div>
           </div>

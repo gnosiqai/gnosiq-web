@@ -12,6 +12,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # GNO-93: gera coverage/lcov.info — sem isso o Quality Gate falha
+      # 0% em new code para qualquer PR, independente de haver testes.
+      - run: npm run test:coverage
       - uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

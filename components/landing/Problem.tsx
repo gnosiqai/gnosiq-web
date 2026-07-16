@@ -3,6 +3,7 @@
 import { useLocale } from '@/lib/context/LocaleContext'
 import ComingSoonBanner from '@/components/landing/ComingSoonBanner'
 import { useStaggerReveal } from '@/hooks/useStaggerReveal'
+import { DELIVERY_MINUTES } from '@/lib/constants/metrics'
 
 export default function Problem() {
   const { locale } = useLocale()
@@ -161,7 +162,7 @@ export default function Problem() {
                   <span className="text-[#22C55E] font-semibold">&#10003; API-first</span>
                 </td>
                 <td className="py-3 px-4 text-center">
-                  <span className="text-[#22C55E] font-semibold">~30 minutos</span>
+                  <span className="text-[#22C55E] font-semibold">~{DELIVERY_MINUTES} minutos</span>
                 </td>
               </tr>
             </tbody>

@@ -3,7 +3,6 @@ import {
   createContext,
   useContext,
   useState,
-  useEffect,
   type ReactNode,
 } from 'react'
 
@@ -21,18 +20,11 @@ const LocaleContext = createContext<LocaleContextType>({
   switchLocale: () => {},
 })
 
+// GNO-93: EN desconectado até M2 — sem auto-detecção via navigator.language/localStorage,
+// que fazia o Googlebot (Accept-Language: en) renderizar os placeholders "Coming in M2".
+// locale nasce e permanece 'pt'; setLocale/switchLocale ficam prontos para o toggle voltar em M2.
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>('pt')
-
-  useEffect(() => {
-    const stored = localStorage.getItem('gnosiq_locale') as Locale | null
-    if (stored === 'en' || stored === 'pt') {
-      setLocaleState(stored)
-      return
-    }
-    const detected = navigator.language.startsWith('en') ? 'en' : 'pt'
-    setLocaleState(detected)
-  }, [])
 
   const setLocale = (next: Locale) => {
     setLocaleState(next)

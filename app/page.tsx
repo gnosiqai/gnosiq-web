@@ -1,5 +1,6 @@
 'use client'
 import { useEffect } from 'react'
+import { armRevealObserver } from '@/lib/reveal'
 import Nav from '@/components/landing/Nav'
 import Hero from '@/components/landing/Hero'
 import Problem from '@/components/landing/Problem'
@@ -11,15 +12,7 @@ import Footer from '@/components/landing/Footer'
 import ApiSection from '@/components/landing/ApiSection'
 
 export default function Home() {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((e) => e.isIntersecting && e.target.classList.add('visible')),
-      { threshold: 0.1 },
-    )
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
+  useEffect(() => armRevealObserver(), [])
 
   return (
     <main className="bg-background-primary min-h-screen">
