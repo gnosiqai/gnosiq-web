@@ -59,6 +59,19 @@ export default function Solution() {
           </p>
         </div>
 
+        {/* GNO-93 P3: prova de produto — screenshot real do relatório */}
+        <div className="mb-10 max-w-2xl mx-auto text-center">
+          <img
+            src="/report-preview.png"
+            alt="Trecho real do relatório GnosIQ de 18 páginas com escores mascarados"
+            loading="lazy"
+            className="w-full rounded-xl border border-white/5"
+          />
+          <p className="text-xs text-white/40 mt-3">
+            Trecho real do relatório · escores mascarados
+          </p>
+        </div>
+
         {/* Cards B2C — linguagem funcional */}
         <div ref={staggerRef} className="grid md:grid-cols-3 gap-8">
           <div className="stagger-item bg-background-secondary rounded-xl p-6 border border-white/5 card-hover">
