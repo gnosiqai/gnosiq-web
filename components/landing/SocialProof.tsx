@@ -48,13 +48,6 @@ export default function SocialProof() {
             <div className="text-sm text-text-muted">Páginas de relatório</div>
           </div>
         </div>
-
-        {/* Trust bar */}
-        <section className="py-4 text-center">
-          <p className="text-sm text-white/60 tracking-wide">
-            Acesso Antecipado · Vagas Limitadas
-          </p>
-        </section>
       </div>
     </section>
   )
