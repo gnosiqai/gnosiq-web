@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og'
-import { loadInter } from '@/lib/og/fonts'
+import { loadInter, FONT_FAMILY } from '@/lib/og/fonts'
 
 // GNO-92: OG image gerada — Design System v1.0
 // Substitui public/og-image.png (estático, wordmark defasado)
@@ -35,7 +35,7 @@ export default async function Image() {
           backgroundColor: '#0D0B1E',
           backgroundImage: DOT_GRID,
           backgroundRepeat: 'repeat',
-          fontFamily: 'Inter',
+          fontFamily: FONT_FAMILY,
         }}
       >
         <div
@@ -81,8 +81,8 @@ export default async function Image() {
     {
       ...size,
       fonts: [
-        { name: 'Inter', data: extraBold, weight: 800, style: 'normal' },
-        { name: 'Inter', data: regular, weight: 400, style: 'normal' },
+        { name: FONT_FAMILY, data: extraBold, weight: 800, style: 'normal' },
+        { name: FONT_FAMILY, data: regular, weight: 400, style: 'normal' },
       ],
     }
   )

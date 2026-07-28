@@ -12,6 +12,13 @@ import { join } from 'node:path'
 
 const FONT_DIR = join(process.cwd(), 'assets', 'fonts')
 
+/**
+ * GNO-102: nome da família registrado no Satori. Fonte única — precisa bater
+ * entre o `fontFamily` do CSS e o `name` de cada entrada em `fonts[]`, senão
+ * o Satori cai no fallback silenciosamente.
+ */
+export const FONT_FAMILY = 'Inter'
+
 let cache: Promise<{ extraBold: Buffer; regular: Buffer }> | null = null
 
 export function loadInter() {
