@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og'
-import { loadInter } from '@/lib/og/fonts'
+import { loadInter, FONT_FAMILY } from '@/lib/og/fonts'
 
 // GNO-92: apple touch icon gerado — monograma "IQ" do Design System v1.0
 export const size = { width: 180, height: 180 }
@@ -17,13 +17,14 @@ export default async function AppleIcon() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#0D0B1E',
+          // GNO-102: contraste invertido — ver app/icon.tsx
+          backgroundColor: '#8B5CF6',
           borderRadius: 36,
-          fontFamily: 'Inter',
+          fontFamily: FONT_FAMILY,
           fontSize: 92,
           fontWeight: 800,
           letterSpacing: '-0.03em',
-          color: '#8B5CF6',
+          color: '#FFFFFF',
         }}
       >
         IQ
@@ -31,7 +32,7 @@ export default async function AppleIcon() {
     ),
     {
       ...size,
-      fonts: [{ name: 'Inter', data: extraBold, weight: 800, style: 'normal' }],
+      fonts: [{ name: FONT_FAMILY, data: extraBold, weight: 800, style: 'normal' }],
     }
   )
 }

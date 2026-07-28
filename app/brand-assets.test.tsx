@@ -68,7 +68,7 @@ describe('GNO-92 OG image', () => {
 })
 
 describe('GNO-92 twitter image', () => {
-  it('reusa exatamente a mesma imagem do OG', async () => {
+  it('reusa exatamente a mesma imagem do OG', () => {
     expect(TwitterImage).toBe(OgImage)
     expect(twSize).toEqual(ogSize)
     expect(twContentType).toBe(ogContentType)
