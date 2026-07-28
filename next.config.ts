@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
   },
+  // GNO-92: as rotas de imagem geradas leem as TTFs do disco em runtime —
+  // garantir que assets/fonts/ entre no bundle serverless.
+  outputFileTracingIncludes: {
+    '/opengraph-image': ['./assets/fonts/**'],
+    '/twitter-image': ['./assets/fonts/**'],
+    '/icon': ['./assets/fonts/**'],
+    '/apple-icon': ['./assets/fonts/**'],
+  },
   async headers() {
     return [
       {

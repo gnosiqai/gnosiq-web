@@ -281,7 +281,7 @@ gnosiq-web/
 ├── prompts/                # Cognitive Engine (proprietary · not documented)
 ├── public/
 │   ├── gnosiq-logo.png     # Brand logo — LOCKED, do not replace
-│   └── logo-placeholder.svg
+│   └── report-preview.png  # Mockup do relatório (Solution.tsx)
 ├── .github/
 │   └── workflows/          # CI/CD workflows
 └── .env.example            # All required vars documented
