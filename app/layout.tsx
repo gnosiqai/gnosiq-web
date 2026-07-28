@@ -23,22 +23,17 @@ export const metadata: Metadata = {
   title: "GnosIQ — The Cognitive Capital API",
   // GNO-93: indexação explícita (remoção de sinais de stealth)
   robots: { index: true, follow: true },
-  // GNO-92: favicon implementation
-  icons: {
-    icon: [
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon.ico', sizes: 'any' },
-    ],
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
-  },
+  // GNO-92: icons servidos pelas rotas geradas app/icon.tsx e app/apple-icon.tsx
+  // (Next injeta os <link rel="icon"> automaticamente — não declarar aqui)
   description:
     "A primeira API que transforma potencial humano em capital computável. Relatório cognitivo completo em 30 minutos, por R$97.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL ?? "https://gnosiq.ai"
   ),
+  // GNO-92: canonical explícito na raiz (resolvido contra metadataBase)
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "GnosIQ — The Cognitive Capital API",
     description:
@@ -47,15 +42,8 @@ export const metadata: Metadata = {
     siteName: "GnosIQ",
     locale: "pt_BR",
     type: "website",
-    // GNO-79: og:image estático — public/og-image.png (1200×630)
-    images: [
-      {
-        url: "https://gnosiq.ai/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "GnosIQ — The Cognitive Capital API",
-      },
-    ],
+    // GNO-92: og:image vem da rota gerada app/opengraph-image.tsx —
+    // Next injeta automaticamente. Não declarar `images` aqui (conflitaria).
   },
   twitter: {
     card: "summary_large_image",
@@ -63,8 +51,7 @@ export const metadata: Metadata = {
     description:
       "A primeira API que transforma potencial humano em capital computável. Relatório cognitivo completo em 30 minutos, por R$97.",
     creator: "@gnosiqai",
-    // GNO-79: twitter card image estático
-    images: ["https://gnosiq.ai/og-image.png"],
+    // GNO-92: twitter:image vem da rota gerada app/twitter-image.tsx
   },
 };
 
