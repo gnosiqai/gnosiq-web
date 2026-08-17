@@ -246,7 +246,8 @@ npm run dev
 | `SENDGRID_API_KEY` | M1 | Waitlist confirmation + report delivery |
 | `SENDGRID_FROM_EMAIL` | M1 | Sender email address |
 | `NEXT_PUBLIC_POSTHOG_KEY` | M1 | Analytics |
-| `FIRESTORE_PROJECT_ID` | M1 | Waitlist + sessions persistence |
+| `GCP_PROJECT_ID` | M1 | Firestore target project · waitlist + sessions persistence |
+| `GOOGLE_APPLICATION_CREDENTIALS_JSON` | M1 | Service account JSON **content** (serverless has no key file) |
 | `STRIPE_SECRET_KEY` | M2+ | Payment processing |
 | `STRIPE_WEBHOOK_SECRET` | M2+ | Async payment confirmation |
 | CI/CD secrets | CI/CD | Configured in GitHub Actions · not documented here |
