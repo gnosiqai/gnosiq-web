@@ -12,7 +12,14 @@
 // USO:
 //   node scripts/founder-tier-materialize.mjs            # dry-run (default)
 //   node scripts/founder-tier-materialize.mjs --apply    # escreve + read-back
-//   npm run founder:materialize -- --apply
+//
+//   npm run founder:materialize                          # dry-run
+//   npm run founder:materialize:apply                    # escreve + read-back
+//
+// NÃO usar `npm run founder:materialize -- --apply`: no PowerShell o npm
+// engole o `--` e a flag, o script roda em dry-run e o operador acredita ter
+// aplicado. Daí o alias dedicado acima — a flag mora no package.json, fora do
+// alcance do shell.
 //
 // AMBIENTE (GNO-105 — mesmo contrato de lib/firestore.ts, sem default):
 //   GCP_PROJECT_ID                       obrigatória
