@@ -61,6 +61,17 @@ firebase-admin*.json
 credentials*.json
 secrets*.json
 
+# GNO-113 — o GCP Console baixa a chave com o nome PADRÃO `<project-id>-<hash>.json`,
+# que nenhum padrão acima pegava. É exatamente o arquivo que o founder baixa para
+# rodar scripts/founder-tier-materialize.mjs. Continua sem `*.json` amplo.
+project-*.json
+*-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]*.json
+key.json
+sa.json
+*-sa.json
+# Local recomendado para a chave admin (fora da árvore de fontes)
+.secrets/
+
 # Additional secrets / certificates
 *.key
 *.crt
