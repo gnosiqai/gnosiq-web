@@ -14,6 +14,12 @@
 //   node scripts/founder-tier-materialize.mjs --apply    # escreve + read-back
 //   npm run founder:materialize -- --apply
 //
+// AMBIENTE (GNO-105 — mesmo contrato de lib/firestore.ts, sem default):
+//   GCP_PROJECT_ID                       obrigatória
+//   GOOGLE_APPLICATION_CREDENTIALS_JSON  conteúdo do JSON (padrão da casa)  ─┐ uma
+//   GOOGLE_APPLICATION_CREDENTIALS       caminho para o JSON               ─┘ das duas
+// Rodar sem nada configurado imprime os comandos exatos para PowerShell e bash.
+//
 // CADÊNCIA: manual — após cada lote de divulgação e antes de fechar os 100.
 //
 // TRAVAS DE SEGURANÇA (coleção com PII de beta):
@@ -42,29 +48,50 @@ const LEGACY_TIMESTAMP_FIELD = 'created_at' // nunca existiu no repo; verificado
 const FOUNDER_LIMIT = 100
 const BATCH_LIMIT = 500 // teto do Firestore por WriteBatch
 
-// projectId espelha lib/firestore.ts, que é o entrypoint único do Firestore na
-// APLICAÇÃO. Este script é ferramenta administrativa avulsa rodada da máquina
-// do founder: não passa pelo bundler, não pode importar o módulo .ts, e precisa
-// aceitar ADC (que o caminho serverless não usa). Se o projectId mudar lá, muda
-// aqui — são os dois únicos lugares.
-const DEFAULT_PROJECT_ID = 'project-6482cadc-95f4-4adb-a0c'
-
 // Só executa quando invocado direto. Importado (verificação da ordenação e do
 // diff sem tocar no Firestore), exporta apenas as funções puras.
 const IS_MAIN = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 
 // --- Credencial ---
 
+/** Instruções de setup, nos dois shells que o founder usa. */
+function printSetupHelp() {
+  console.error('')
+  console.error('  PowerShell (Windows):')
+  console.error('    $env:GCP_PROJECT_ID = "<id-do-projeto-gcp>"')
+  console.error('    $env:GOOGLE_APPLICATION_CREDENTIALS = "C:\\caminho\\para\\chave.json"')
+  console.error('    # ou, na forma inline (mesma do runtime Vercel):')
+  console.error('    $env:GOOGLE_APPLICATION_CREDENTIALS_JSON = Get-Content C:\\caminho\\para\\chave.json -Raw')
+  console.error('')
+  console.error('  bash/zsh (macOS, Linux, WSL, Git Bash):')
+  console.error('    export GCP_PROJECT_ID="<id-do-projeto-gcp>"')
+  console.error('    export GOOGLE_APPLICATION_CREDENTIALS="/caminho/para/chave.json"')
+  console.error('    # ou, na forma inline:')
+  console.error('    export GOOGLE_APPLICATION_CREDENTIALS_JSON="$(cat /caminho/para/chave.json)"')
+  console.error('')
+  console.error('  As variáveis valem só para a sessão atual do terminal.')
+  console.error('  A chave é provisionada no GCP Console e NUNCA vai para o repositório.')
+}
+
 /**
- * Resolve a credencial admin a partir do ambiente, na ordem:
- *   1. GOOGLE_APPLICATION_CREDENTIALS_JSON — JSON inline (padrão do runtime Vercel)
- *   2. GOOGLE_APPLICATION_CREDENTIALS      — caminho para o key file
- *   3. ADC implícito (gcloud auth application-default login / metadata server)
- * Aborta com instruções se nada estiver configurado.
+ * Resolve project e credencial a partir do ambiente. As duas formas de
+ * credencial são aceitas — inline (padrão da casa, igual ao runtime Vercel) e
+ * caminho de arquivo (mais prático de exportar num shell local):
+ *   1. GOOGLE_APPLICATION_CREDENTIALS_JSON — conteúdo do service-account.json
+ *   2. GOOGLE_APPLICATION_CREDENTIALS      — caminho para o service-account.json
+ *
+ * GNO-105: `GCP_PROJECT_ID` é obrigatória e falha alto, mesmo contrato de
+ * lib/firestore.ts. Sem project-id default e sem ADC implícito — um default
+ * aqui significaria materializar `founder_tier` no projeto GCP errado, e este
+ * script escreve em cima de uma promessa pública.
  */
 async function buildFirestore() {
-  const projectId =
-    process.env.FIRESTORE_PROJECT_ID || process.env.GCP_PROJECT_ID || DEFAULT_PROJECT_ID
+  const projectId = process.env.GCP_PROJECT_ID
+  if (!projectId) {
+    console.error('ABORT: GCP_PROJECT_ID não está definida.')
+    printSetupHelp()
+    process.exit(2)
+  }
 
   const inlineJson = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON
   if (inlineJson) {
@@ -94,10 +121,8 @@ async function buildFirestore() {
   }
 
   console.error('ABORT: nenhuma credencial admin configurada no ambiente.')
-  console.error('Configure UMA das opções abaixo antes de rodar:')
-  console.error('  export GOOGLE_APPLICATION_CREDENTIALS=/caminho/para/service-account.json')
-  console.error('  export GOOGLE_APPLICATION_CREDENTIALS_JSON="$(cat service-account.json)"')
-  console.error('A chave é provisionada no GCP Console e NUNCA vai para o repositório.')
+  console.error('Defina GOOGLE_APPLICATION_CREDENTIALS (caminho) OU GOOGLE_APPLICATION_CREDENTIALS_JSON (conteúdo).')
+  printSetupHelp()
   process.exit(2)
 }
 
