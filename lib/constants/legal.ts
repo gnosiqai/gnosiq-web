@@ -47,3 +47,10 @@ export const PRIVACY_POLICY_URL = '/privacy';
 export const COGNITIVE_ASSESSMENT_DISCLAIMER =
   'Este relatório é gerado por IA e não substitui diagnóstico clínico. ' +
   'Os dados são confidenciais e nunca saem do perímetro GnosIQ.';
+
+// --- Disclaimer da landing page (GNO-115) ------------------------------
+// CFP: a LP não pode conter a palavra "diagnóstico" em nenhuma flexão.
+// DISCLAIMER_PT acima diz "avaliação diagnóstica" e por isso NÃO pode ser
+// renderizado na LP — ele continua válido para relatório e páginas legais,
+// onde o termo técnico é apropriado e exigido.
+export const CLINICAL_DISCLAIMER_LP = 'A GnosIQ não substitui avaliação clínica.'

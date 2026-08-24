@@ -19,14 +19,23 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+// GNO-115 — VETO GATE: a descrição anterior terminava em "por R$97." e era
+// reusada em `description`, `openGraph` e `twitter`. Três <meta> com preço
+// numérico no HTML renderizado — o DoD exige zero. Uma constante só para as
+// três, para que a próxima edição não reintroduza a divergência.
+const META_DESCRIPTION =
+  "A GnosIQ mapeia o seu perfil cognitivo com instrumentos validados e IA " +
+  "especializada, e entrega um relatório com o seu GnoScore™ em cerca de 30 " +
+  "minutos. Entre na lista de espera do beta. Não substitui avaliação clínica.";
+
 export const metadata: Metadata = {
-  title: "GnosIQ — The Cognitive Capital API",
+  title: "Como a sua mente realmente funciona? — GnosIQ",
   // GNO-93: indexação explícita (remoção de sinais de stealth)
   robots: { index: true, follow: true },
   // GNO-92: icons servidos pelas rotas geradas app/icon.tsx e app/apple-icon.tsx
   // (Next injeta os <link rel="icon"> automaticamente — não declarar aqui)
   description:
-    "A primeira API que transforma potencial humano em capital computável. Relatório cognitivo completo em 30 minutos, por R$97.",
+    META_DESCRIPTION,
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL ?? "https://gnosiq.ai"
   ),
@@ -35,9 +44,9 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "GnosIQ — The Cognitive Capital API",
+    title: "Como a sua mente realmente funciona? — GnosIQ",
     description:
-      "A primeira API que transforma potencial humano em capital computável. Relatório cognitivo completo em 30 minutos, por R$97.",
+      META_DESCRIPTION,
     url: process.env.NEXT_PUBLIC_APP_URL ?? "https://gnosiq.ai",
     siteName: "GnosIQ",
     locale: "pt_BR",
@@ -47,9 +56,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "GnosIQ — The Cognitive Capital API",
+    title: "Como a sua mente realmente funciona? — GnosIQ",
     description:
-      "A primeira API que transforma potencial humano em capital computável. Relatório cognitivo completo em 30 minutos, por R$97.",
+      META_DESCRIPTION,
     creator: "@gnosiqai",
     // GNO-92: twitter:image vem da rota gerada app/twitter-image.tsx
   },

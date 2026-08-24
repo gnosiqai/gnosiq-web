@@ -1,123 +1,35 @@
 'use client'
+
 import posthog from 'posthog-js'
-import { useFeatureFlagVariantKey } from 'posthog-js/react'
-import { useLocale } from '@/lib/context/LocaleContext'
 import HeroBackground from './HeroBackground'
-import { DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
+import FounderSlots from './FounderSlots'
+import { FILL_MINUTES, DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
+
+// GNO-115 — Hero v2 (AEO waitlist-first).
+//
+// Formato "Million-Dollar": H1 é a pergunta do comprador, e a primeira coisa
+// abaixo dela é a RESPOSTA em 40–60 palavras, acima da dobra. É o bloco que
+// um motor de resposta cita — precisa se sustentar fora da página.
+//
+// CFP: a palavra "diagnóstico" não aparece nesta superfície. A v1 dizia
+// "o diagnóstico cognitivo profundo era caro" — trocado por "mapeamento".
+// VETO GATE: nenhum preço numérico. A v1 trazia "A partir de R$97" aqui.
+// CTA ÚNICO: a v1 tinha dois botões; a v2 tem um, e ele vai para a waitlist.
 
 export default function Hero() {
-  const { locale } = useLocale()
-
-  // GNO-74: A/B test — flag ativado manualmente pelo Carlos no PostHog
-  const headlineVariant = useFeatureFlagVariantKey('headline_ab_test')
-  const headlineControlPt = (
-    <>
-      GnosIQ<br />O Manual de Instruções<br />da sua Mente
-    </>
-  )
-  const headlineControlEn = (
-    <>
-      GnosIQ<br />The Instruction Manual for<br />your mind
-    </>
-  )
-  const headlines = {
-    control: locale === 'pt'
-      ? headlineControlPt
-      : headlineControlEn,
-    variant_a: locale === 'pt'
-      ? 'Você toma decisões estratégicas sem dados sobre como você pensa. Isso muda agora.'
-      : 'You make strategic decisions without data on how you think. That changes now.',
-  } as const
-  const activeHeadline =
-    headlines[headlineVariant as keyof typeof headlines] ?? headlines.control
-
-  const copy = {
-    pt: {
-      eyebrow: 'Acesso Antecipado',
-      sub1: (
-        <>
-          Para founders e líderes técnicos e outros que tomam decisões de
-          <br />alta consequência: o diagnóstico cognitivo profundo
-          <br />era caro, demorado e inacessível.
-        </>
-      ),
-      sub1b: 'Isso mudou.',
-      sub2: (
-        <>
-          A inteligência humana é o único ativo que
-          <br />nenhum balanço patrimonial capturou.
-        </>
-      ),
-      sub2b: 'Até agora.',
-      sub3: (
-        <>
-          A profundidade de uma avaliação baseada em instrumentos
-          <br />psicométricos validados internacionalmente
-          <br />pela fração do custo e tempo.
-        </>
-      ),
-      price: `A partir de R$97 · relatório online em até ~${DELIVERY_MINUTES} minutos.`,
-      cta1: 'Entrar na lista de espera',
-      cta2: 'Ver como funciona',
-      disclaimer: 'Avaliação cognitiva · não substitui avaliação clínica.',
-      gnoscoreNote: 'Inclui GnoScore™ verificado',
-      micro: ['✓ Pagamento único', `✓ Relatório de ${REPORT_PAGES} páginas`, `✓ Entrega em ~${DELIVERY_MINUTES} minutos`, '✓ Acesso Antecipado · Vagas Limitadas'],
-    },
-    en: {
-      eyebrow: 'Early Access',
-      sub1: (
-        <>
-          For founders and technical leaders and others who make
-          <br />high-consequence decisions: deep cognitive diagnosis
-          <br />was expensive, slow and inaccessible.
-        </>
-      ),
-      sub1b: 'That changed.',
-      sub2: (
-        <>
-          Human intelligence is the only asset that
-          <br />no balance sheet has captured.
-        </>
-      ),
-      sub2b: 'Until now.',
-      sub3: (
-        <>
-          The depth of an evaluation based on internationally
-          <br />validated psychometric instruments
-          <br />at a fraction of the cost and time.
-        </>
-      ),
-      price: `Starting at $97 · online report in up to ~${DELIVERY_MINUTES} minutes.`,
-      cta1: 'Join the waitlist',
-      cta2: 'See how it works',
-      disclaimer: 'Cognitive evaluation · does not replace clinical assessment.',
-      gnoscoreNote: 'Includes verified GnoScore™',
-      micro: ['✓ One-time payment', `✓ ${REPORT_PAGES}-page report`, `✓ Delivered in ~${DELIVERY_MINUTES} minutes`, '✓ Early Access · Limited Spots'],
-    },
-  }
-  const t = copy[locale]
-
-  const handleCta1Click = () => {
+  const handleCtaClick = () => {
     posthog.capture('cta clicked', {
       label: 'hero_primary',
       destination: '#waitlist',
     })
   }
 
-  const handleCta2Click = () => {
-    posthog.capture('cta clicked', {
-      label: 'hero_secondary',
-      destination: '#como-funciona',
-    })
-  }
-
   return (
     <section className="relative overflow-hidden min-h-screen flex items-center">
-
-      {/* LAYER 1: Neural canvas — z-index 0 */}
+      {/* LAYER 1: Neural canvas */}
       <HeroBackground />
 
-      {/* LAYER 2: Radial purple glow — z-index 1 */}
+      {/* LAYER 2: Radial purple glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         aria-hidden="true"
@@ -128,7 +40,7 @@ export default function Hero() {
         }}
       />
 
-      {/* LAYER 3: Noise texture overlay — z-index 2 */}
+      {/* LAYER 3: Noise texture */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.025]"
         aria-hidden="true"
@@ -139,84 +51,54 @@ export default function Hero() {
         }}
       />
 
-      {/* CONTEÚDO — z-index 10 */}
       <div className="relative z-10 container mx-auto px-6 py-32 text-center max-w-4xl">
-        {/* Eyebrow badge com SVG cognitivo */}
-        <div className="flex items-center justify-center gap-2 mb-6">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            aria-hidden="true"
-            className="text-accent flex-shrink-0"
-          >
-            <circle cx="8" cy="8" r="2.5" fill="currentColor" opacity="0.9" />
-            <circle cx="8" cy="2" r="1.5" fill="currentColor" opacity="0.5" />
-            <circle cx="8" cy="14" r="1.5" fill="currentColor" opacity="0.5" />
-            <circle cx="2" cy="8" r="1.5" fill="currentColor" opacity="0.5" />
-            <circle cx="14" cy="8" r="1.5" fill="currentColor" opacity="0.5" />
-            <line x1="8" y1="5.5" x2="8" y2="3.5" stroke="currentColor" strokeWidth="1" opacity="0.4" />
-            <line x1="8" y1="10.5" x2="8" y2="12.5" stroke="currentColor" strokeWidth="1" opacity="0.4" />
-            <line x1="5.5" y1="8" x2="3.5" y2="8" stroke="currentColor" strokeWidth="1" opacity="0.4" />
-            <line x1="10.5" y1="8" x2="12.5" y2="8" stroke="currentColor" strokeWidth="1" opacity="0.4" />
-          </svg>
-          <span className="text-xs font-bold text-accent uppercase tracking-widest">
-            {t.eyebrow}
-          </span>
-        </div>
+        {/* Eyebrow — marcas INPI como sinal de seriedade */}
+        <p className="font-mono text-xs md:text-sm text-accent-light uppercase tracking-[0.14em] mb-6">
+          GnosIQ™ · GnoScore™ · Beta
+        </p>
 
-        {/* H1 — A/B test via PostHog feature flag headline_ab_test */}
-        <h1 className="text-4xl md:text-6xl font-bold text-text-primary leading-tight mb-6">
-          {activeHeadline}
+        {/* H1 — a pergunta do comprador */}
+        <h1 className="text-4xl md:text-6xl font-bold text-text-primary leading-[1.08] tracking-tight mb-7 max-w-3xl mx-auto">
+          Como a sua mente <span className="text-accent">realmente</span> funciona?
         </h1>
 
-        {/* Subtitle — 3 parágrafos + preço */}
-        <div className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-10 leading-relaxed space-y-4">
-          <p>{t.sub1}</p>
-          <p className="font-medium text-text-primary">{t.sub1b}</p>
-          <p>{t.sub2}</p>
-          <p className="font-medium text-text-primary">{t.sub2b}</p>
-          <p>{t.sub3}</p>
-          <p className="font-semibold text-text-primary">{t.price}</p>
-        </div>
+        {/*
+          ANSWER BLOCK — 40–60 palavras, texto real, acima da dobra.
+          Autocontido de propósito: é o trecho que um motor de resposta cita
+          sem o resto da página junto.
+        */}
+        <p className="text-lg md:text-xl text-text-secondary leading-relaxed max-w-2xl mx-auto">
+          A GnosIQ mapeia o seu perfil cognitivo com instrumentos validados e IA
+          especializada, e entrega um relatório de {REPORT_PAGES} páginas com o seu
+          GnoScore™ em cerca de {DELIVERY_MINUTES} minutos — direto do navegador, sem
+          semanas de espera. A avaliação é adaptativa e leva cerca de {FILL_MINUTES}{' '}
+          minutos, do seu computador ou celular.
+        </p>
 
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        {/* ICP — item 4 do delta */}
+        <p className="text-base text-accent-light max-w-xl mx-auto mt-5">
+          Para quem toma decisões de alta consequência — e para quem sempre quis se
+          entender de verdade.
+        </p>
+
+        {/* CTA ÚNICO */}
+        <div className="mt-10 flex justify-center">
           <a
             href="#waitlist"
-            onClick={handleCta1Click}
-            className="btn-cta-primary cta-pulse bg-accent hover:bg-accent-dark text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors"
+            onClick={handleCtaClick}
+            className="btn-cta-primary cta-pulse bg-accent hover:bg-accent-dark text-white font-bold px-11 py-[18px] rounded-xl text-lg transition-colors"
           >
-            {t.cta1}
-          </a>
-          <a
-            href="#como-funciona"
-            onClick={handleCta2Click}
-            className="border border-white/20 hover:border-accent/50 text-text-secondary hover:text-text-primary font-bold px-8 py-4 rounded-xl text-lg transition-colors"
-          >
-            {t.cta2}
+            Entrar na lista de espera
           </a>
         </div>
 
-        {/* GnoScore note — GNO-78: removido LinkedIn inline */}
-        <p className="mt-2 text-xs text-white/50 text-center">
-          {t.gnoscoreNote}
-        </p>
+        {/* Escassez real — nunca número inventado (item 8 do delta) */}
+        <FounderSlots className="text-sm text-text-muted mt-8" />
 
-        {/* Disclaimer cognitivo */}
-        <p className="hero-disclaimer mt-2 text-center">
-          {t.disclaimer}
+        {/* Disclaimer clínico visível no hero */}
+        <p className="text-sm text-text-muted mt-9">
+          A GnosIQ não substitui avaliação clínica.
         </p>
-
-        {/* Micro-copy */}
-        <div className="mt-4 flex flex-wrap justify-center gap-4">
-          {t.micro.map((item) => (
-            <span key={item} className="text-sm text-text-muted">
-              {item}
-            </span>
-          ))}
-        </div>
       </div>
     </section>
   )
