@@ -39,6 +39,11 @@ describe('/privacy descreve os dados que o código coleta', () => {
     expect(t).toMatch(/professional role/i)
   })
 
+  it('o EN explica o que é a LGPD — sigla nua não informa leitor em inglês', () => {
+    // Redação chancelada pelo CLO em 2026-08-25.
+    expect(t).toMatch(/art\.\s*7\(I\) of the LGPD, the Brazilian data protection law/i)
+  })
+
   it('declara finalidade, base legal e canal de exclusão', () => {
     expect(t).toMatch(/Base legal:\s*consentimento/i)
     expect(t).toMatch(/Legal basis:\s*consent/i)

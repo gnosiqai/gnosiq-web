@@ -170,11 +170,12 @@ export default function PrivacyPage() {
               1. Data Collected
             </h3>
             <p style={{ color: '#D1D5DB' }}>
-              <strong>Waitlist:</strong> we collect your email address and/or WhatsApp number (at
-              least one, provided by you) and, optionally, your professional role.{' '}
-              <strong>Purpose:</strong> communication about early beta access and founder
-              conditions. <strong>Legal basis:</strong> consent (art. 7, I, LGPD). You may request
-              deletion of this data at any time by emailing{' '}
+              <strong>Waiting list:</strong> we collect your e-mail address and/or WhatsApp number
+              (at least one, provided by you) and, optionally, your professional role.{' '}
+              <strong>Purpose:</strong> communication about early access to the beta and the founder
+              conditions. <strong>Legal basis:</strong> consent (art. 7(I) of the LGPD, the
+              Brazilian data protection law). You may request deletion of this data at any time by
+              e-mailing{' '}
               <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
                 hello@gnosiq.ai
               </a>
