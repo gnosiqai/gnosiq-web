@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { addToWaitlist } from '@/lib/firestore'
 import { normalizeToE164, isValidEmail } from '@/lib/waitlist/phone'
+import { parseUtm } from '@/lib/waitlist/utm'
+import { captureServerEvent } from '@/lib/posthog-server'
 
 export const runtime = 'nodejs'
 
@@ -20,7 +22,21 @@ export const runtime = 'nodejs'
  *     esta rota valida para decidir. Payload malformado morre com 400.
  *  4. Erro interno nunca vaza stack trace nem conteúdo de credencial.
  *  5. Consentimento LGPD é obrigatório e registrado — sem ele, 400.
+ *  6. Honeypot server-side contra flood de bot (item 6 do checklist CISO,
+ *     parte "a" — o Turnstile é fast-follow na GNO-120, fora deste PR).
  */
+
+/**
+ * Campo-isca. Invisível para humano, irresistível para bot que preenche
+ * tudo que encontra no formulário. Preenchido = descarta em silêncio.
+ *
+ * O nome é plausível de propósito: um campo chamado "honeypot" seria
+ * ignorado por qualquer bot minimamente esperto.
+ */
+const HONEYPOT_FIELD = 'website'
+
+/** Identidade única para todos os trips — conta eventos, não pessoas. */
+const HONEYPOT_DISTINCT_ID = 'honeypot-bot'
 
 /** Tamanho máximo do corpo aceito — trava barata contra payload inflado. */
 const MAX_FIELD_LENGTH = 254
@@ -150,9 +166,53 @@ const SUCCESS_RESPONSE = {
   message: 'Pronto. Se estiver tudo certo, avisamos você quando o beta abrir.',
 } as const
 
+/**
+ * UTMs da origem do envio, lidos do cabeçalho `Referer`.
+ *
+ * DELIBERADAMENTE não vêm do corpo: quem dispara o honeypot é um bot, e o
+ * corpo dele é dado hostil. O Referer é o que o navegador (ou o cliente)
+ * declara como página de origem — continua sendo dado de terceiro, mas é
+ * metadado de transporte, não payload, e passa por uma allowlist de 5
+ * chaves com valor truncado antes de virar propriedade de evento.
+ */
+function utmFromReferer(req: NextRequest): Record<string, string> {
+  const referer = req.headers.get('referer')
+  if (!referer) return {}
+
+  try {
+    const utm = parseUtm(new URL(referer).search)
+    return Object.fromEntries(
+      Object.entries(utm).map(([key, value]) => [key, String(value).slice(0, 100)]),
+    )
+  } catch {
+    // Referer malformado — some com ele, não quebra a resposta.
+    return {}
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => null)
+
+    /*
+      HONEYPOT — antes de qualquer validação, de propósito.
+      Um bot não pode receber nem sequer feedback de "campo inválido": isso
+      já seria sinal de que a armadilha existe. A resposta é a MESMA de
+      sucesso, byte a byte, e nada é escrito no Firestore nem enviado pelo
+      SendGrid. Do lado de fora, indistinguível de uma inscrição real —
+      exatamente a coerência que o fechamento do oráculo exige.
+    */
+    if (body && typeof body === 'object') {
+      const trap = (body as Record<string, unknown>)[HONEYPOT_FIELD]
+      if (typeof trap === 'string' && trap.trim().length > 0) {
+        await captureServerEvent('waitlist_honeypot_tripped', HONEYPOT_DISTINCT_ID, {
+          lp_version: 'v2',
+          ...utmFromReferer(req),
+        })
+        return NextResponse.json(SUCCESS_RESPONSE, { status: 200 })
+      }
+    }
+
     const parsed = parseSubmission(body)
 
     if (!parsed.ok) {

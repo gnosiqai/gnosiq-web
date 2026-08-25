@@ -143,6 +143,47 @@ describe('envio', () => {
   })
 })
 
+describe('honeypot no formulário (GATE CISO, item 6)', () => {
+  it('o campo existe e é enviado vazio numa submissão humana', async () => {
+    render(<WaitlistSection />)
+    type(/whatsapp/i, '11912345678')
+    consent()
+    submit()
+    await waitFor(() => expect(waitlistCalls()).toHaveLength(1))
+    expect(sentBody()).toHaveProperty('website', '')
+  })
+
+  it('está fora da tela, NÃO em display:none — bot esperto pula campo oculto', () => {
+    const { container } = render(<WaitlistSection />)
+    const trap = container.querySelector('input[name="website"]') as HTMLInputElement
+
+    expect(trap).not.toBeNull()
+    expect(trap.className).toContain('hp-field')
+    expect(trap.getAttribute('style') ?? '').not.toContain('display: none')
+    expect(trap.getAttribute('style') ?? '').not.toContain('visibility: hidden')
+  })
+
+  it('fora da ordem de tabulação, sem autocomplete e invisível a leitor de tela', () => {
+    const { container } = render(<WaitlistSection />)
+    const trap = container.querySelector('input[name="website"]') as HTMLInputElement
+
+    expect(trap.getAttribute('tabindex')).toBe('-1')
+    expect(trap.getAttribute('autocomplete')).toBe('off')
+    expect(trap.getAttribute('aria-hidden')).toBe('true')
+  })
+
+  it('não tem label — não aparece para quem navega o formulário', () => {
+    render(<WaitlistSection />)
+    expect(screen.queryByLabelText(/website/i)).toBeNull()
+  })
+
+  it('é o primeiro campo do formulário — o que um bot em ordem encontra antes', () => {
+    const { container } = render(<WaitlistSection />)
+    const first = container.querySelector('form input')
+    expect(first?.getAttribute('name')).toBe('website')
+  })
+})
+
 describe('evento de conversão — DoD e GATE CISO', () => {
   it('não dispara antes da confirmação da API', async () => {
     fetchMock.mockResolvedValue({ ok: false, json: async () => ({ success: false }) })

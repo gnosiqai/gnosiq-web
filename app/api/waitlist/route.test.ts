@@ -11,11 +11,19 @@ vi.mock('@/lib/firestore', () => ({
   addToWaitlist: (...args: unknown[]) => addToWaitlist(...args),
 }))
 
+const captureServerEvent = vi.fn()
+vi.mock('@/lib/posthog-server', () => ({
+  captureServerEvent: (...args: unknown[]) => captureServerEvent(...args),
+}))
+
 const { POST } = await import('./route')
 
 /** Requisição mínima — só o que o handler consome. */
-function req(body: unknown) {
-  return { json: async () => body } as unknown as Parameters<typeof POST>[0]
+function req(body: unknown, referer?: string) {
+  return {
+    json: async () => body,
+    headers: { get: (name: string) => (name === 'referer' ? (referer ?? null) : null) },
+  } as unknown as Parameters<typeof POST>[0]
 }
 
 const VALID = {
@@ -125,6 +133,91 @@ describe('role — allowlist, não texto livre', () => {
     expect(addToWaitlist).toHaveBeenCalledWith(
       expect.objectContaining({ icpSegment: null }),
     )
+  })
+})
+
+describe('honeypot (GATE CISO, item 6 — parte "a")', () => {
+  it('preenchido: ZERO escrita no Firestore', async () => {
+    const res = await POST(req({ ...VALID, website: 'http://spam.example' }))
+    expect(res.status).toBe(200)
+    expect(addToWaitlist).not.toHaveBeenCalled()
+  })
+
+  it('preenchido: resposta BYTE A BYTE idêntica à de sucesso real', async () => {
+    addToWaitlist.mockResolvedValue({ alreadyExists: false })
+    const real = await POST(req(VALID))
+    const corpoReal = await real.json()
+
+    vi.clearAllMocks()
+    const bot = await POST(req({ ...VALID, website: 'http://spam.example' }))
+    const corpoBot = await bot.json()
+
+    expect(bot.status).toBe(real.status)
+    expect(JSON.stringify(corpoBot)).toBe(JSON.stringify(corpoReal))
+  })
+
+  it('preenchido: dispara antes da validação — nem feedback de erro o bot recebe', async () => {
+    // Payload que falharia em TODAS as validações. Ainda assim: 200 e silêncio.
+    const res = await POST(
+      req({ whatsapp: 'lixo', email: 'lixo', consent: false, website: 'x' }),
+    )
+    expect(res.status).toBe(200)
+    expect(await res.json()).toHaveProperty('success', true)
+    expect(addToWaitlist).not.toHaveBeenCalled()
+  })
+
+  it('telemetria: evento disparado sem NENHUM dado do payload do bot', async () => {
+    await POST(
+      req(
+        {
+          whatsapp: '(11) 91234-5678',
+          email: 'bot@spam.example',
+          consent: true,
+          website: 'http://spam.example',
+        },
+        'https://gnosiq.ai/?utm_source=linkedin&utm_campaign=inpi',
+      ),
+    )
+
+    expect(captureServerEvent).toHaveBeenCalledWith(
+      'waitlist_honeypot_tripped',
+      expect.any(String),
+      { lp_version: 'v2', utm_source: 'linkedin', utm_campaign: 'inpi' },
+    )
+
+    const payload = JSON.stringify(captureServerEvent.mock.calls[0])
+    expect(payload).not.toContain('91234')
+    expect(payload).not.toContain('bot@spam.example')
+    expect(payload).not.toContain('spam.example')
+  })
+
+  it('sem Referer: evento sai só com lp_version, sem quebrar', async () => {
+    await POST(req({ ...VALID, website: 'x' }))
+    expect(captureServerEvent).toHaveBeenCalledWith('waitlist_honeypot_tripped', expect.any(String), {
+      lp_version: 'v2',
+    })
+  })
+
+  it('Referer malformado não derruba a resposta', async () => {
+    const res = await POST(req({ ...VALID, website: 'x' }, 'nao-e-url'))
+    expect(res.status).toBe(200)
+  })
+
+  it('vazio ou ausente: fluxo normal intacto', async () => {
+    addToWaitlist.mockResolvedValue({ alreadyExists: false })
+
+    await POST(req({ ...VALID, website: '' }))
+    expect(addToWaitlist).toHaveBeenCalledTimes(1)
+
+    await POST(req(VALID))
+    expect(addToWaitlist).toHaveBeenCalledTimes(2)
+    expect(captureServerEvent).not.toHaveBeenCalled()
+  })
+
+  it('só espaços em branco não é considerado preenchido', async () => {
+    addToWaitlist.mockResolvedValue({ alreadyExists: false })
+    await POST(req({ ...VALID, website: '   ' }))
+    expect(addToWaitlist).toHaveBeenCalled()
   })
 })
 

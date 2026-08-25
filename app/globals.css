@@ -74,6 +74,21 @@ body {
   margin-top: 0.5rem;
 }
 
+/* Campo-isca do honeypot (GNO-115).
+   Fora da tela em vez de display:none / visibility:hidden de propósito:
+   bot minimamente esperto pula campo declaradamente oculto, mas preenche
+   um que, para o parser dele, é um input de texto comum. Humano nunca vê,
+   nunca tabula (tabindex -1) e leitor de tela ignora (aria-hidden). */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Reduzir movimento — respeitar preferência do usuário */
 @media (prefers-reduced-motion: reduce) {
   .reveal, .btn-cta-primary:hover, .cta-pulse { animation: none; }

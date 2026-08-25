@@ -37,6 +37,8 @@ export default function WaitlistSection() {
   const [email, setEmail] = useState('')
   const [role, setRole] = useState('')
   const [consent, setConsent] = useState(false)
+  // Campo-isca: humano nunca preenche, então qualquer valor aqui é bot.
+  const [website, setWebsite] = useState('')
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -68,7 +70,7 @@ export default function WaitlistSection() {
     return hasWhatsapp ? 'whatsapp' : 'email'
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (status === 'loading') return
 
@@ -91,6 +93,7 @@ export default function WaitlistSection() {
           email: email.trim(),
           icp_segment: role || null,
           consent,
+          website,
         }),
       })
 
@@ -170,6 +173,24 @@ export default function WaitlistSection() {
             </p>
 
             <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4 text-left">
+              {/*
+                HONEYPOT (GNO-115, item 6 do checklist CISO — parte "a").
+                Primeiro campo do formulário: é o que um bot que preenche em
+                ordem encontra antes de tudo. Invisível ao humano, fora da
+                ordem de tabulação e ignorado por leitor de tela. O servidor
+                decide — isto aqui só carrega o valor.
+              */}
+              <input
+                type="text"
+                name="website"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                className="hp-field"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+              />
+
               <div>
                 <label htmlFor="wa" className="block text-sm font-semibold text-text-secondary mb-2">
                   WhatsApp
