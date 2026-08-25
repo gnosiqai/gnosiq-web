@@ -87,4 +87,23 @@ describe('isValidEmail', () => {
   it('rejeita acima de 254 caracteres', () => {
     expect(isValidEmail(`${'a'.repeat(250)}@exemplo.com`)).toBe(false)
   })
+
+  it('rejeita rótulo de domínio vazio', () => {
+    // A regex anterior aceitava "a@b..c"; a atual descreve rótulo a rótulo.
+    expect(isValidEmail('a@b..c')).toBe(false)
+    expect(isValidEmail('a@.com')).toBe(false)
+    expect(isValidEmail('a@b.')).toBe(false)
+  })
+
+  it('aceita subdomínio', () => {
+    expect(isValidEmail('voce@mail.exemplo.com.br')).toBe(true)
+  })
+
+  it('entrada patológica não trava — a regex é linear, não backtracking', () => {
+    // Formato que fazia a versão ambígua explodir: muitos pontos sem TLD.
+    const pathological = `a@${'.'.repeat(120)}`
+    const started = performance.now()
+    expect(isValidEmail(pathological)).toBe(false)
+    expect(performance.now() - started).toBeLessThan(50)
+  })
 })

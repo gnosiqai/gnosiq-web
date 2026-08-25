@@ -1,6 +1,8 @@
 'use client'
 
+import Image from 'next/image'
 import { useStaggerReveal } from '@/hooks/useStaggerReveal'
+import founderPhoto from '@/public/foto-de-perfil-linkedin.jpg'
 import { FILL_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 
 // GNO-115 — "Isso tem base científica?" · bloco de PROVA da categoria.
@@ -74,21 +76,39 @@ export default function Science() {
 
         {/* Byline do founder — autoria da metodologia + LGPD + disclaimer */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6 bg-background-secondary border border-accent/[0.14] rounded-2xl p-8 md:px-10">
-          <div>
-            <p className="text-[17px] font-bold text-text-primary m-0">
-              Carlos Alberto Gomes
-            </p>
-            <p className="font-mono text-xs text-text-muted tracking-[0.08em] mt-1">
-              CEO &amp; FOUNDER · AUTOR DA METODOLOGIA
-            </p>
-            <a
-              href="https://www.linkedin.com/in/carlosalbertogomessp/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block text-xs text-accent-light hover:text-accent underline mt-2 transition-colors"
-            >
-              Perfil no LinkedIn
-            </a>
+          <div className="flex items-center gap-6">
+            {/*
+              Asset 400x400 quadrado: o next/image gera webp/avif e serve o
+              tamanho certo por DPR. SEM `sizes`: para imagem de tamanho fixo
+              o Next emite srcset 1x/2x (72px e 144px). Com `sizes="72px"` ele
+              cai no caminho de descritor `w` e lista de 16w a 3840w, fazendo
+              o browser buscar 256px para exibir 72.
+              `loading="lazy"` porque a byline está bem abaixo da dobra.
+            */}
+            <Image
+              src={founderPhoto}
+              alt="Carlos Alberto Gomes, CEO &amp; Founder da GnosIQ"
+              width={72}
+              height={72}
+              loading="lazy"
+              className="w-[72px] h-[72px] rounded-full object-cover border-2 border-accent/50 shrink-0"
+            />
+            <div>
+              <p className="text-[17px] font-bold text-text-primary m-0">
+                Carlos Alberto Gomes
+              </p>
+              <p className="font-mono text-xs text-text-muted tracking-[0.08em] mt-1">
+                CEO &amp; FOUNDER · AUTOR DA METODOLOGIA
+              </p>
+              <a
+                href="https://www.linkedin.com/in/carlosalbertogomessp/"
+                target="_blank"
+                rel="me noopener noreferrer"
+                className="inline-block text-xs text-accent-light hover:text-accent underline mt-2 transition-colors"
+              >
+                Perfil no LinkedIn
+              </a>
+            </div>
           </div>
 
           <p className="text-[13.5px] text-text-muted leading-relaxed md:text-right md:max-w-md m-0">

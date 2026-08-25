@@ -128,6 +128,38 @@ describe('role — allowlist, não texto livre', () => {
   })
 })
 
+describe('sem oráculo de enumeração (GATE CISO, itens 4 e 7)', () => {
+  it('inscrição nova e reinscrição produzem resposta BYTE A BYTE idêntica', async () => {
+    addToWaitlist.mockResolvedValue({ alreadyExists: false })
+    const novo = await POST(req({ ...VALID, email: 'alguem@exemplo.com' }))
+    const corpoNovo = await novo.json()
+
+    addToWaitlist.mockResolvedValue({ alreadyExists: true })
+    const repetido = await POST(req({ ...VALID, email: 'alguem@exemplo.com' }))
+    const corpoRepetido = await repetido.json()
+
+    expect(repetido.status).toBe(novo.status)
+    expect(JSON.stringify(corpoRepetido)).toBe(JSON.stringify(corpoNovo))
+  })
+
+  it('a resposta não expõe alreadyExists em campo nenhum', async () => {
+    addToWaitlist.mockResolvedValue({ alreadyExists: true })
+    const body = await (await POST(req(VALID))).json()
+
+    expect(body).not.toHaveProperty('alreadyExists')
+    expect(JSON.stringify(body)).not.toMatch(/alreadyExists|já est/i)
+  })
+
+  it('o efeito colateral ainda distingue os casos — só a resposta não', async () => {
+    // O e-mail de confirmação continua saindo só para inscrição nova; o que
+    // mudou é que isso não é observável por quem chama a rota.
+    addToWaitlist.mockResolvedValue({ alreadyExists: true })
+    const res = await POST(req({ ...VALID, email: 'alguem@exemplo.com' }))
+    expect(res.status).toBe(200)
+    expect(addToWaitlist).toHaveBeenCalledTimes(1)
+  })
+})
+
 describe('robustez e vazamento', () => {
   it('corpo não-JSON vira 400, não 500', async () => {
     const res = await POST({

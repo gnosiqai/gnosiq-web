@@ -24,7 +24,12 @@ import { DELIVERY_MINUTES } from '@/lib/constants/metrics'
 //
 // Server component: JSON-LD estático, resolvido no build.
 
+/** Caminho público do asset — o mesmo arquivo que o next/image consome. */
+const FOUNDER_PHOTO_PATH = '/foto-de-perfil-linkedin.jpg'
+
 export default function StructuredData() {
+  const FOUNDER_ID = `${COMPANY_URL}/#founder`
+
   const organization = {
     '@type': 'Organization',
     '@id': `${COMPANY_URL}/#organization`,
@@ -43,12 +48,27 @@ export default function StructuredData() {
       addressCountry: COMPANY_ADDRESS.country,
     },
     sameAs: [...COMPANY_SOCIAL],
-    founder: {
-      '@type': 'Person',
-      name: 'Carlos Alberto Gomes',
-      jobTitle: 'CEO & Founder',
-      sameAs: 'https://www.linkedin.com/in/carlosalbertogomessp/',
-    },
+    founder: { '@id': FOUNDER_ID },
+  }
+
+  /*
+    O founder é um nó próprio do grafo, referenciado por @id pela Organization.
+    Como Person separado ele pode ser citado por outras entidades (o autor da
+    metodologia no bloco científico) sem duplicar a descrição.
+
+    `image` aponta para o asset ORIGINAL em /public, não para a URL otimizada
+    do next/image: aquela carrega query string de tamanho e qualidade e não é
+    endereço estável para consumidor de schema.
+  */
+  const founder = {
+    '@type': 'Person',
+    '@id': FOUNDER_ID,
+    name: 'Carlos Alberto Gomes',
+    jobTitle: 'CEO & Founder',
+    description: 'Autor da metodologia de avaliação cognitiva da GnosIQ.',
+    image: `${COMPANY_URL}${FOUNDER_PHOTO_PATH}`,
+    sameAs: ['https://www.linkedin.com/in/carlosalbertogomessp/'],
+    worksFor: { '@id': `${COMPANY_URL}/#organization` },
   }
 
   const product = {
@@ -87,7 +107,7 @@ export default function StructuredData() {
 
   const graph = {
     '@context': 'https://schema.org',
-    '@graph': [organization, product, faqPage, webPage],
+    '@graph': [organization, founder, product, faqPage, webPage],
   }
 
   return (
@@ -96,7 +116,7 @@ export default function StructuredData() {
       // JSON.stringify de dados nossos, sem entrada de usuário. O escape de
       // '<' evita que uma string com "</script>" feche a tag cedo.
       dangerouslySetInnerHTML={{
-        __html: JSON.stringify(graph).replace(/</g, '\\u003c'),
+        __html: JSON.stringify(graph).replace(/</g, String.raw`\u003c`),
       }}
     />
   )

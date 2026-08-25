@@ -60,7 +60,15 @@ export default function WaitlistSection() {
     return null
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  /** Qual canal a pessoa usou — nunca o valor digitado (GATE CISO). */
+  const resolveChannel = (): 'both' | 'whatsapp' | 'email' => {
+    const hasWhatsapp = whatsapp.trim().length > 0
+    const hasEmail = email.trim().length > 0
+    if (hasWhatsapp && hasEmail) return 'both'
+    return hasWhatsapp ? 'whatsapp' : 'email'
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (status === 'loading') return
 
@@ -101,14 +109,8 @@ export default function WaitlistSection() {
       */
       posthog.capture('waitlist_signed_up', {
         lp_version: 'v2',
-        channel:
-          whatsapp.trim() && email.trim()
-            ? 'both'
-            : whatsapp.trim()
-              ? 'whatsapp'
-              : 'email',
+        channel: resolveChannel(),
         icp_type: role || null,
-        already_existed: data.alreadyExists === true,
         ...getUtmParams(),
       })
 
@@ -150,10 +152,7 @@ export default function WaitlistSection() {
         </h2>
 
         {status === 'success' ? (
-          <div
-            role="status"
-            className="bg-semantic-success/10 border border-semantic-success/30 rounded-xl p-8 text-center mt-8"
-          >
+          <output className="block bg-semantic-success/10 border border-semantic-success/30 rounded-xl p-8 text-center mt-8">
             <p className="font-bold text-semantic-success text-lg m-0">
               Você está na lista. ✓
             </p>
@@ -163,7 +162,7 @@ export default function WaitlistSection() {
             <p className="text-sm text-text-muted mt-3">
               Sem cobrança agora. A GnosIQ não substitui avaliação clínica.
             </p>
-          </div>
+          </output>
         ) : (
           <>
             <p className="text-base text-text-muted text-center mb-10">
@@ -247,7 +246,7 @@ export default function WaitlistSection() {
                   >
                     Política de Privacidade
                   </a>
-                  . Posso pedir a exclusão a qualquer momento.
+                  {'. '}Posso pedir a exclusão a qualquer momento.
                 </span>
               </label>
 

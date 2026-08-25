@@ -19,7 +19,7 @@ type State =
   | { status: 'ready'; slotsRemaining: number }
   | { status: 'unavailable' }
 
-export default function FounderSlots({ className = '' }: { className?: string }) {
+export default function FounderSlots({ className = '' }: Readonly<{ className?: string }>) {
   const [state, setState] = useState<State>({ status: 'loading' })
 
   useEffect(() => {

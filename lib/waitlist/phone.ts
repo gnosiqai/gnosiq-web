@@ -63,7 +63,18 @@ export function isValidWhatsApp(raw: string): boolean {
   return normalizeToE164(raw) !== null
 }
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+/*
+  O domínio é descrito rótulo a rótulo, com `.` FORA das classes de caractere.
+  A forma anterior — /^[^\s@]+@[^\s@]+\.[^\s@]+$/ — permitia que `.` casasse
+  tanto dentro de [^\s@] quanto no ponto literal, e essa ambiguidade dá
+  backtracking super-linear: uma entrada como "a@" seguida de muitos pontos
+  faz o motor testar um número explosivo de divisões. Num endpoint público
+  isso é vetor de ReDoS, ainda que o teto de 254 caracteres limite o estrago.
+  Esta forma é inequívoca — cada rótulo não contém ponto — e roda em tempo
+  linear. Efeito colateral: passou a rejeitar "a@b..c", que a anterior
+  aceitava. Mais correto, e nenhum e-mail válido perde.
+*/
+const EMAIL_RE = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/
 
 /** Validação de e-mail — mesmo critério que a rota usa desde a v1. */
 export function isValidEmail(raw: string): boolean {

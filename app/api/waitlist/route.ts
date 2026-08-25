@@ -38,106 +38,141 @@ const ALLOWED_ROLES = new Set([
 
 const GENERIC_ERROR = 'Serviço temporariamente indisponível. Tente novamente em instantes.'
 
+/** Lê um campo de texto do corpo sem confiar no tipo que chegou. */
+function asString(value: unknown): string {
+  return typeof value === 'string' ? value : ''
+}
+
+type ParsedChannels =
+  | { ok: true; whatsapp: string | null; email: string | null }
+  | { ok: false; error: string }
+
+/**
+ * Resolve os dois canais. Extraída do handler porque a regra "pelo menos um,
+ * nenhum obrigatório sozinho" é o ponto mais denso da rota, e mantê-la inline
+ * empurrava a complexidade cognitiva do POST para 22 (limite 15).
+ */
+function parseChannels(rawWhatsapp: string, rawEmail: string): ParsedChannels {
+  const hasWhatsapp = rawWhatsapp.trim().length > 0
+  const hasEmail = rawEmail.trim().length > 0
+
+  if (!hasWhatsapp && !hasEmail) {
+    return { ok: false, error: 'Informe o WhatsApp ou o e-mail — pelo menos um dos dois.' }
+  }
+
+  let whatsapp: string | null = null
+  if (hasWhatsapp) {
+    whatsapp = normalizeToE164(rawWhatsapp)
+    if (!whatsapp) {
+      return {
+        ok: false,
+        error: 'WhatsApp inválido. Use o formato com DDD, por exemplo (11) 91234-5678.',
+      }
+    }
+  }
+
+  let email: string | null = null
+  if (hasEmail) {
+    if (!isValidEmail(rawEmail)) {
+      return { ok: false, error: 'E-mail inválido. Verifique e tente novamente.' }
+    }
+    email = rawEmail.trim().toLowerCase()
+  }
+
+  return { ok: true, whatsapp, email }
+}
+
+type ParsedSubmission =
+  | { ok: true; whatsapp: string | null; email: string | null; name: string; icpSegment: string | null }
+  | { ok: false; error: string }
+
+/**
+ * Valida o corpo inteiro. Pura: não toca rede nem Firestore, o que a torna
+ * testável isoladamente e mantém o handler com uma responsabilidade só.
+ */
+function parseSubmission(body: unknown): ParsedSubmission {
+  if (!body || typeof body !== 'object') {
+    return { ok: false, error: 'Requisição inválida.' }
+  }
+
+  const fields = body as Record<string, unknown>
+  const rawWhatsapp = asString(fields.whatsapp)
+  const rawEmail = asString(fields.email)
+  const rawName = asString(fields.name)
+
+  const tooLong = [rawWhatsapp, rawEmail, rawName].some(
+    (value) => value.length > MAX_FIELD_LENGTH,
+  )
+  if (tooLong) {
+    return { ok: false, error: 'Requisição inválida.' }
+  }
+
+  // LGPD: consentimento explícito é condição de entrada, não checkbox decorativo.
+  if (fields.consent !== true) {
+    return {
+      ok: false,
+      error: 'É necessário aceitar a Política de Privacidade para entrar na lista.',
+    }
+  }
+
+  const channels = parseChannels(rawWhatsapp, rawEmail)
+  if (!channels.ok) return channels
+
+  const rawRole = fields.icp_segment
+  const icpSegment =
+    typeof rawRole === 'string' && ALLOWED_ROLES.has(rawRole) ? rawRole : null
+
+  return {
+    ok: true,
+    whatsapp: channels.whatsapp,
+    email: channels.email,
+    name: rawName,
+    icpSegment,
+  }
+}
+
+/**
+ * Resposta de sucesso ÚNICA, idêntica para inscrição nova e para quem já
+ * estava na lista.
+ *
+ * GATE CISO T1 (itens 4 e 7 do checklist): a versão anterior devolvia
+ * `alreadyExists` e duas mensagens distintas. Isso é um ORÁCULO DE
+ * ENUMERAÇÃO — qualquer um podia postar um e-mail ou telefone e descobrir,
+ * pela resposta, se aquela pessoa está na waitlist. Numa lista de espera de
+ * avaliação cognitiva, confirmar que alguém se inscreveu já é informação
+ * pessoal sobre essa pessoa.
+ *
+ * Custo aceito: o evento do PostHog perdeu a propriedade `already_existed`.
+ * O DoD pede o evento de conversão com UTM, e isso continua de pé.
+ */
+const SUCCESS_RESPONSE = {
+  success: true,
+  message: 'Pronto. Se estiver tudo certo, avisamos você quando o beta abrir.',
+} as const
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => null)
+    const parsed = parseSubmission(body)
 
-    if (!body || typeof body !== 'object') {
-      return NextResponse.json(
-        { success: false, error: 'Requisição inválida.' },
-        { status: 400 },
-      )
+    if (!parsed.ok) {
+      return NextResponse.json({ success: false, error: parsed.error }, { status: 400 })
     }
-
-    const rawWhatsapp: string = typeof body.whatsapp === 'string' ? body.whatsapp : ''
-    const rawEmail: string = typeof body.email === 'string' ? body.email : ''
-    const rawName: string = typeof body.name === 'string' ? body.name : ''
-    const rawRole: unknown = body.icp_segment
-    const consent: unknown = body.consent
-
-    if (
-      rawWhatsapp.length > MAX_FIELD_LENGTH ||
-      rawEmail.length > MAX_FIELD_LENGTH ||
-      rawName.length > MAX_FIELD_LENGTH
-    ) {
-      return NextResponse.json(
-        { success: false, error: 'Requisição inválida.' },
-        { status: 400 },
-      )
-    }
-
-    // LGPD: consentimento explícito é condição de entrada, não checkbox decorativo.
-    if (consent !== true) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'É necessário aceitar a Política de Privacidade para entrar na lista.',
-        },
-        { status: 400 },
-      )
-    }
-
-    const hasWhatsapp = rawWhatsapp.trim().length > 0
-    const hasEmail = rawEmail.trim().length > 0
-
-    // Regra da v2: pelo menos um canal. Nenhum dos dois é individualmente obrigatório.
-    if (!hasWhatsapp && !hasEmail) {
-      return NextResponse.json(
-        { success: false, error: 'Informe o WhatsApp ou o e-mail — pelo menos um dos dois.' },
-        { status: 400 },
-      )
-    }
-
-    let whatsapp: string | null = null
-    if (hasWhatsapp) {
-      whatsapp = normalizeToE164(rawWhatsapp)
-      if (!whatsapp) {
-        return NextResponse.json(
-          {
-            success: false,
-            error: 'WhatsApp inválido. Use o formato com DDD, por exemplo (11) 91234-5678.',
-          },
-          { status: 400 },
-        )
-      }
-    }
-
-    let email: string | null = null
-    if (hasEmail) {
-      if (!isValidEmail(rawEmail)) {
-        return NextResponse.json(
-          { success: false, error: 'E-mail inválido. Verifique e tente novamente.' },
-          { status: 400 },
-        )
-      }
-      email = rawEmail.trim().toLowerCase()
-    }
-
-    const icpSegment =
-      typeof rawRole === 'string' && ALLOWED_ROLES.has(rawRole) ? rawRole : null
 
     const { alreadyExists } = await addToWaitlist({
-      whatsapp,
-      email,
-      name: rawName,
-      icpSegment,
+      whatsapp: parsed.whatsapp,
+      email: parsed.email,
+      name: parsed.name,
+      icpSegment: parsed.icpSegment,
     })
 
-    // E-mail de confirmação só faz sentido se a pessoa deixou e-mail.
-    if (!alreadyExists && email) {
-      await sendConfirmationEmail(email, rawName)
+    // E-mail de confirmação só para inscrição nova e só se houver e-mail.
+    // O `alreadyExists` decide o efeito colateral, mas NUNCA vaza na resposta.
+    if (!alreadyExists && parsed.email) {
+      await sendConfirmationEmail(parsed.email, parsed.name)
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        alreadyExists,
-        message: alreadyExists
-          ? 'Você já está na lista de espera.'
-          : 'Você está na lista de espera.',
-      },
-      { status: 200 },
-    )
+    return NextResponse.json(SUCCESS_RESPONSE, { status: 200 })
   } catch (err) {
     // Log interno sem PII: só a mensagem do erro, nunca o corpo da requisição.
     console.error('[waitlist] Erro:', err instanceof Error ? err.message : 'desconhecido')

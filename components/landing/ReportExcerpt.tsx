@@ -28,7 +28,7 @@ export default function ReportExcerpt() {
         </span>
         <span className="inline-flex items-center gap-2 border border-accent/35 bg-accent/10 rounded-full px-3 py-1 text-xs font-bold text-text-primary whitespace-nowrap">
           <span className="w-[7px] h-[7px] rounded-full bg-accent inline-block" aria-hidden="true" />
-          GnoScore™
+          {' '}GnoScore™
         </span>
       </div>
 
