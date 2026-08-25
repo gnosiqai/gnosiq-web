@@ -81,3 +81,29 @@ describe('coerência entre o formulário e a política', () => {
     }
   })
 })
+
+describe('GNO-120 · sub-processadores declarados nos DOIS idiomas', () => {
+  const t = text(privacy)
+
+  /**
+   * O espelho EN não tinha seção de compartilhamento com terceiros: PostHog e
+   * SendGrid estavam declarados só em PT. Declarar o Turnstile apenas em PT
+   * repetiria a divergência, e é exatamente a classe de incoerência que esta
+   * suite existe para impedir. A seção EN foi criada como tradução fiel da PT.
+   */
+  it('declara o Cloudflare Turnstile, em PT e em EN', () => {
+    expect(t).toMatch(/proteção anti-bot do formulário de lista de espera/i)
+    expect(t).toMatch(/anti-bot protection of the waiting list form/i)
+  })
+
+  it('promete o mesmo em PT e EN: sem rastreamento de identidade', () => {
+    expect(t).toMatch(/sem rastreamento de cliques ou identidade/i)
+    expect(t).toMatch(/no click or identity tracking/i)
+  })
+
+  it('todo sub-processador aparece nos dois idiomas — lista não diverge', () => {
+    for (const nome of ['PostHog', 'SendGrid', 'Cloudflare Turnstile']) {
+      expect(t.split(nome).length - 1).toBeGreaterThanOrEqual(2)
+    }
+  })
+})

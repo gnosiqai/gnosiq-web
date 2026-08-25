@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // GNO-115 · GATE CISO T1 — o campo WhatsApp é dado pessoal NOVO neste
 // endpoint. Estes testes seguram o contrato que a review vai auditar:
@@ -18,10 +18,41 @@ vi.mock('@/lib/posthog-server', () => ({
 
 const { POST } = await import('./route')
 
-/** Requisição mínima — só o que o handler consome. */
+/**
+ * GNO-120 — o siteverify da Cloudflare é mockado em TODA esta suite. Nenhum
+ * teste fala com a rede, e a secret usada é a dummy oficial "always passes"
+ * injetada por vitest.config.ts.
+ */
+const fetchMock = vi.fn()
+
+/** Aprovação do siteverify — o padrão desta suite. */
+const turnstileApproves = () =>
+  fetchMock.mockResolvedValue({ ok: true, status: 200, json: async () => ({ success: true }) })
+
+/** Reprovação do siteverify, com o error-code que a Cloudflare devolveria. */
+const turnstileRejects = () =>
+  fetchMock.mockResolvedValue({
+    ok: true,
+    status: 200,
+    json: async () => ({ success: false, 'error-codes': ['invalid-input-response'] }),
+  })
+
+/**
+ * Requisição mínima — só o que o handler consome.
+ *
+ * O token do Turnstile entra por padrão porque a esmagadora maioria destes
+ * testes é sobre VALIDAÇÃO, não sobre o gate anti-bot: sem o padrão, todos
+ * eles morreriam no gate e passariam a testar a camada errada. Quem exercita
+ * o gate sobrescreve `turnstile_token` explicitamente.
+ */
 function req(body: unknown, referer?: string) {
+  const withToken =
+    body && typeof body === 'object' && !('turnstile_token' in body)
+      ? { ...body, turnstile_token: 'token-de-teste' }
+      : body
+
   return {
-    json: async () => body,
+    json: async () => withToken,
     headers: { get: (name: string) => (name === 'referer' ? (referer ?? null) : null) },
   } as unknown as Parameters<typeof POST>[0]
 }
@@ -35,7 +66,14 @@ const VALID = {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  vi.stubGlobal('fetch', fetchMock)
+  turnstileApproves()
   addToWaitlist.mockResolvedValue({ alreadyExists: false })
+})
+
+afterEach(() => {
+  vi.unstubAllGlobals()
+  vi.unstubAllEnvs()
 })
 
 describe('consentimento LGPD', () => {
@@ -285,5 +323,192 @@ describe('robustez e vazamento', () => {
 
     errorSpy.mockRestore()
     warnSpy.mockRestore()
+  })
+})
+
+describe('GNO-120 · Turnstile (GATE CISO, item 6 — parte "b")', () => {
+  it('token ausente: ZERO escrita no Firestore', async () => {
+    const res = await POST(req({ ...VALID, turnstile_token: undefined }))
+
+    expect(res.status).toBe(200)
+    expect(addToWaitlist).not.toHaveBeenCalled()
+  })
+
+  it('token reprovado pela Cloudflare: ZERO escrita no Firestore', async () => {
+    turnstileRejects()
+
+    const res = await POST(req({ ...VALID, turnstile_token: 'token-forjado' }))
+
+    expect(res.status).toBe(200)
+    expect(addToWaitlist).not.toHaveBeenCalled()
+  })
+
+  it('token reprovado: ZERO e-mail enviado', async () => {
+    turnstileRejects()
+    const sgSend = vi.fn()
+    vi.doMock('@sendgrid/mail', () => ({ default: { setApiKey: vi.fn(), send: sgSend } }))
+
+    await POST(req({ ...VALID, email: 'lead@exemplo.com', turnstile_token: 'forjado' }))
+
+    expect(sgSend).not.toHaveBeenCalled()
+  })
+
+  it('reprovação é BYTE A BYTE idêntica à resposta de sucesso real', async () => {
+    const real = await POST(req(VALID))
+    const corpoReal = await real.json()
+
+    vi.clearAllMocks()
+    turnstileRejects()
+    const bot = await POST(req({ ...VALID, turnstile_token: 'token-forjado' }))
+    const corpoBot = await bot.json()
+
+    expect(bot.status).toBe(real.status)
+    expect(JSON.stringify(corpoBot)).toBe(JSON.stringify(corpoReal))
+  })
+
+  it('reprovação é indistinguível do honeypot — nenhuma defesa se denuncia', async () => {
+    const honeypot = await POST(req({ ...VALID, website: 'http://spam.example' }))
+    const corpoHoneypot = await honeypot.json()
+
+    turnstileRejects()
+    const turnstile = await POST(req({ ...VALID, turnstile_token: 'forjado' }))
+    const corpoTurnstile = await turnstile.json()
+
+    expect(turnstile.status).toBe(honeypot.status)
+    expect(JSON.stringify(corpoTurnstile)).toBe(JSON.stringify(corpoHoneypot))
+  })
+
+  it('a verificação acontece ANTES da validação do payload', async () => {
+    turnstileRejects()
+
+    // Payload que falharia em todas as validações: ainda assim 200 e silêncio,
+    // porque o gate decidiu antes de qualquer validação olhar o conteúdo.
+    const res = await POST(
+      req({ whatsapp: 'lixo', consent: false, turnstile_token: 'forjado' }),
+    )
+
+    expect(res.status).toBe(200)
+    expect(await res.json()).toHaveProperty('success', true)
+    expect(addToWaitlist).not.toHaveBeenCalled()
+  })
+
+  it('honeypot decide antes do Turnstile — bot entregue não gasta chamada de rede', async () => {
+    await POST(req({ ...VALID, website: 'http://spam.example' }))
+
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(captureServerEvent).toHaveBeenCalledWith(
+      'waitlist_honeypot_tripped',
+      expect.any(String),
+      expect.any(Object),
+    )
+  })
+
+  it('telemetria da reprovação não carrega NENHUM dado do payload', async () => {
+    turnstileRejects()
+
+    await POST(
+      req(
+        {
+          whatsapp: '(11) 91234-5678',
+          email: 'bot@spam.example',
+          consent: true,
+          turnstile_token: 'forjado',
+        },
+        'https://gnosiq.ai/?utm_source=linkedin&utm_campaign=inpi',
+      ),
+    )
+
+    expect(captureServerEvent).toHaveBeenCalledWith(
+      'waitlist_turnstile_rejected',
+      expect.any(String),
+      { lp_version: 'v2', reason: 'rejected', utm_source: 'linkedin', utm_campaign: 'inpi' },
+    )
+
+    const payload = JSON.stringify(captureServerEvent.mock.calls[0])
+    expect(payload).not.toContain('91234')
+    expect(payload).not.toContain('bot@spam.example')
+    expect(payload).not.toContain('forjado')
+  })
+
+  it('token ausente e token reprovado são medidos separado', async () => {
+    await POST(req({ ...VALID, turnstile_token: '' }))
+
+    expect(captureServerEvent).toHaveBeenCalledWith(
+      'waitlist_turnstile_rejected',
+      expect.any(String),
+      expect.objectContaining({ reason: 'missing-token' }),
+    )
+  })
+
+  it('token aprovado: fluxo normal intacto', async () => {
+    const res = await POST(req(VALID))
+
+    expect(res.status).toBe(200)
+    expect(addToWaitlist).toHaveBeenCalledTimes(1)
+    expect(captureServerEvent).not.toHaveBeenCalled()
+  })
+
+  it('o token NUNCA chega ao Firestore — não é dado do lead', async () => {
+    await POST(req({ ...VALID, turnstile_token: 'token-de-teste' }))
+
+    const persisted = JSON.stringify(addToWaitlist.mock.calls[0])
+    expect(persisted).not.toContain('token-de-teste')
+    expect(addToWaitlist).toHaveBeenCalledWith(
+      expect.not.objectContaining({ turnstile_token: expect.anything() }),
+    )
+  })
+})
+
+describe('GNO-120 · fail-closed do Turnstile', () => {
+  it('secret ausente: 503 explícito e ZERO escrita — nunca sucesso silencioso', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    vi.stubEnv('TURNSTILE_SECRET_KEY', '')
+
+    const res = await POST(req(VALID))
+
+    expect(res.status).toBe(503)
+    expect(addToWaitlist).not.toHaveBeenCalled()
+    expect(errorSpy.mock.calls.flat().join(' ')).toMatch(/TURNSTILE_SECRET_KEY/)
+
+    errorSpy.mockRestore()
+  })
+
+  it('siteverify fora do ar: 503 e ZERO escrita — a inscrição NÃO passa', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    fetchMock.mockRejectedValue(new Error('ECONNREFUSED'))
+
+    const res = await POST(req(VALID))
+
+    expect(res.status).toBe(503)
+    expect(addToWaitlist).not.toHaveBeenCalled()
+
+    errorSpy.mockRestore()
+  })
+
+  it('o 503 do fail-closed devolve o erro genérico, sem detalhe do provedor', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    fetchMock.mockResolvedValue({ ok: false, status: 500, json: async () => ({}) })
+
+    const body = await (await POST(req(VALID))).json()
+
+    expect(body.error).not.toMatch(/turnstile|cloudflare|siteverify/i)
+    expect(body.error).toMatch(/temporariamente indispon/i)
+
+    vi.restoreAllMocks()
+  })
+
+  it('nenhum log do fail-closed carrega a secret ou dado do inscrito', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    fetchMock.mockRejectedValue(new Error('ECONNREFUSED'))
+
+    await POST(req({ whatsapp: '(11) 91234-5678', email: 'vaza@exemplo.com', consent: true }))
+
+    const logged = [...errorSpy.mock.calls, ...warnSpy.mock.calls].flat().join(' ')
+    expect(logged).not.toContain('91234')
+    expect(logged).not.toContain('vaza@exemplo.com')
+    expect(logged).not.toContain('1x0000000000000000000000000000000AA')
+
+    vi.restoreAllMocks()
   })
 })

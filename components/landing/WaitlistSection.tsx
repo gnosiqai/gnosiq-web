@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import posthog from 'posthog-js'
 import FounderSlots from './FounderSlots'
 import { isValidEmail, isValidWhatsApp } from '@/lib/waitlist/phone'
@@ -19,6 +19,12 @@ import { getUtmParams } from '@/lib/waitlist/utm'
 //    isso saiu. O distinct_id do PostHog já atribui a conversão.
 //  · consentimento LGPD é checkbox explícito e obrigatório, não pré-marcado,
 //    e a rota recusa a inscrição sem ele.
+//
+// GNO-120 — Cloudflare Turnstile, modo MANAGED. O widget aqui só PRODUZ o
+// token; quem decide é o servidor, que revalida contra o siteverify antes de
+// escrever qualquer coisa. Nada nesta tela é barreira de segurança: um bot
+// pode ignorar o componente inteiro e postar direto na rota. O valor de ter o
+// widget é gerar o token para o humano real, sem fricção.
 
 const ROLES = [
   { value: 'profissional', label: 'Profissional' },
@@ -32,6 +38,42 @@ const ROLES = [
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
+/**
+ * Renderização EXPLÍCITA (`render=explicit`): a implícita varre o DOM sozinha
+ * atrás de `.cf-turnstile` e briga com o ciclo de vida do React, que monta e
+ * desmonta o nó quando bem entende. Explícito, quem manda no widget é o
+ * efeito abaixo.
+ */
+const TURNSTILE_SCRIPT_URL = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
+
+/** Promise única do script: dois formulários na página não baixam duas vezes. */
+let turnstileScript: Promise<void> | null = null
+
+function loadTurnstileScript(): Promise<void> {
+  if (turnstileScript) return turnstileScript
+
+  turnstileScript = new Promise<void>((resolve, reject) => {
+    const existing = document.querySelector<HTMLScriptElement>(
+      `script[src="${TURNSTILE_SCRIPT_URL}"]`,
+    )
+    if (existing) {
+      existing.addEventListener('load', () => resolve())
+      existing.addEventListener('error', () => reject(new Error('turnstile script')))
+      return
+    }
+
+    const script = document.createElement('script')
+    script.src = TURNSTILE_SCRIPT_URL
+    script.async = true
+    script.defer = true
+    script.onload = () => resolve()
+    script.onerror = () => reject(new Error('turnstile script'))
+    document.head.appendChild(script)
+  })
+
+  return turnstileScript
+}
+
 export default function WaitlistSection() {
   const [whatsapp, setWhatsapp] = useState('')
   const [email, setEmail] = useState('')
@@ -41,6 +83,66 @@ export default function WaitlistSection() {
   const [website, setWebsite] = useState('')
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  // Token do Turnstile. `null` = ainda não veio, expirou ou já foi gasto.
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+  // Script bloqueado (bloqueador de anúncio, rede fora): sem widget, sem token.
+  const [widgetFailed, setWidgetFailed] = useState(false)
+  const widgetRef = useRef<HTMLDivElement>(null)
+  const widgetIdRef = useRef<string | undefined>(undefined)
+
+  /*
+    Sitekey é público por definição (vai no HTML de qualquer jeito), por isso
+    NEXT_PUBLIC. Ausente = configuração incompleta: o formulário assume o
+    mesmo fail-closed do servidor e não deixa enviar, em vez de mandar um POST
+    que a rota vai descartar em silêncio.
+  */
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? ''
+
+  useEffect(() => {
+    if (!siteKey) return
+
+    let cancelled = false
+
+    const mountWidget = () => {
+      if (cancelled || !widgetRef.current || !window.turnstile) return
+      widgetIdRef.current = window.turnstile.render(widgetRef.current, {
+        sitekey: siteKey,
+        theme: 'dark',
+        callback: (token: string) => setTurnstileToken(token),
+        // Token do Turnstile é de uso único e expira. Nos dois casos o
+        // estado volta a `null` e o widget se reapresenta sozinho.
+        'error-callback': () => setTurnstileToken(null),
+        'expired-callback': () => setTurnstileToken(null),
+      })
+    }
+
+    /*
+      API já presente (remontagem do componente, navegação client-side) =
+      monta na hora, sem passar pelo carregamento de novo. Fora a economia,
+      isso evita o piscar de um espaço vazio onde o widget já poderia estar.
+    */
+    if (window.turnstile) {
+      mountWidget()
+    } else {
+      loadTurnstileScript()
+        .then(mountWidget)
+        .catch(() => {
+          if (!cancelled) setWidgetFailed(true)
+        })
+    }
+
+    return () => {
+      cancelled = true
+      if (widgetIdRef.current) window.turnstile?.remove(widgetIdRef.current)
+      widgetIdRef.current = undefined
+    }
+  }, [siteKey])
+
+  /** Devolve o widget ao estado inicial: token gasto não serve para reenvio. */
+  const resetWidget = () => {
+    setTurnstileToken(null)
+    if (widgetIdRef.current) window.turnstile?.reset(widgetIdRef.current)
+  }
 
   /** Espelha a regra do servidor. O servidor revalida — isto é só feedback. */
   const validate = (): string | null => {
@@ -58,6 +160,12 @@ export default function WaitlistSection() {
     }
     if (!consent) {
       return 'É necessário aceitar a Política de Privacidade para entrar na lista.'
+    }
+    if (!siteKey || widgetFailed) {
+      return 'Verificação de segurança indisponível. Recarregue a página e tente de novo.'
+    }
+    if (!turnstileToken) {
+      return 'Aguarde a verificação de segurança terminar e tente de novo.'
     }
     return null
   }
@@ -94,12 +202,16 @@ export default function WaitlistSection() {
           icp_segment: role || null,
           consent,
           website,
+          turnstile_token: turnstileToken,
         }),
       })
 
       const data = await res.json().catch(() => ({}))
 
       if (!res.ok || !data?.success) {
+        // O token já foi consumido na tentativa: sem reset, o reenvio levaria
+        // um token gasto e o servidor reprovaria de novo, para sempre.
+        resetWidget()
         setStatus('error')
         setErrorMsg(data?.error ?? 'Serviço temporariamente indisponível. Tente novamente em instantes.')
         return
@@ -119,6 +231,7 @@ export default function WaitlistSection() {
 
       setStatus('success')
     } catch {
+      resetWidget()
       setStatus('error')
       setErrorMsg('Serviço temporariamente indisponível. Tente novamente em instantes.')
     }
@@ -270,6 +383,19 @@ export default function WaitlistSection() {
                   {'. '}Posso pedir a exclusão a qualquer momento.
                 </span>
               </label>
+
+              {/*
+                GNO-120 — widget Turnstile (modo Managed). Fica junto do botão
+                porque é o último passo antes do envio; o desafio interativo,
+                quando aparece, aparece onde o olho já está.
+              */}
+              <div ref={widgetRef} className="flex justify-center min-h-[65px]" />
+
+              {(!siteKey || widgetFailed) && (
+                <p role="alert" className="text-semantic-error text-sm text-center">
+                  Verificação de segurança indisponível. Recarregue a página e tente de novo.
+                </p>
+              )}
 
               <button
                 type="submit"

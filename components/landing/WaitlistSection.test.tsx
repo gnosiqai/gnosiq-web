@@ -15,9 +15,37 @@ import WaitlistSection from './WaitlistSection'
 
 const fetchMock = vi.fn()
 
+/**
+ * GNO-120 — dublê do widget Turnstile.
+ *
+ * O script real da Cloudflare nunca é baixado nesta suite: o componente monta
+ * o widget na hora quando `window.turnstile` já existe, e é esse ponto que o
+ * dublê ocupa. `render` devolve o id do widget e entrega um token pelo mesmo
+ * callback que a API real usa.
+ */
+const turnstileRender = vi.fn()
+const turnstileReset = vi.fn()
+
+const TEST_TOKEN = 'token-do-widget-de-teste'
+
+/** Instala o dublê. `token: null` simula widget que nunca resolveu. */
+function stubTurnstile(token: string | null = TEST_TOKEN) {
+  turnstileRender.mockImplementation((_el: HTMLElement, opts: { callback?: (t: string) => void }) => {
+    if (token !== null) opts.callback?.(token)
+    return 'widget-de-teste'
+  })
+
+  vi.stubGlobal('turnstile', {
+    render: turnstileRender,
+    reset: turnstileReset,
+    remove: vi.fn(),
+  })
+}
+
 beforeEach(() => {
   vi.clearAllMocks()
   vi.stubGlobal('fetch', fetchMock)
+  stubTurnstile()
   fetchMock.mockResolvedValue({
     ok: true,
     json: async () => ({ success: true, alreadyExists: false }),
@@ -237,5 +265,71 @@ describe('evento de conversão — DoD e GATE CISO', () => {
     expect(payload).not.toContain('vaza@exemplo.com')
     expect(payload).not.toContain('91234')
     expect(payload).not.toContain('5678')
+  })
+})
+
+describe('GNO-120 · Turnstile no formulário', () => {
+  it('o widget é montado com a sitekey do ambiente, em tema escuro', () => {
+    render(<WaitlistSection />)
+
+    expect(turnstileRender).toHaveBeenCalledWith(
+      expect.any(HTMLElement),
+      expect.objectContaining({ sitekey: '1x00000000000000000000AA', theme: 'dark' }),
+    )
+  })
+
+  it('o token do widget acompanha o envio', async () => {
+    render(<WaitlistSection />)
+    type(/whatsapp/i, '(11) 91234-5678')
+    consent()
+    submit()
+    await waitFor(() => expect(waitlistCalls()).toHaveLength(1))
+
+    expect(sentBody().turnstile_token).toBe(TEST_TOKEN)
+  })
+
+  it('sem token não chama a API — fail-closed também no cliente', async () => {
+    stubTurnstile(null)
+    render(<WaitlistSection />)
+    type(/whatsapp/i, '(11) 91234-5678')
+    consent()
+    submit()
+
+    await screen.findByRole('alert')
+    expect(waitlistCalls()).toHaveLength(0)
+    expect(screen.getByRole('alert').textContent).toMatch(/verificação de segurança/i)
+  })
+
+  it('script bloqueado: avisa e não deixa enviar', async () => {
+    // Sem API e sem script que carregue: é o cenário de bloqueador de anúncio.
+    vi.stubGlobal('turnstile', undefined)
+    render(<WaitlistSection />)
+    type(/whatsapp/i, '(11) 91234-5678')
+    consent()
+    submit()
+
+    await screen.findByRole('alert')
+    expect(waitlistCalls()).toHaveLength(0)
+  })
+
+  it('erro da API reseta o widget — token é de uso único', async () => {
+    fetchMock.mockResolvedValue({ ok: false, json: async () => ({ success: false, error: 'x' }) })
+    render(<WaitlistSection />)
+    type(/whatsapp/i, '(11) 91234-5678')
+    consent()
+    submit()
+    await screen.findByRole('alert')
+
+    expect(turnstileReset).toHaveBeenCalledWith('widget-de-teste')
+  })
+
+  it('o token não vira propriedade de evento do PostHog', async () => {
+    render(<WaitlistSection />)
+    type(/whatsapp/i, '(11) 91234-5678')
+    consent()
+    submit()
+    await waitFor(() => expect(capture).toHaveBeenCalled())
+
+    expect(JSON.stringify(capture.mock.calls[0][1])).not.toContain(TEST_TOKEN)
   })
 })

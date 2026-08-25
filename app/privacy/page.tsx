@@ -100,6 +100,7 @@ export default function PrivacyPage() {
             <ul className="space-y-2" style={{ color: '#D1D5DB' }}>
               <li>✦ <strong>PostHog</strong>: analytics de uso (dados pseudonimizados; sem PII exposta)</li>
               <li>✦ <strong>SendGrid</strong>: envio de e-mail transacional (confirmação de cadastro e comunicações de lançamento)</li>
+              <li>✦ <strong>Cloudflare Turnstile</strong>: proteção anti-bot do formulário de lista de espera (verificação de desafio no navegador; sem rastreamento de cliques ou identidade)</li>
             </ul>
             <p className="mt-3 leading-relaxed" style={{ color: '#D1D5DB' }}>
               Nenhum dado pessoal é vendido ou compartilhado com terceiros para fins comerciais
@@ -208,7 +209,26 @@ export default function PrivacyPage() {
 
           <div>
             <h3 className="text-xl font-semibold mb-3" style={{ color: '#8B5CF6' }}>
-              4. Your Rights (LGPD / GDPR)
+              4. Third-Party Sharing
+            </h3>
+            <p className="mb-3 leading-relaxed" style={{ color: '#D1D5DB' }}>
+              To operate the service, GnosIQ uses the following data sub-processors, all
+              operating under confidentiality agreements and in compliance with the LGPD:
+            </p>
+            <ul className="space-y-2" style={{ color: '#D1D5DB' }}>
+              <li>✦ <strong>PostHog</strong>: usage analytics (pseudonymized data; no PII exposed)</li>
+              <li>✦ <strong>SendGrid</strong>: transactional e-mail delivery (sign-up confirmation and launch communications)</li>
+              <li>✦ <strong>Cloudflare Turnstile</strong>: anti-bot protection of the waiting list form (browser challenge verification; no click or identity tracking)</li>
+            </ul>
+            <p className="mt-3 leading-relaxed" style={{ color: '#D1D5DB' }}>
+              No personal data is sold or shared with third parties for commercial or
+              advertising purposes.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-semibold mb-3" style={{ color: '#8B5CF6' }}>
+              5. Your Rights (LGPD / GDPR)
             </h3>
             <p style={{ color: '#D1D5DB' }}>
               You have the right to access, correct, delete, or port your data, and to revoke
@@ -223,7 +243,7 @@ export default function PrivacyPage() {
 
           <div>
             <h3 className="text-xl font-semibold mb-3" style={{ color: '#8B5CF6' }}>
-              5. Contact
+              6. Contact
             </h3>
             <p style={{ color: '#D1D5DB' }}>
               <strong>GnosIQ</strong> · São Paulo, SP - Brazil

@@ -138,6 +138,16 @@ describe('GNO-121 · voz da marca — e-mails transacionais', () => {
     sentMessages.length = 0
     process.env.SENDGRID_API_KEY = 'SG.test-key-brand-voice'
 
+    /*
+      GNO-120 — a rota agora verifica o Turnstile antes de escrever ou enviar
+      qualquer coisa, então o e-mail PT só existe para ser inspecionado se o
+      token passar. O siteverify é mockado: nenhuma chamada de rede sai daqui.
+    */
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => ({ success: true }) }),
+    )
+
     // EN: lib/sendgrid.ts
     await sendWaitlistConfirmation({ email: 'lead@example.com', name: 'Ada Lovelace' })
 
@@ -148,9 +158,12 @@ describe('GNO-121 · voz da marca — e-mails transacionais', () => {
         whatsapp: '',
         icp_segment: 'founder',
         consent: true,
+        turnstile_token: 'token-de-teste',
       }),
       headers: { get: () => null },
     } as unknown as Parameters<typeof POST>[0])
+
+    vi.unstubAllGlobals()
   })
 
   it('os dois templates foram capturados — senão a trava não está olhando nada', () => {
