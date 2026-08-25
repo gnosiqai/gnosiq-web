@@ -297,7 +297,7 @@ export async function POST(req: NextRequest) {
     // E-mail de confirmação só para inscrição nova e só se houver e-mail.
     // O `alreadyExists` decide o efeito colateral, mas NUNCA vaza na resposta.
     if (!alreadyExists && parsed.email) {
-      await sendConfirmationEmail(parsed.email, parsed.name)
+      await sendConfirmationEmail(parsed.email)
     }
 
     return NextResponse.json(SUCCESS_RESPONSE, { status: 200 })
@@ -405,10 +405,16 @@ async function reportEmailFailure(err: unknown): Promise<void> {
  * O que MUDOU na GNO-122 não é isso, é o oposto disso: continuar não derrubando
  * a inscrição, mas parar de esconder a falha. Devolver erro para a pessoa aqui
  * seria trocar uma mentira por outra - a inscrição dela deu certo mesmo.
+ *
+ * GNO-123: o `name` NÃO é mais repassado ao template. Ele entrava cru no HTML
+ * do e-mail, e o destinatário também vem do corpo: era conteúdo arbitrário
+ * entregue a endereço arbitrário pelo nosso domínio autenticado. O campo
+ * continua sendo persistido no Firestore; o que morreu é a ponte dele para o
+ * corpo da mensagem.
  */
-async function sendConfirmationEmail(email: string, name: string): Promise<void> {
+async function sendConfirmationEmail(email: string): Promise<void> {
   try {
-    await sendWaitlistConfirmationPT({ email, name })
+    await sendWaitlistConfirmationPT({ email })
   } catch (err) {
     await reportEmailFailure(err)
   }

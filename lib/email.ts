@@ -103,42 +103,58 @@ async function send({ to, subject, text, html }: Payload): Promise<string> {
   return data.id
 }
 
+/**
+ * GNO-123 — o destinatário é o ÚNICO parâmetro, e isso é decisão de segurança.
+ *
+ * Até a auditoria CISO T3 estes dois templates recebiam `name` e o
+ * interpolavam CRU no HTML. `name` é campo de corpo do POST /api/waitlist:
+ * quem passasse uma vez pelo Turnstile fazia o nosso domínio autenticado
+ * (DKIM/SPF/Return-Path no Cloudflare) entregar, a um destinatário à escolha
+ * dele, uma mensagem com marcação escolhida por ele. Não é XSS de navegador,
+ * é abuso da nossa reputação de envio, que é ativo caro de reconstruir.
+ *
+ * A saída foi REMOVER, não escapar, porque a LP v2 nunca mandou `name`: era
+ * superfície de ataque com valor zero de produto. Escapar seria manter a
+ * superfície e confiar num `replace` para sempre.
+ *
+ * QUANDO A PERSONALIZAÇÃO VOLTAR (convites beta, por exemplo): reintroduzir
+ * COM escape de HTML no ramo `html` e com teste adversarial provando que
+ * marcação não sobrevive. Este comentário é a memória dessa decisão.
+ */
 interface ConfirmationParams {
   email: string
-  name: string
 }
 
 /**
- * Confirmação PT da lista de espera. Copy INALTERADA na migração: já estava
- * conforme a regra de voz da marca (GNO-121) e a trava cobre os dois templates.
+ * Confirmação PT da lista de espera.
+ *
+ * Copy inalterada desde a GNO-122, exceto pela saudação personalizada, que a
+ * GNO-123 removeu (ver `ConfirmationParams`). O corpo é CONSTANTE: nenhuma
+ * entrada de usuário atravessa para o HTML, e é isso que um teste desta suite
+ * trava. A regra de voz da GNO-121 continua valendo e continua coberta.
  */
 export async function sendWaitlistConfirmationPT({
   email,
-  name,
 }: ConfirmationParams): Promise<string> {
-  const firstName = name.trim().split(' ')[0] || 'olá'
-
   return send({
     to: email,
     subject: 'Você está na lista de espera da GnosIQ',
-    text: `${firstName},\n\nVocê está na lista de espera da GnosIQ.\n\nA GnosIQ mapeia o seu perfil cognitivo com instrumentos validados e IA especializada, e entrega um relatório com o seu GnoScore™.\n\nAviso: a GnosIQ não substitui avaliação clínica.\n\nAvisamos você pessoalmente quando o acesso beta abrir.\n\n- Carlos\nFounder, GnosIQ\ngnosiq.ai`,
-    html: `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"></head><body style="background:#0D0B1E;color:#FFFFFF;font-family:Inter,sans-serif;padding:40px 24px;max-width:600px;margin:0 auto;"><p style="color:#8B5CF6;font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;">GNOSIQ</p><h1 style="font-size:24px;font-weight:700;margin-bottom:16px;">Você está na lista, ${firstName}.</h1><p style="color:#A1A1AA;line-height:1.7;margin-bottom:24px;">A GnosIQ mapeia o seu perfil cognitivo com instrumentos validados e IA especializada, e entrega um relatório com o seu GnoScore™.</p><p style="color:#A1A1AA;line-height:1.7;margin-bottom:32px;">Avisamos você pessoalmente quando o acesso beta abrir.</p><hr style="border:none;border-top:1px solid #1F1B3A;margin-bottom:32px;"><p style="color:#6B7280;font-size:13px;">A GnosIQ não substitui avaliação clínica.</p><p style="color:#6B7280;font-size:13px;">Carlos Alberto Gomes · Founder, GnosIQ<br><a href="https://gnosiq.ai" style="color:#8B5CF6;">gnosiq.ai</a></p></body></html>`,
+    text: `Você está na lista de espera da GnosIQ.\n\nA GnosIQ mapeia o seu perfil cognitivo com instrumentos validados e IA especializada, e entrega um relatório com o seu GnoScore™.\n\nAviso: a GnosIQ não substitui avaliação clínica.\n\nAvisamos você pessoalmente quando o acesso beta abrir.\n\n- Carlos\nFounder, GnosIQ\ngnosiq.ai`,
+    html: `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"></head><body style="background:#0D0B1E;color:#FFFFFF;font-family:Inter,sans-serif;padding:40px 24px;max-width:600px;margin:0 auto;"><p style="color:#8B5CF6;font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;">GNOSIQ</p><h1 style="font-size:24px;font-weight:700;margin-bottom:16px;">Você está na lista.</h1><p style="color:#A1A1AA;line-height:1.7;margin-bottom:24px;">A GnosIQ mapeia o seu perfil cognitivo com instrumentos validados e IA especializada, e entrega um relatório com o seu GnoScore™.</p><p style="color:#A1A1AA;line-height:1.7;margin-bottom:32px;">Avisamos você pessoalmente quando o acesso beta abrir.</p><hr style="border:none;border-top:1px solid #1F1B3A;margin-bottom:32px;"><p style="color:#6B7280;font-size:13px;">A GnosIQ não substitui avaliação clínica.</p><p style="color:#6B7280;font-size:13px;">Carlos Alberto Gomes · Founder, GnosIQ<br><a href="https://gnosiq.ai" style="color:#8B5CF6;">gnosiq.ai</a></p></body></html>`,
   })
 }
 
 /**
- * Confirmação EN. Copy INALTERADA na migração (vinha de lib/sendgrid.ts).
+ * Confirmação EN. Mesma regra do template PT: corpo constante, sem saudação
+ * personalizada desde a GNO-123.
  */
 export async function sendWaitlistConfirmation({
   email,
-  name,
 }: ConfirmationParams): Promise<string> {
-  const firstName = name.split(' ')[0] || 'there'
-
   return send({
     to: email,
     subject: "You're on the GnosIQ waitlist 🧠",
-    text: `Hey ${firstName},\n\nYou're officially on the GnosIQ waitlist.\n\nGnosIQ is the first API that turns human potential into computable capital.\n\nWe'll reach out personally when early access opens.\n\n- Carlos\nFounder, GnosIQ\ngnosiq.ai`,
-    html: `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="background:#0D0B1E;color:#FFFFFF;font-family:Inter,sans-serif;padding:40px 24px;max-width:600px;margin:0 auto;"><p style="color:#8B5CF6;font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;">GNOSIQ</p><h1 style="font-size:24px;font-weight:700;margin-bottom:16px;">You're on the waitlist, ${firstName}.</h1><p style="color:#A1A1AA;line-height:1.7;margin-bottom:24px;">GnosIQ is the first API that turns human potential into computable capital.<br>Deep cognitive assessment. Affordable. Programmatic. 30 minutes.</p><p style="color:#A1A1AA;line-height:1.7;margin-bottom:32px;">We'll reach out personally when early access opens.</p><hr style="border:none;border-top:1px solid #1F1B3A;margin-bottom:32px;"><p style="color:#6B7280;font-size:13px;">Carlos Gomes · Founder, GnosIQ<br><a href="https://gnosiq.ai" style="color:#8B5CF6;">gnosiq.ai</a></p></body></html>`,
+    text: `You're officially on the GnosIQ waitlist.\n\nGnosIQ is the first API that turns human potential into computable capital.\n\nWe'll reach out personally when early access opens.\n\n- Carlos\nFounder, GnosIQ\ngnosiq.ai`,
+    html: `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="background:#0D0B1E;color:#FFFFFF;font-family:Inter,sans-serif;padding:40px 24px;max-width:600px;margin:0 auto;"><p style="color:#8B5CF6;font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;">GNOSIQ</p><h1 style="font-size:24px;font-weight:700;margin-bottom:16px;">You're on the waitlist.</h1><p style="color:#A1A1AA;line-height:1.7;margin-bottom:24px;">GnosIQ is the first API that turns human potential into computable capital.<br>Deep cognitive assessment. Affordable. Programmatic. 30 minutes.</p><p style="color:#A1A1AA;line-height:1.7;margin-bottom:32px;">We'll reach out personally when early access opens.</p><hr style="border:none;border-top:1px solid #1F1B3A;margin-bottom:32px;"><p style="color:#6B7280;font-size:13px;">Carlos Gomes · Founder, GnosIQ<br><a href="https://gnosiq.ai" style="color:#8B5CF6;">gnosiq.ai</a></p></body></html>`,
   })
 }
