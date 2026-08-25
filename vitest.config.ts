@@ -6,6 +6,25 @@ export default defineConfig({
   plugins: [tsconfigPaths(), react()],
   test: {
     environment: 'jsdom',
+    /*
+      GNO-120 - chaves de TESTE oficiais da Cloudflare, verbatim da doc
+      (developers.cloudflare.com/turnstile/troubleshooting/testing/):
+
+        1x00000000000000000000AA            sitekey "always passes"
+        1x0000000000000000000000000000000AA secret  "always passes"
+
+      Ficam aqui, e não em cada arquivo, porque são CONFIGURAÇÃO de ambiente,
+      não fixture de caso: qualquer teste que renderize a LP inteira precisa
+      da sitekey para o formulário não cair no fail-closed do cliente.
+
+      A secret real NUNCA entra em CI nem em código: ela existe só como env
+      Secret do Vercel. Os testes que exercitam o siteverify mockam a rede, e
+      os que exercitam ausência de env limpam a variável explicitamente.
+    */
+    env: {
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: '1x00000000000000000000AA',
+      TURNSTILE_SECRET_KEY: '1x0000000000000000000000000000000AA',
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],

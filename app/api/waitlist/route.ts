@@ -3,6 +3,11 @@ import { addToWaitlist } from '@/lib/firestore'
 import { normalizeToE164, isValidEmail } from '@/lib/waitlist/phone'
 import { parseUtm } from '@/lib/waitlist/utm'
 import { captureServerEvent } from '@/lib/posthog-server'
+import {
+  verifyTurnstileToken,
+  TurnstileConfigError,
+  TurnstileUnavailableError,
+} from '@/lib/turnstile'
 
 export const runtime = 'nodejs'
 
@@ -23,7 +28,13 @@ export const runtime = 'nodejs'
  *  4. Erro interno nunca vaza stack trace nem conteúdo de credencial.
  *  5. Consentimento LGPD é obrigatório e registrado — sem ele, 400.
  *  6. Honeypot server-side contra flood de bot (item 6 do checklist CISO,
- *     parte "a" — o Turnstile é fast-follow na GNO-120, fora deste PR).
+ *     parte "a").
+ *
+ * GNO-120 fecha a parte "b" do mesmo item: Cloudflare Turnstile verificado no
+ * servidor ANTES de qualquer escrita ou envio. As duas camadas compartilham a
+ * mesma regra de saída — reprovar devolve a resposta de sucesso, byte a byte,
+ * porque uma resposta distinta seria um oráculo contando ao atacante qual
+ * defesa ele acabou de tocar.
  */
 
 /**
@@ -37,6 +48,12 @@ const HONEYPOT_FIELD = 'website'
 
 /** Identidade única para todos os trips — conta eventos, não pessoas. */
 const HONEYPOT_DISTINCT_ID = 'honeypot-bot'
+
+/** Campo do corpo que carrega o token emitido pelo widget Turnstile. */
+const TURNSTILE_FIELD = 'turnstile_token'
+
+/** Mesma lógica do honeypot: conta reprovações, não pessoas. */
+const TURNSTILE_DISTINCT_ID = 'turnstile-bot'
 
 /** Tamanho máximo do corpo aceito — trava barata contra payload inflado. */
 const MAX_FIELD_LENGTH = 254
@@ -190,28 +207,75 @@ function utmFromReferer(req: NextRequest): Record<string, string> {
   }
 }
 
+/** Lê um campo do corpo sem confiar em nada que veio dele. */
+function fieldOf(body: unknown, name: string): unknown {
+  return body && typeof body === 'object' ? (body as Record<string, unknown>)[name] : undefined
+}
+
+/**
+ * As duas camadas anti-bot, na ordem em que custam.
+ *
+ * HONEYPOT primeiro, porque é decisão local: nem gasta chamada de rede com um
+ * bot que já se entregou. Um bot não pode receber nem sequer feedback de
+ * "campo inválido" — isso já seria sinal de que a armadilha existe.
+ *
+ * TURNSTILE depois, e ainda assim antes de qualquer escrita no Firestore ou
+ * envio de e-mail: é essa ordem que a issue exige, e é ela que garante que um
+ * token reprovado não deixe rastro nenhum no placar de fundadores.
+ *
+ * Retorna a resposta a devolver quando o request deve morrer aqui, ou `null`
+ * quando ele está liberado para seguir. A resposta é sempre a MESMA de
+ * sucesso — nunca um oráculo dizendo qual defesa reprovou.
+ */
+async function screenForBots(req: NextRequest, body: unknown): Promise<NextResponse | null> {
+  const trap = fieldOf(body, HONEYPOT_FIELD)
+  if (typeof trap === 'string' && trap.trim().length > 0) {
+    await captureServerEvent('waitlist_honeypot_tripped', HONEYPOT_DISTINCT_ID, {
+      lp_version: 'v2',
+      ...utmFromReferer(req),
+    })
+    return NextResponse.json(SUCCESS_RESPONSE, { status: 200 })
+  }
+
+  const verdict = await verifyTurnstileToken(fieldOf(body, TURNSTILE_FIELD))
+  if (!verdict.ok) {
+    /*
+      `reason` separa "nem mandou token" (bot que ignora o widget) de "mandou
+      token reprovado" (token forjado, expirado ou já gasto). É métrica de
+      operação, não de pessoa: nenhum campo do formulário entra no evento.
+    */
+    await captureServerEvent('waitlist_turnstile_rejected', TURNSTILE_DISTINCT_ID, {
+      lp_version: 'v2',
+      reason: verdict.reason,
+      ...utmFromReferer(req),
+    })
+    return NextResponse.json(SUCCESS_RESPONSE, { status: 200 })
+  }
+
+  return null
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => null)
 
     /*
-      HONEYPOT — antes de qualquer validação, de propósito.
-      Um bot não pode receber nem sequer feedback de "campo inválido": isso
-      já seria sinal de que a armadilha existe. A resposta é a MESMA de
-      sucesso, byte a byte, e nada é escrito no Firestore nem enviado pelo
-      SendGrid. Do lado de fora, indistinguível de uma inscrição real —
-      exatamente a coerência que o fechamento do oráculo exige.
+      Corpo ilegível morre aqui, ANTES do gate anti-bot, e continua sendo 400
+      como na GNO-115.
+
+      Não é inconsistência com a regra do não-oráculo: isto é erro de
+      TRANSPORTE, não veredito sobre quem enviou. Não dá para screenar o que
+      não dá para ler, e um 400 aqui não conta nada sobre nenhuma pessoa - só
+      diz que o que chegou não era JSON. Devolver a resposta de sucesso neste
+      caso esconderia bug de cliente nosso atrás de uma tela verde.
     */
-    if (body && typeof body === 'object') {
-      const trap = (body as Record<string, unknown>)[HONEYPOT_FIELD]
-      if (typeof trap === 'string' && trap.trim().length > 0) {
-        await captureServerEvent('waitlist_honeypot_tripped', HONEYPOT_DISTINCT_ID, {
-          lp_version: 'v2',
-          ...utmFromReferer(req),
-        })
-        return NextResponse.json(SUCCESS_RESPONSE, { status: 200 })
-      }
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ success: false, error: 'Requisição inválida.' }, { status: 400 })
     }
+
+    // Gate anti-bot ANTES de validar, de persistir e de enviar e-mail.
+    const blocked = await screenForBots(req, body)
+    if (blocked) return blocked
 
     const parsed = parseSubmission(body)
 
@@ -234,6 +298,26 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(SUCCESS_RESPONSE, { status: 200 })
   } catch (err) {
+    /*
+      FAIL-CLOSED do Turnstile, explícito.
+
+      Secret ausente (defeito de configuração nosso) e siteverify fora do ar
+      são as DUAS situações em que a camada anti-bot não consegue decidir. Nas
+      duas, a inscrição não passa: nada é escrito, nada é enviado.
+
+      E a resposta aqui é 503, não a resposta genérica de sucesso — de
+      propósito. Não há oráculo nisso: a falha independe do que a pessoa
+      digitou, então não conta nada sobre ninguém. O que ela conta é para o
+      humano legítimo, que recebe "tente de novo em instantes" em vez de uma
+      tela de sucesso mentindo sobre uma inscrição que não aconteceu. Essa
+      mentira silenciosa é exatamente a classe de falha que a GNO-122 está
+      matando no caminho de e-mail.
+    */
+    if (err instanceof TurnstileConfigError || err instanceof TurnstileUnavailableError) {
+      console.error('[waitlist] Turnstile fail-closed:', err.message)
+      return NextResponse.json({ success: false, error: GENERIC_ERROR }, { status: 503 })
+    }
+
     // Log interno sem PII: só a mensagem do erro, nunca o corpo da requisição.
     console.error('[waitlist] Erro:', err instanceof Error ? err.message : 'desconhecido')
     return NextResponse.json({ success: false, error: GENERIC_ERROR }, { status: 503 })
