@@ -55,7 +55,7 @@ describe('GNO-92 OG image', () => {
   it('expõe os metadados que o Next injeta no <head>', () => {
     expect(ogSize).toEqual({ width: 1200, height: 630 })
     expect(ogContentType).toBe('image/png')
-    expect(ogAlt).toBe('GnosIQ — The Cognitive Capital API')
+    expect(ogAlt).toBe('GnosIQ - The Cognitive Capital API')
   })
 
   it('renderiza um PNG 1200×630 de verdade', async () => {

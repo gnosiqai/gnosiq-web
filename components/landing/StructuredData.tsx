@@ -74,7 +74,7 @@ export default function StructuredData() {
   const product = {
     '@type': 'Product',
     '@id': `${COMPANY_URL}/#product`,
-    name: 'GnosIQ — Mapeamento cognitivo com GnoScore™',
+    name: 'GnosIQ - Mapeamento cognitivo com GnoScore™',
     description:
       `Mapeamento do perfil cognitivo com instrumentos validados e IA especializada, ` +
       `com relatório e GnoScore™ entregues em cerca de ${DELIVERY_MINUTES} minutos. ` +
@@ -99,7 +99,7 @@ export default function StructuredData() {
     '@type': 'WebPage',
     '@id': `${COMPANY_URL}/#webpage`,
     url: COMPANY_URL,
-    name: 'Como a sua mente realmente funciona? — GnosIQ',
+    name: 'Como a sua mente realmente funciona? - GnosIQ',
     isPartOf: { '@id': `${COMPANY_URL}/#organization` },
     // last-updated real: mesmo instante que o rodapé exibe.
     dateModified: LAST_UPDATED_ISO,

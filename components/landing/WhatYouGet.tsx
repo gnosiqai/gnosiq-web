@@ -26,7 +26,7 @@ const BENEFITS = [
   },
   {
     title: 'Onde estão seus pontos cegos',
-    body: 'Os padrões que surgem sob pressão de decisão — os que afetam contratações, sócios e mudanças de rumo antes que você perceba.',
+    body: 'Os padrões que surgem sob pressão de decisão: os que afetam contratações, sócios e mudanças de rumo antes que você perceba.',
   },
   {
     title: 'O que bloqueia sua alta performance',

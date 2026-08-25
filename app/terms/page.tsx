@@ -96,7 +96,7 @@ export default function TermsPage() {
               marginBottom: '0.75rem',
             }}
           >
-            2. Aviso Importante — Limitações do Serviço
+            2. Aviso Importante: Limitações do Serviço
           </h2>
           <p style={{ lineHeight: 1.7, fontStyle: 'italic' }}>
             A avaliação cognitiva da GnosIQ <strong style={{ color: '#FFFFFF' }}>não substitui avaliação clínica
@@ -120,23 +120,23 @@ export default function TermsPage() {
           </h2>
           <p style={{ lineHeight: 1.7, marginBottom: '1rem' }}>
             O tratamento de dados pessoais pela GnosIQ é realizado com base no{' '}
-            <strong style={{ color: '#FFFFFF' }}>consentimento do titular</strong> (Lei 13.709/2018 — LGPD,
+            <strong style={{ color: '#FFFFFF' }}>consentimento do titular</strong> (Lei 13.709/2018 - LGPD,
             Art. 7º, inciso I). Os dados coletados incluem:
           </p>
           <ul style={{ paddingLeft: '1.5rem', lineHeight: 2 }}>
             <li>
               <strong style={{ color: '#FFFFFF' }}>Lista de espera:</strong> endereço de e-mail e/ou número de
-              WhatsApp (pelo menos um, fornecido por você) e, opcionalmente, o papel profissional — para
+              WhatsApp (pelo menos um, fornecido por você) e, opcionalmente, o papel profissional, para
               comunicação sobre o acesso antecipado ao beta e as condições de fundador.
             </li>
             <li>
-              <strong style={{ color: '#FFFFFF' }}>Avaliação cognitiva:</strong> respostas ao questionário —
+              <strong style={{ color: '#FFFFFF' }}>Avaliação cognitiva:</strong> respostas ao questionário,
               utilizadas exclusivamente para geração do relatório individual. Não são compartilhadas com terceiros
               e não são utilizadas para treinar modelos de inteligência artificial externos.
             </li>
             <li>
               <strong style={{ color: '#FFFFFF' }}>Dados de uso:</strong> informações de navegação anonimizadas
-              (via PostHog) — para melhoria da plataforma.
+              (via PostHog), para melhoria da plataforma.
             </li>
           </ul>
           <p style={{ lineHeight: 1.7, marginTop: '1rem' }}>
@@ -144,7 +144,7 @@ export default function TermsPage() {
             <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
               hello@gnosiq.ai
             </a>{' '}
-            com o assunto <strong style={{ color: '#FFFFFF' }}>&ldquo;LGPD &mdash; Revogar Consentimento&rdquo;</strong>.
+            com o assunto <strong style={{ color: '#FFFFFF' }}>&ldquo;LGPD - Revogar Consentimento&rdquo;</strong>.
           </p>
         </div>
 
@@ -169,10 +169,10 @@ export default function TermsPage() {
           </p>
           <p style={{ lineHeight: 1.7 }}>
             Para solicitar reembolso, envie e-mail para{' '}
-            <a href="mailto:support@gnosiq.ai" style={{ color: '#8B5CF6' }}>
-              support@gnosiq.ai
+            <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
+              hello@gnosiq.ai
             </a>{' '}
-            com o assunto <strong style={{ color: '#FFFFFF' }}>&ldquo;Reembolso &mdash; [seu pedido]&rdquo;</strong>. O valor será
+            com o assunto <strong style={{ color: '#FFFFFF' }}>&ldquo;Reembolso - [seu pedido]&rdquo;</strong>. O valor será
             estornado em até 5 dias úteis.
           </p>
         </div>
@@ -246,7 +246,7 @@ export default function TermsPage() {
             <br />
             GnosIQ · CNPJ 66.473.762/0001-13
             <br />
-            São Paulo, SP — Brasil
+            São Paulo, SP - Brasil
             <br />
             <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
               hello@gnosiq.ai

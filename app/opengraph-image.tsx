@@ -3,7 +3,7 @@ import { loadInter, FONT_FAMILY } from '@/lib/og/fonts'
 
 // GNO-92: OG image gerada — Design System v1.0
 // Substitui public/og-image.png (estático, wordmark defasado)
-export const alt = 'GnosIQ — The Cognitive Capital API'
+export const alt = 'GnosIQ - The Cognitive Capital API'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 

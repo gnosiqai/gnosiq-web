@@ -68,16 +68,17 @@ export default function Hero() {
           sem o resto da página junto.
         */}
         <p className="text-lg md:text-xl text-text-secondary leading-relaxed max-w-2xl mx-auto">
-          A GnosIQ mapeia o seu perfil cognitivo com instrumentos validados e IA
-          especializada, e entrega um relatório de {REPORT_PAGES} páginas com o seu
-          GnoScore™ em cerca de {DELIVERY_MINUTES} minutos — direto do navegador, sem
-          semanas de espera. A avaliação é adaptativa e leva cerca de {FILL_MINUTES}{' '}
-          minutos, do seu computador ou celular.
+          A GnosIQ mapeia o seu perfil cognitivo com uma combinação única de
+          instrumentos validados e IA especializada, e entrega um relatório de{' '}
+          {REPORT_PAGES} páginas com o seu GnoScore™ em cerca de {DELIVERY_MINUTES}{' '}
+          minutos, direto do navegador, sem semanas de espera. A avaliação é
+          adaptativa e leva cerca de {FILL_MINUTES} minutos, do seu computador ou
+          celular.
         </p>
 
         {/* ICP — item 4 do delta */}
         <p className="text-base text-accent-light max-w-xl mx-auto mt-5">
-          Para quem toma decisões de alta consequência — e para quem sempre quis se
+          Para quem toma decisões de alta consequência, e para quem sempre quis se
           entender de verdade.
         </p>
 
