@@ -15,7 +15,7 @@ const { POST } = await import('./route')
 
 /** Requisição mínima — só o que o handler consome. */
 function req(body: unknown) {
-  return { json: async () => body } as Parameters<typeof POST>[0]
+  return { json: async () => body } as unknown as Parameters<typeof POST>[0]
 }
 
 const VALID = {
@@ -134,7 +134,7 @@ describe('robustez e vazamento', () => {
       json: async () => {
         throw new Error('invalid json')
       },
-    } as Parameters<typeof POST>[0])
+    } as unknown as Parameters<typeof POST>[0])
     expect(res.status).toBe(400)
   })
 

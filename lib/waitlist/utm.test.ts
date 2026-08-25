@@ -43,3 +43,17 @@ describe('parseUtm', () => {
     })
   })
 })
+
+describe('getUtmParams — leitura da URL atual', () => {
+  it('lê a query string do browser', async () => {
+    const { getUtmParams } = await import('./utm')
+    window.history.replaceState({}, '', '/?utm_source=x&utm_campaign=y')
+    expect(getUtmParams()).toEqual({ utm_source: 'x', utm_campaign: 'y' })
+  })
+
+  it('devolve vazio quando não há UTM', async () => {
+    const { getUtmParams } = await import('./utm')
+    window.history.replaceState({}, '', '/')
+    expect(getUtmParams()).toEqual({})
+  })
+})

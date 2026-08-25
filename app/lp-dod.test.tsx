@@ -51,7 +51,7 @@ describe('DoD · VETO GATE — nenhum preço numérico na LP', () => {
 
 describe('DoD · estrutura AEO', () => {
   it('o H1 é a pergunta do comprador', () => {
-    expect(html).toMatch(/<h1[^>]*>.*Como a sua mente.*realmente.*funciona\?.*<\/h1>/s)
+    expect(html).toMatch(/<h1[^>]*>[\s\S]*Como a sua mente[\s\S]*realmente[\s\S]*funciona\?[\s\S]*<\/h1>/)
   })
 
   it('há exatamente um H1', () => {
@@ -82,7 +82,7 @@ describe('DoD · estrutura AEO', () => {
 describe('DoD · schema JSON-LD', () => {
   const extractGraph = () => {
     const match = html.match(
-      /<script type="application\/ld\+json">(.*?)<\/script>/s,
+      /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
     )
     expect(match).not.toBeNull()
     // O componente escapa '<' como < para não fechar a tag cedo.
