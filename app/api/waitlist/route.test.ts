@@ -531,10 +531,8 @@ describe('GNO-122 · o caminho de e-mail não falha em silêncio', () => {
   it('inscrição nova com e-mail dispara a confirmação', async () => {
     await POST(req(emailLead))
 
-    expect(sendWaitlistConfirmationPT).toHaveBeenCalledWith({
-      email: 'lead@exemplo.com',
-      name: '',
-    })
+    // GNO-123: o destinatário é o único argumento. `name` não é mais repassado.
+    expect(sendWaitlistConfirmationPT).toHaveBeenCalledWith({ email: 'lead@exemplo.com' })
   })
 
   it('reinscrição não dispara e-mail de novo', async () => {
@@ -668,5 +666,98 @@ describe('GNO-122 · o caminho de e-mail não falha em silêncio', () => {
     expect(res.status).toBe(200)
     expect(addToWaitlist).toHaveBeenCalledTimes(1)
     vi.restoreAllMocks()
+  })
+})
+
+/**
+ * GNO-123 — hotfix pós-auditoria CISO T3, na fronteira da rota.
+ *
+ * Os testes unitários de lib/turnstile.ts e lib/email.ts já provam cada trava
+ * isolada. Estes provam o que só a rota pode provar: que o EFEITO combinado é
+ * o esperado (503 sem escrita, resposta genérica sem escrita, nada do corpo
+ * hostil chegando ao provedor de e-mail).
+ */
+describe('GNO-123 · guard anti-dummy-key em produção (achado R1 do PR #105)', () => {
+  it('produção com chave de TESTE: 503, ZERO escrita, ZERO e-mail', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    vi.stubEnv('VERCEL_ENV', 'production')
+
+    const res = await POST(req({ ...VALID, email: 'lead@exemplo.com' }))
+
+    expect(res.status).toBe(503)
+    expect(addToWaitlist).not.toHaveBeenCalled()
+    expect(sendWaitlistConfirmationPT).not.toHaveBeenCalled()
+    // Fail-closed de verdade: nem a chamada ao siteverify chegou a sair.
+    expect(fetchMock).not.toHaveBeenCalled()
+
+    vi.restoreAllMocks()
+  })
+
+  it('o 503 devolve o erro genérico e o log não carrega o valor da chave', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    vi.stubEnv('VERCEL_ENV', 'production')
+
+    const res = await POST(req({ whatsapp: '(11) 91234-5678', consent: true }))
+    const body = await res.json()
+
+    expect(body.error).toMatch(/temporariamente indispon/i)
+    expect(body.error).not.toMatch(/turnstile|cloudflare|chave/i)
+
+    const logged = errorSpy.mock.calls.flat().join(' ')
+    expect(logged).toMatch(/TURNSTILE_SECRET_KEY/)
+    expect(logged).not.toContain('1x0000000000000000000000000000000AA')
+    expect(logged).not.toContain('91234')
+
+    vi.restoreAllMocks()
+  })
+
+  it('fora da Vercel (teste, dev local) a dummy continua funcionando', async () => {
+    // Sem VERCEL_ENV a trava não dispara: é assim que Preview e Development
+    // seguem usando as chaves de teste oficiais.
+    const res = await POST(req(VALID))
+
+    expect(res.status).toBe(200)
+    expect(addToWaitlist).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('GNO-123 · teto do turnstile_token (achado R2 do PR #105)', () => {
+  it('token gigante: resposta genérica, ZERO escrita e ZERO banda gasta', async () => {
+    const res = await POST(req({ ...VALID, turnstile_token: 'a'.repeat(500_000) }))
+
+    expect(res.status).toBe(200)
+    expect(addToWaitlist).not.toHaveBeenCalled()
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('a reprovação por tamanho é BYTE A BYTE igual à resposta de sucesso', async () => {
+    const real = await POST(req(VALID))
+    const corpoReal = await real.json()
+
+    vi.clearAllMocks()
+    const gigante = await POST(req({ ...VALID, turnstile_token: 'a'.repeat(3000) }))
+    const corpoGigante = await gigante.json()
+
+    expect(gigante.status).toBe(real.status)
+    expect(JSON.stringify(corpoGigante)).toBe(JSON.stringify(corpoReal))
+  })
+})
+
+describe('GNO-123 · `name` não atravessa para o e-mail (achado R1 do PR #106)', () => {
+  it('name hostil no corpo do POST não chega ao provedor', async () => {
+    const payload = '<img/src=x/onerror=1>'
+
+    await POST(req({ ...VALID, email: 'vitima@exemplo.com', name: payload }))
+
+    expect(sendWaitlistConfirmationPT).toHaveBeenCalledWith({ email: 'vitima@exemplo.com' })
+    expect(JSON.stringify(sendWaitlistConfirmationPT.mock.calls)).not.toContain(payload)
+  })
+
+  it('o campo continua sendo PERSISTIDO — o que morreu é a ponte para o e-mail', async () => {
+    await POST(req({ ...VALID, email: 'lead@exemplo.com', name: 'Ada Lovelace' }))
+
+    expect(addToWaitlist).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'Ada Lovelace' }),
+    )
   })
 })

@@ -52,6 +52,33 @@ describe('token ausente ou malformado', () => {
   })
 })
 
+describe('GNO-123 · teto de tamanho do token', () => {
+  /*
+    O achado R2 da auditoria CISO T3 do PR #105: sem teto, o token atravessava
+    inteiro para a Cloudflare (500.000 bytes medidos a partir de um POST). Um
+    token real não passa de ~2 KB.
+  */
+  it('acima de 2048 caracteres reprova SEM chamada de rede', async () => {
+    const verdict = await verifyTurnstileToken('a'.repeat(2049))
+
+    expect(verdict).toEqual({ ok: false, reason: 'rejected' })
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('token gigante não é encaminhado: a banda gasta é ZERO', async () => {
+    await verifyTurnstileToken('a'.repeat(500_000))
+
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('exatamente 2048 ainda vai para o siteverify — o teto não corta token real', async () => {
+    fetchMock.mockResolvedValue(siteverify({ success: true }))
+
+    expect(await verifyTurnstileToken('a'.repeat(2048))).toEqual({ ok: true })
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+})
+
 describe('veredito da Cloudflare', () => {
   it('aprova quando success é true', async () => {
     fetchMock.mockResolvedValue(siteverify({ success: true }))
@@ -143,6 +170,78 @@ describe('fail-closed', () => {
     await expect(verifyTurnstileToken('token-valido')).rejects.toBeInstanceOf(
       TurnstileUnavailableError,
     )
+  })
+
+  /*
+    GNO-123, achado R1 da auditoria CISO T3 do PR #105. A chave dummy
+    "always passes" em Production faz o siteverify aprovar TUDO: a camada
+    anti-bot vira enfeite e nada denuncia. Aqui ela é defeito de CONFIGURAÇÃO,
+    e cai no mesmo fail-closed do secret ausente.
+  */
+  it('chave de TESTE em produção é erro de configuração, não aprovação', async () => {
+    vi.stubEnv('VERCEL_ENV', 'production')
+
+    await expect(verifyTurnstileToken('token-valido')).rejects.toBeInstanceOf(
+      TurnstileConfigError,
+    )
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('a trava vale para todas as dummies conhecidas, secret e sitekey', async () => {
+    vi.stubEnv('VERCEL_ENV', 'production')
+
+    for (const dummy of [
+      '1x0000000000000000000000000000000AA',
+      '2x0000000000000000000000000000000AA',
+      '3x0000000000000000000000000000000AA',
+      '1x00000000000000000000AA',
+    ]) {
+      vi.stubEnv('TURNSTILE_SECRET_KEY', dummy)
+      await expect(verifyTurnstileToken('token-valido')).rejects.toBeInstanceOf(
+        TurnstileConfigError,
+      )
+    }
+
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('o erro nomeia a variável e o defeito, NUNCA o valor da chave', async () => {
+    vi.stubEnv('VERCEL_ENV', 'production')
+
+    await expect(verifyTurnstileToken('token-valido')).rejects.toThrow(
+      /TURNSTILE_SECRET_KEY/,
+    )
+    await expect(verifyTurnstileToken('token-valido')).rejects.not.toThrow(
+      /1x0000000000000000000000000000000AA/,
+    )
+  })
+
+  it('a trava é INDEPENDENTE do input: token ausente em produção também é 503', async () => {
+    vi.stubEnv('VERCEL_ENV', 'production')
+
+    // Se a checagem viesse depois do token, um bot sem token receberia a
+    // resposta genérica e o defeito de configuração ficaria invisível.
+    await expect(verifyTurnstileToken(undefined)).rejects.toBeInstanceOf(
+      TurnstileConfigError,
+    )
+  })
+
+  it('Preview e Development seguem usando a dummy sem reclamar', async () => {
+    fetchMock.mockResolvedValue(siteverify({ success: true }))
+
+    for (const env of ['preview', 'development']) {
+      vi.stubEnv('VERCEL_ENV', env)
+      expect(await verifyTurnstileToken('token-valido')).toEqual({ ok: true })
+    }
+  })
+
+  it('chave REAL em produção passa direto — a trava só olha as dummies', async () => {
+    vi.stubEnv('VERCEL_ENV', 'production')
+    vi.stubEnv('TURNSTILE_SECRET_KEY', '0xSECRETdeVerdadeQueNaoEDummy')
+    fetchMock.mockResolvedValue(siteverify({ success: true }))
+
+    expect(await verifyTurnstileToken('token-valido')).toEqual({ ok: true })
+    expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
   it('aborta a espera em vez de pendurar a request', async () => {

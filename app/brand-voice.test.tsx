@@ -155,10 +155,11 @@ describe('GNO-121 · voz da marca — e-mails transacionais', () => {
       vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => ({ success: true }) }),
     )
 
-    // EN: lib/email.ts
-    await sendWaitlistConfirmation({ email: 'lead@example.com', name: 'Ada Lovelace' })
+    // EN: lib/email.ts. GNO-123 removeu o parâmetro `name` dos dois templates;
+    // a trava de voz olha os mesmos campos, que agora são constantes.
+    await sendWaitlistConfirmation({ email: 'lead@example.com' })
 
-    // PT: o template inline de app/api/waitlist/route.ts
+    // PT: lib/email.ts, disparado pela rota (é ela que decide se o e-mail sai)
     await POST({
       json: async () => ({
         email: 'lead@example.com',
