@@ -48,7 +48,7 @@ export default function WaitlistSection() {
     const hasEmail = email.trim().length > 0
 
     if (!hasWhatsapp && !hasEmail) {
-      return 'Informe o WhatsApp ou o e-mail — pelo menos um dos dois.'
+      return 'Informe o WhatsApp ou o e-mail: pelo menos um dos dois.'
     }
     if (hasWhatsapp && !isValidWhatsApp(whatsapp)) {
       return 'WhatsApp inválido. Use o formato com DDD, por exemplo (11) 91234-5678.'
@@ -169,7 +169,7 @@ export default function WaitlistSection() {
         ) : (
           <>
             <p className="text-base text-text-muted text-center mb-10">
-              Informe o WhatsApp ou o e-mail — pelo menos um dos dois.
+              Informe o WhatsApp ou o e-mail: pelo menos um dos dois.
             </p>
 
             <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4 text-left">

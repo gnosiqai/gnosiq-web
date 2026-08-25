@@ -29,7 +29,7 @@ const META_DESCRIPTION =
   "minutos. Entre na lista de espera do beta. Não substitui avaliação clínica.";
 
 export const metadata: Metadata = {
-  title: "Como a sua mente realmente funciona? — GnosIQ",
+  title: "Como a sua mente realmente funciona? - GnosIQ",
   // GNO-93: indexação explícita (remoção de sinais de stealth)
   robots: { index: true, follow: true },
   // GNO-92: icons servidos pelas rotas geradas app/icon.tsx e app/apple-icon.tsx
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Como a sua mente realmente funciona? — GnosIQ",
+    title: "Como a sua mente realmente funciona? - GnosIQ",
     description:
       META_DESCRIPTION,
     url: process.env.NEXT_PUBLIC_APP_URL ?? "https://gnosiq.ai",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Como a sua mente realmente funciona? — GnosIQ",
+    title: "Como a sua mente realmente funciona? - GnosIQ",
     description:
       META_DESCRIPTION,
     creator: "@gnosiqai",

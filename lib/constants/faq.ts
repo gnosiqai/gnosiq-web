@@ -25,12 +25,12 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: 'É um teste de QI?',
     answer:
-      'Não. O GnoScore™ é um índice do seu perfil cognitivo nos domínios do modelo CHC — mais amplo que um número único de QI e focado em como você processa informação, não em rotular pessoas.',
+      'Não. O GnoScore™ é um índice do seu perfil cognitivo nos domínios do modelo CHC: mais amplo que um número único de QI e focado em como você processa informação, não em rotular pessoas.',
   },
   {
     question: 'Que dados são coletados e quem acessa?',
     answer:
-      'Coletamos apenas o que você informa no formulário — WhatsApp ou e-mail, e opcionalmente o seu perfil — para avisar sobre o acesso ao beta. O acesso é restrito à equipe da GnosIQ e o tratamento segue a LGPD (Lei 13.709/2018), com consentimento explícito.',
+      'Coletamos apenas o que você informa no formulário (WhatsApp ou e-mail, e opcionalmente o seu perfil) para avisar sobre o acesso ao beta. O acesso é restrito à equipe da GnosIQ e o tratamento segue a LGPD (Lei 13.709/2018), com consentimento explícito.',
   },
   {
     question: 'Meus resultados treinam IA?',

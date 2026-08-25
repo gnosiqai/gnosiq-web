@@ -73,7 +73,7 @@ function parseChannels(rawWhatsapp: string, rawEmail: string): ParsedChannels {
   const hasEmail = rawEmail.trim().length > 0
 
   if (!hasWhatsapp && !hasEmail) {
-    return { ok: false, error: 'Informe o WhatsApp ou o e-mail — pelo menos um dos dois.' }
+    return { ok: false, error: 'Informe o WhatsApp ou o e-mail: pelo menos um dos dois.' }
   }
 
   let whatsapp: string | null = null
@@ -266,7 +266,7 @@ async function sendConfirmationEmail(email: string, name: string): Promise<void>
         name: 'Carlos @ GnosIQ',
       },
       subject: 'Você está na lista de espera da GnosIQ',
-      text: `${firstName},\n\nVocê está na lista de espera da GnosIQ.\n\nA GnosIQ mapeia o seu perfil cognitivo com instrumentos validados e IA especializada, e entrega um relatório com o seu GnoScore™.\n\nAviso: a GnosIQ não substitui avaliação clínica.\n\nAvisamos você pessoalmente quando o acesso beta abrir.\n\n— Carlos\nFounder, GnosIQ\ngnosiq.ai`,
+      text: `${firstName},\n\nVocê está na lista de espera da GnosIQ.\n\nA GnosIQ mapeia o seu perfil cognitivo com instrumentos validados e IA especializada, e entrega um relatório com o seu GnoScore™.\n\nAviso: a GnosIQ não substitui avaliação clínica.\n\nAvisamos você pessoalmente quando o acesso beta abrir.\n\n- Carlos\nFounder, GnosIQ\ngnosiq.ai`,
       html: `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"></head><body style="background:#0D0B1E;color:#FFFFFF;font-family:Inter,sans-serif;padding:40px 24px;max-width:600px;margin:0 auto;"><p style="color:#8B5CF6;font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;">GNOSIQ</p><h1 style="font-size:24px;font-weight:700;margin-bottom:16px;">Você está na lista, ${firstName}.</h1><p style="color:#A1A1AA;line-height:1.7;margin-bottom:24px;">A GnosIQ mapeia o seu perfil cognitivo com instrumentos validados e IA especializada, e entrega um relatório com o seu GnoScore™.</p><p style="color:#A1A1AA;line-height:1.7;margin-bottom:32px;">Avisamos você pessoalmente quando o acesso beta abrir.</p><hr style="border:none;border-top:1px solid #1F1B3A;margin-bottom:32px;"><p style="color:#6B7280;font-size:13px;">A GnosIQ não substitui avaliação clínica.</p><p style="color:#6B7280;font-size:13px;">Carlos Alberto Gomes · Founder, GnosIQ<br><a href="https://gnosiq.ai" style="color:#8B5CF6;">gnosiq.ai</a></p></body></html>`,
     })
   } catch (emailErr) {

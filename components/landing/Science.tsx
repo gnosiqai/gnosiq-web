@@ -36,7 +36,7 @@ const STEPS = [
   {
     num: '03',
     title: 'Relatório em linguagem clara',
-    body: `Um terceiro agente redige as ${REPORT_PAGES} páginas — o que os números significam e o que fazer com eles.`,
+    body: `Um terceiro agente redige as ${REPORT_PAGES} páginas: o que os números significam e o que fazer com eles.`,
   },
 ] as const
 
@@ -51,9 +51,9 @@ export default function Science() {
         </h2>
 
         <p className="text-lg text-text-secondary leading-relaxed max-w-3xl mb-12">
-          Sim. A avaliação é construída sobre o modelo CHC — a taxonomia mais aceita na
-          pesquisa contemporânea sobre inteligência — com instrumentos validados e IA
-          especializada em cognição.
+          Sim. A avaliação é construída com base no modelo CHC - a referência mais
+          aceita na pesquisa contemporânea sobre inteligência - com uma combinação
+          única de instrumentos validados e IA especializada em cognição.
         </p>
 
         {/* Metodologia em 3 passos — âncora "Como funciona" da navbar */}

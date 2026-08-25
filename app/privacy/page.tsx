@@ -98,8 +98,8 @@ export default function PrivacyPage() {
               todos operando sob acordos de confidencialidade e em conformidade com a LGPD:
             </p>
             <ul className="space-y-2" style={{ color: '#D1D5DB' }}>
-              <li>✦ <strong>PostHog</strong> — analytics de uso (dados pseudonimizados; sem PII exposta)</li>
-              <li>✦ <strong>SendGrid / Resend</strong> — envio de e-mail transacional (confirmação de cadastro e comunicações de lançamento)</li>
+              <li>✦ <strong>PostHog</strong>: analytics de uso (dados pseudonimizados; sem PII exposta)</li>
+              <li>✦ <strong>SendGrid</strong>: envio de e-mail transacional (confirmação de cadastro e comunicações de lançamento)</li>
             </ul>
             <p className="mt-3 leading-relaxed" style={{ color: '#D1D5DB' }}>
               Nenhum dado pessoal é vendido ou compartilhado com terceiros para fins comerciais
@@ -109,24 +109,24 @@ export default function PrivacyPage() {
 
           <div>
             <h2 className="text-xl font-semibold mb-3" style={{ color: '#8B5CF6' }}>
-              5. Seus Direitos (LGPD — Lei nº 13.709/2018)
+              5. Seus Direitos (LGPD, Lei nº 13.709/2018)
             </h2>
             <p className="mb-3" style={{ color: '#D1D5DB' }}>
               Nos termos da Lei Geral de Proteção de Dados Pessoais, você tem direito a:
             </p>
             <ul className="space-y-2" style={{ color: '#D1D5DB' }}>
-              <li>✦ <strong>Acesso</strong> — saber quais dados temos sobre você</li>
-              <li>✦ <strong>Correção</strong> — atualizar dados incorretos ou desatualizados</li>
-              <li>✦ <strong>Exclusão</strong> — solicitar a remoção completa dos seus dados</li>
-              <li>✦ <strong>Portabilidade</strong> — receber seus dados em formato estruturado</li>
-              <li>✦ <strong>Revogação</strong> — cancelar o consentimento a qualquer momento</li>
+              <li>✦ <strong>Acesso</strong>: saber quais dados temos sobre você</li>
+              <li>✦ <strong>Correção</strong>: atualizar dados incorretos ou desatualizados</li>
+              <li>✦ <strong>Exclusão</strong>: solicitar a remoção completa dos seus dados</li>
+              <li>✦ <strong>Portabilidade</strong>: receber seus dados em formato estruturado</li>
+              <li>✦ <strong>Revogação</strong>: cancelar o consentimento a qualquer momento</li>
             </ul>
             <p className="mt-4" style={{ color: '#D1D5DB' }}>
               Para exercer qualquer direito, envie um e-mail para{' '}
               <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
                 hello@gnosiq.ai
               </a>{' '}
-              com o assunto <strong>&quot;LGPD — [seu direito]&quot;</strong>. Respondemos em até 15 dias
+              com o assunto <strong>&quot;LGPD - [seu direito]&quot;</strong>. Respondemos em até 15 dias
               úteis.
             </p>
           </div>
@@ -136,7 +136,7 @@ export default function PrivacyPage() {
               6. Contato e Controlador de Dados
             </h2>
             <p style={{ color: '#D1D5DB' }}>
-              <strong>GnosIQ</strong> · CNPJ 66.473.762/0001-13 · São Paulo, SP — Brasil
+              <strong>GnosIQ</strong> · CNPJ 66.473.762/0001-13 · São Paulo, SP - Brasil
               <br />
               Responsável pelo tratamento de dados: Carlos Alberto Gomes
               <br />
@@ -216,7 +216,7 @@ export default function PrivacyPage() {
               <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
                 hello@gnosiq.ai
               </a>{' '}
-              with subject <strong>&quot;Privacy — [your request]&quot;</strong>. Response within 15
+              with subject <strong>&quot;LGPD - [your request]&quot;</strong>. Response within 15
               business days.
             </p>
           </div>
@@ -226,7 +226,7 @@ export default function PrivacyPage() {
               5. Contact
             </h3>
             <p style={{ color: '#D1D5DB' }}>
-              <strong>GnosIQ</strong> · São Paulo, SP — Brazil
+              <strong>GnosIQ</strong> · São Paulo, SP - Brazil
               <br />
               Data Controller: Carlos Alberto Gomes
               <br />

@@ -24,7 +24,7 @@ export default function Nav() {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link
           href="/"
-          aria-label="GnosIQ — início"
+          aria-label="GnosIQ - início"
           className="text-xl font-bold tracking-tight text-text-primary select-none hover:opacity-90 transition-opacity"
         >
           Gnos<span className="text-accent">IQ</span>
