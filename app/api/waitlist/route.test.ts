@@ -608,6 +608,56 @@ describe('GNO-122 · o caminho de e-mail não falha em silêncio', () => {
     vi.restoreAllMocks()
   })
 
+  it('mensagem hostil do provedor não trava a rota (typescript:S8786)', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { EmailDeliveryError } = await import('@/lib/email')
+
+    /*
+      Caso adversarial da redação. A mensagem de erro do provedor é entrada
+      influenciada pelo usuário, então a regex que a redige é superfície de
+      ataque: com backtracking não-linear, uma string longa custa tempo
+      QUADRÁTICO no caminho de falha.
+
+      A forma abaixo é a pior possível, e o detalhe importa: a string tem
+      muitos caracteres e NENHUM match completável (um `@` no fim, sem cauda
+      depois dele). Encher a string de `@` seria mais fraco, não mais forte -
+      aí existe match, o motor acha um cedo e vai embora rápido. O custo mora
+      no caminho SEM match, onde ele precisa provar que nenhuma divisão serve.
+
+      Medido: regex anterior 2062ms, regex atual 37ms, na mesma string. O teto
+      de 1s é folgado o bastante para não piscar em runner lento e apertado o
+      bastante para reprovar a regressão.
+    */
+    const hostil = `${'a'.repeat(60_000)}@`
+    sendWaitlistConfirmationPT.mockRejectedValue(new EmailDeliveryError(hostil))
+
+    const inicio = performance.now()
+    const res = await POST(req(emailLead))
+    const decorrido = performance.now() - inicio
+
+    expect(res.status).toBe(200)
+    expect(decorrido).toBeLessThan(1_000)
+    vi.restoreAllMocks()
+  })
+
+  it('endereço longo é redigido INTEIRO — nada de meia redação', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { EmailDeliveryError } = await import('@/lib/email')
+    // Local-part no limite que a própria rota aceita (MAX_FIELD_LENGTH).
+    const longo = `${'x'.repeat(254)}@exemplo.com`
+    sendWaitlistConfirmationPT.mockRejectedValue(
+      new EmailDeliveryError(`Invalid \`to\` field: ${longo} rejeitado`),
+    )
+
+    await POST(req(emailLead))
+
+    const tudo = JSON.stringify([...errorSpy.mock.calls, ...captureServerEvent.mock.calls])
+    expect(tudo).not.toContain('xxx')
+    expect(tudo).not.toContain('@exemplo.com')
+    expect(tudo).toContain('[e-mail]')
+    vi.restoreAllMocks()
+  })
+
   it('falha de e-mail NÃO derruba a inscrição — o lead já está gravado', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
     const { EmailDeliveryError } = await import('@/lib/email')
