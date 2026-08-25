@@ -99,7 +99,7 @@ export default function PrivacyPage() {
             </p>
             <ul className="space-y-2" style={{ color: '#D1D5DB' }}>
               <li>✦ <strong>PostHog</strong>: analytics de uso (dados pseudonimizados; sem PII exposta)</li>
-              <li>✦ <strong>SendGrid</strong>: envio de e-mail transacional (confirmação de cadastro e comunicações de lançamento)</li>
+              <li>✦ <strong>Resend</strong>: envio de e-mail transacional (confirmação de cadastro e comunicações de lançamento)</li>
               <li>✦ <strong>Cloudflare Turnstile</strong>: proteção anti-bot do formulário de lista de espera (verificação de desafio no navegador; sem rastreamento de cliques ou identidade)</li>
             </ul>
             <p className="mt-3 leading-relaxed" style={{ color: '#D1D5DB' }}>
@@ -217,7 +217,7 @@ export default function PrivacyPage() {
             </p>
             <ul className="space-y-2" style={{ color: '#D1D5DB' }}>
               <li>✦ <strong>PostHog</strong>: usage analytics (pseudonymized data; no PII exposed)</li>
-              <li>✦ <strong>SendGrid</strong>: transactional e-mail delivery (sign-up confirmation and launch communications)</li>
+              <li>✦ <strong>Resend</strong>: transactional e-mail delivery (sign-up confirmation and launch communications)</li>
               <li>✦ <strong>Cloudflare Turnstile</strong>: anti-bot protection of the waiting list form (browser challenge verification; no click or identity tracking)</li>
             </ul>
             <p className="mt-3 leading-relaxed" style={{ color: '#D1D5DB' }}>

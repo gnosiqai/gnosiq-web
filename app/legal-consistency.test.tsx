@@ -102,8 +102,22 @@ describe('GNO-120 · sub-processadores declarados nos DOIS idiomas', () => {
   })
 
   it('todo sub-processador aparece nos dois idiomas — lista não diverge', () => {
-    for (const nome of ['PostHog', 'SendGrid', 'Cloudflare Turnstile']) {
+    for (const nome of ['PostHog', 'Resend', 'Cloudflare Turnstile']) {
       expect(t.split(nome).length - 1).toBeGreaterThanOrEqual(2)
     }
+  })
+})
+
+describe('GNO-122 · a política nomeia o provedor de e-mail REAL', () => {
+  const t = text(privacy)
+
+  it('declara Resend nos dois idiomas', () => {
+    expect(t.split('Resend').length - 1).toBeGreaterThanOrEqual(2)
+  })
+
+  it('não sobrou nenhuma menção a SendGrid', () => {
+    // O provedor saiu do código nesta issue. Política que cita sub-processador
+    // que não processa mais nada é declaração falsa, não sobra inofensiva.
+    expect(t).not.toContain('SendGrid')
   })
 })

@@ -8,6 +8,7 @@ import {
   TurnstileConfigError,
   TurnstileUnavailableError,
 } from '@/lib/turnstile'
+import { sendWaitlistConfirmationPT, EmailConfigError } from '@/lib/email'
 
 export const runtime = 'nodejs'
 
@@ -54,6 +55,9 @@ const TURNSTILE_FIELD = 'turnstile_token'
 
 /** Mesma lógica do honeypot: conta reprovações, não pessoas. */
 const TURNSTILE_DISTINCT_ID = 'turnstile-bot'
+
+/** Falha de e-mail é evento de INFRA. Conta incidentes, não inscritos. */
+const EMAIL_FAILURE_DISTINCT_ID = 'email-infra'
 
 /** Tamanho máximo do corpo aceito — trava barata contra payload inflado. */
 const MAX_FIELD_LENGTH = 254
@@ -325,38 +329,64 @@ export async function POST(req: NextRequest) {
 }
 
 /**
- * Confirmação por e-mail. Falha aqui NUNCA derruba a inscrição: o lead já
- * está no Firestore, e um erro do SendGrid não é problema do usuário.
+ * Apaga endereço de e-mail de um texto antes dele virar log.
+ *
+ * A mensagem de erro vem do provedor, e provedor gosta de ecoar o campo que
+ * recusou ("Invalid `to` field: fulano@..."). A regra de zero PII em log é
+ * anterior a qualquer conveniência de diagnóstico.
+ */
+function redactEmails(text: string): string {
+  return text.replace(/[^\s<>()"',;]+@[^\s<>()"',;]+/g, '[e-mail]')
+}
+
+/**
+ * GNO-122 — a falha de e-mail vira sinal, não silêncio.
+ *
+ * Esta função é a resposta direta ao incidente que originou a issue: o erro
+ * ia para `console.error` numa função serverless que ninguém lê, enquanto a
+ * pessoa via tela de sucesso. Agora ele sai em DOIS lugares:
+ *
+ *  · log estruturado (JSON de uma linha), que dá para filtrar no Vercel;
+ *  · evento de produto, que aparece no PostHog junto do resto e permite
+ *    alarme sobre "e-mail parou de sair" sem ninguém abrir log nenhum.
+ *
+ * `kind` separa defeito de CONFIGURAÇÃO (env faltando, que é problema nosso e
+ * some com um deploy) de recusa de ENTREGA (provedor disse não), porque as
+ * duas pedem ações diferentes de quem opera.
+ */
+async function reportEmailFailure(err: unknown): Promise<void> {
+  const kind = err instanceof EmailConfigError ? 'config' : 'delivery'
+  const reason = redactEmails(err instanceof Error ? err.message : 'desconhecido')
+
+  console.error(
+    JSON.stringify({
+      level: 'error',
+      event: 'waitlist_email_failed',
+      provider: 'resend',
+      kind,
+      reason,
+    }),
+  )
+
+  await captureServerEvent('waitlist_email_failed', EMAIL_FAILURE_DISTINCT_ID, {
+    lp_version: 'v2',
+    kind,
+    reason,
+  })
+}
+
+/**
+ * Confirmação por e-mail. Falha aqui NUNCA derruba a inscrição: o lead já está
+ * no Firestore, e uma recusa do provedor não é problema de quem se inscreveu.
+ *
+ * O que MUDOU na GNO-122 não é isso, é o oposto disso: continuar não derrubando
+ * a inscrição, mas parar de esconder a falha. Devolver erro para a pessoa aqui
+ * seria trocar uma mentira por outra - a inscrição dela deu certo mesmo.
  */
 async function sendConfirmationEmail(email: string, name: string): Promise<void> {
-  const apiKey = process.env.SENDGRID_API_KEY
-
-  if (!apiKey) {
-    console.warn('[waitlist] SENDGRID_API_KEY ausente em runtime — e-mail não enviado')
-    return
-  }
-
   try {
-    // Import dinâmico: evita instância top-level que explode no cold start.
-    const sgMail = (await import('@sendgrid/mail')).default
-    sgMail.setApiKey(apiKey)
-
-    const firstName = name.trim().split(' ')[0] || 'olá'
-
-    await sgMail.send({
-      to: email,
-      from: {
-        email: process.env.SENDGRID_FROM_EMAIL || 'noreply@gnosiq.ai',
-        name: 'Carlos @ GnosIQ',
-      },
-      subject: 'Você está na lista de espera da GnosIQ',
-      text: `${firstName},\n\nVocê está na lista de espera da GnosIQ.\n\nA GnosIQ mapeia o seu perfil cognitivo com instrumentos validados e IA especializada, e entrega um relatório com o seu GnoScore™.\n\nAviso: a GnosIQ não substitui avaliação clínica.\n\nAvisamos você pessoalmente quando o acesso beta abrir.\n\n- Carlos\nFounder, GnosIQ\ngnosiq.ai`,
-      html: `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"></head><body style="background:#0D0B1E;color:#FFFFFF;font-family:Inter,sans-serif;padding:40px 24px;max-width:600px;margin:0 auto;"><p style="color:#8B5CF6;font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;">GNOSIQ</p><h1 style="font-size:24px;font-weight:700;margin-bottom:16px;">Você está na lista, ${firstName}.</h1><p style="color:#A1A1AA;line-height:1.7;margin-bottom:24px;">A GnosIQ mapeia o seu perfil cognitivo com instrumentos validados e IA especializada, e entrega um relatório com o seu GnoScore™.</p><p style="color:#A1A1AA;line-height:1.7;margin-bottom:32px;">Avisamos você pessoalmente quando o acesso beta abrir.</p><hr style="border:none;border-top:1px solid #1F1B3A;margin-bottom:32px;"><p style="color:#6B7280;font-size:13px;">A GnosIQ não substitui avaliação clínica.</p><p style="color:#6B7280;font-size:13px;">Carlos Alberto Gomes · Founder, GnosIQ<br><a href="https://gnosiq.ai" style="color:#8B5CF6;">gnosiq.ai</a></p></body></html>`,
-    })
-  } catch (emailErr) {
-    console.error(
-      '[waitlist] SendGrid error:',
-      emailErr instanceof Error ? emailErr.message : 'desconhecido',
-    )
+    await sendWaitlistConfirmationPT({ email, name })
+  } catch (err) {
+    await reportEmailFailure(err)
   }
 }

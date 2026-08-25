@@ -7,16 +7,24 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
 }))
 
-/** Captura o payload do SendGrid sem sair para a rede. */
+/**
+ * Captura o payload do Resend sem sair para a rede.
+ *
+ * GNO-122 — o mock migrou de `@sendgrid/mail` para `resend` junto com o
+ * provedor. A trava de voz continua olhando exatamente os mesmos campos
+ * (subject, text, html) dos MESMOS dois templates: o que mudou foi por onde
+ * eles saem, não o que eles dizem.
+ */
 const sentMessages: Record<string, unknown>[] = []
 
-vi.mock('@sendgrid/mail', () => ({
-  default: {
-    setApiKey: vi.fn(),
-    send: async (msg: Record<string, unknown>) => {
-      sentMessages.push(msg)
-      return [{ statusCode: 202 }, {}]
-    },
+vi.mock('resend', () => ({
+  Resend: class {
+    emails = {
+      send: async (msg: Record<string, unknown>) => {
+        sentMessages.push(msg)
+        return { data: { id: 'test-message-id' }, error: null }
+      },
+    }
   },
 }))
 
@@ -31,7 +39,7 @@ vi.mock('@/lib/posthog-server', () => ({
 import Home from '@/app/page'
 import Privacy from '@/app/privacy/page'
 import Terms from '@/app/terms/page'
-import { sendWaitlistConfirmation } from '@/lib/sendgrid'
+import { sendWaitlistConfirmation } from '@/lib/email'
 import { POST } from '@/app/api/waitlist/route'
 
 /**
@@ -136,7 +144,6 @@ describe('GNO-121 · voz da marca — meta tags e assets de compartilhamento', (
 describe('GNO-121 · voz da marca — e-mails transacionais', () => {
   beforeAll(async () => {
     sentMessages.length = 0
-    process.env.SENDGRID_API_KEY = 'SG.test-key-brand-voice'
 
     /*
       GNO-120 — a rota agora verifica o Turnstile antes de escrever ou enviar
@@ -148,7 +155,7 @@ describe('GNO-121 · voz da marca — e-mails transacionais', () => {
       vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => ({ success: true }) }),
     )
 
-    // EN: lib/sendgrid.ts
+    // EN: lib/email.ts
     await sendWaitlistConfirmation({ email: 'lead@example.com', name: 'Ada Lovelace' })
 
     // PT: o template inline de app/api/waitlist/route.ts
@@ -208,9 +215,12 @@ describe('GNO-121 · correções legais menores', () => {
   const privacyHtml = PAGES[1][1]
   const termsHtml = PAGES[2][1]
 
-  it('/privacy §4 lista só sub-processadores REAIS — Resend não está no código', () => {
-    expect(privacyHtml).not.toContain('Resend')
-    expect(privacyHtml).toContain('SendGrid')
+  it('/privacy §4 lista só sub-processadores REAIS — agora Resend, não SendGrid', () => {
+    // GNO-122 inverteu esta trava: o provedor migrou, e a política acompanha
+    // o código. Declarar SendGrid depois da migração seria a mesma classe de
+    // mentira que a GNO-121 corrigiu ao remover Resend antes da migração.
+    expect(privacyHtml).toContain('Resend')
+    expect(privacyHtml).not.toContain('SendGrid')
   })
 
   it('/terms cláusula 4 usa hello@, o único endereço público', () => {
