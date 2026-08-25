@@ -7,8 +7,11 @@ export const metadata: Metadata = {
   robots: 'index, follow',
 }
 
-const TERMS_VERSION = '1.0'
-const TERMS_DATE = '29 de abril de 2026'
+// GNO-115: 1.0 -> 1.1. A cláusula 3 listava só e-mail na lista de espera;
+// a LP v2 coleta WhatsApp. Mesmo princípio da Política de Privacidade —
+// documento legal que muda de conteúdo tem que mudar de carimbo.
+const TERMS_VERSION = '1.1'
+const TERMS_DATE = '25 de agosto de 2026'
 
 export default function TermsPage() {
   return (
@@ -122,8 +125,9 @@ export default function TermsPage() {
           </p>
           <ul style={{ paddingLeft: '1.5rem', lineHeight: 2 }}>
             <li>
-              <strong style={{ color: '#FFFFFF' }}>Lista de espera:</strong> endereço de e-mail — para comunicação
-              sobre lançamento e atualizações do produto.
+              <strong style={{ color: '#FFFFFF' }}>Lista de espera:</strong> endereço de e-mail e/ou número de
+              WhatsApp (pelo menos um, fornecido por você) e, opcionalmente, o papel profissional — para
+              comunicação sobre o acesso antecipado ao beta e as condições de fundador.
             </li>
             <li>
               <strong style={{ color: '#FFFFFF' }}>Avaliação cognitiva:</strong> respostas ao questionário —

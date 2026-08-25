@@ -1,58 +1,47 @@
 'use client'
-import { useRouter } from 'next/navigation'
+
 import Link from 'next/link'
 import posthog from 'posthog-js'
-import { useLocale } from '@/lib/context/LocaleContext'
+
+// GNO-115 — navbar da v2. Os links espelham os H2-pergunta da página
+// (formato AEO: a navegação é o índice das perguntas que a LP responde).
+// CTA único, igual ao do hero e ao do formulário.
+
+const LINKS = [
+  { id: 'como-funciona', label: 'Como funciona' },
+  { id: 'ciencia', label: 'Ciência' },
+  { id: 'faq', label: 'FAQ' },
+] as const
 
 export default function Nav() {
-  const router = useRouter()
-  const { locale } = useLocale()
-
-  const copy = {
-    // GNO-65: API removido da navbar — reintroduzir quando rota /api existir em produção
-    pt: { howItWorks: 'Como funciona', cta: 'Entrar na lista' },
-    en: { howItWorks: 'How it works', cta: 'Join waitlist' },
-  }
-  const t = copy[locale]
-
-  // FIX 2 — Logo: reset de URL e scroll ao topo
-  const handleLogoClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    router.push('/')
-    window.scrollTo({ top: 0, behavior: 'instant' })
-  }
-
-  // FIX 3 — Scroll programático sem hash na URL
+  /** Scroll programático — sem empurrar hash para a URL (mantido da v1). */
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background-primary/90 backdrop-blur-sm border-b border-white/5">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background-primary/90 backdrop-blur-sm border-b border-accent/10">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Wordmark tipográfico — FIX 2: logo reset */}
         <Link
           href="/"
-          onClick={handleLogoClick}
-          aria-label="GnosIQ — Home"
-          className="font-display text-xl font-bold tracking-tight text-white select-none hover:opacity-90 transition-opacity"
+          aria-label="GnosIQ — início"
+          className="text-xl font-bold tracking-tight text-text-primary select-none hover:opacity-90 transition-opacity"
         >
           Gnos<span className="text-accent">IQ</span>
         </Link>
 
-        {/* Links + CTA + Toggle */}
         <div className="flex items-center gap-6">
-          {/* FIX 3 — scroll programático sem hash */}
-          <button
-            onClick={() => scrollTo('como-funciona')}
-            className="hidden md:block text-sm text-text-secondary hover:text-text-primary transition-colors bg-transparent border-none cursor-pointer"
-          >
-            {t.howItWorks}
-          </button>
+          {LINKS.map((link) => (
+            <button
+              key={link.id}
+              type="button"
+              onClick={() => scrollTo(link.id)}
+              className="hidden md:block text-sm text-text-secondary hover:text-text-primary transition-colors bg-transparent border-none cursor-pointer"
+            >
+              {link.label}
+            </button>
+          ))}
 
-          {/* GNO-93: toggle PT/EN removido da UI até M2 — locale forçado em PT (ver LocaleContext) */}
-
-          {/* CTA — GNO-69: <a href> + PostHog tracking preservado */}
           <a
             href="#waitlist"
             onClick={(e) => {
@@ -63,9 +52,9 @@ export default function Nav() {
               })
               scrollTo('waitlist')
             }}
-            className="bg-accent hover:bg-accent-dark text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors"
+            className="bg-accent hover:bg-accent-dark text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors whitespace-nowrap"
           >
-            {t.cta}
+            Entrar na lista
           </a>
         </div>
       </div>

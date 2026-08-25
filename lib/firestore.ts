@@ -56,21 +56,49 @@ export const COLLECTIONS = {
 // --- Helpers de domínio ---
 
 interface WaitlistEntry {
-  email: string
-  name: string
+  /** E.164 normalizado, ou null quando a pessoa deixou só e-mail. */
+  whatsapp?: string | null
+  /** Minúsculo e aparado, ou null quando a pessoa deixou só WhatsApp. */
+  email?: string | null
+  name?: string
   icpSegment?: string | null
 }
 
-export async function addToWaitlist({ email, name, icpSegment }: WaitlistEntry): Promise<{ alreadyExists: boolean }> {
+/**
+ * GNO-115: WhatsApp e e-mail são ambos opcionais isoladamente, mas pelo menos
+ * um é obrigatório — a rota já garante isso antes de chamar aqui. A dedupe
+ * roda no canal que existir, com e-mail tendo precedência quando os dois
+ * vierem: é o identificador estável desde a v1 e o que o materializador de
+ * `founder_tier` (GNO-113) enxerga.
+ *
+ * Uma inscrição só-WhatsApp seguida de uma só-e-mail da mesma pessoa não é
+ * detectável e cria dois docs. Isso é aceito conscientemente: o alternativo
+ * seria pedir os dois campos, que é exatamente o atrito que a v2 remove.
+ */
+export async function addToWaitlist({
+  whatsapp,
+  email,
+  name,
+  icpSegment,
+}: WaitlistEntry): Promise<{ alreadyExists: boolean }> {
   const db = getFirestore()
   const ref = db.collection(COLLECTIONS.WAITLIST)
 
-  const existing = await ref.where('email', '==', email.toLowerCase()).limit(1).get()
-  if (!existing.empty) return { alreadyExists: true }
+  const normalizedEmail = email ? email.toLowerCase().trim() : null
+  const normalizedWhatsapp = whatsapp ?? null
+
+  const dedupeField = normalizedEmail ? 'email' : 'whatsapp'
+  const dedupeValue = normalizedEmail ?? normalizedWhatsapp
+
+  if (dedupeValue) {
+    const existing = await ref.where(dedupeField, '==', dedupeValue).limit(1).get()
+    if (!existing.empty) return { alreadyExists: true }
+  }
 
   await ref.add({
-    email: email.toLowerCase(),
-    name: name.trim(),
+    email: normalizedEmail,
+    whatsapp: normalizedWhatsapp,
+    name: (name ?? '').trim(),
     icp_segment: icpSegment ?? null,
     createdAt: Timestamp.now(),
     source: 'landing_page',
@@ -78,4 +106,27 @@ export async function addToWaitlist({ email, name, icpSegment }: WaitlistEntry):
   })
 
   return { alreadyExists: false }
+}
+
+/**
+ * Contagem de fundadores já confirmados — `count(founder_tier == true)`.
+ *
+ * GNO-115 item 8 do delta. A flag NÃO é decidida na inscrição: ela é
+ * derivada da ordenação por `createdAt` e materializada por
+ * `scripts/founder-tier-materialize.mjs` (GNO-113). Contar a coleção inteira
+ * aqui daria um número diferente do que o materializador promete — por isso
+ * a query filtra pela flag, e não por `.count()` do total.
+ *
+ * Usa o aggregation query do Firestore: o custo não cresce com a coleção e
+ * nenhum documento (nem PII) trafega para o processo.
+ */
+export async function countFounderTier(): Promise<number> {
+  const db = getFirestore()
+  const snapshot = await db
+    .collection(COLLECTIONS.WAITLIST)
+    .where('founder_tier', '==', true)
+    .count()
+    .get()
+
+  return snapshot.data().count
 }
