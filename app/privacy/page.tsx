@@ -59,7 +59,7 @@ export default function PrivacyPage() {
               <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
                 hello@gnosiq.ai
               </a>
-              .
+              {'.'}
             </p>
           </div>
 
@@ -178,7 +178,7 @@ export default function PrivacyPage() {
               <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
                 hello@gnosiq.ai
               </a>
-              .
+              {'.'}
             </p>
           </div>
 
