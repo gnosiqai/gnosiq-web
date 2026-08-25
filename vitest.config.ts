@@ -24,6 +24,15 @@ export default defineConfig({
     env: {
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: '1x00000000000000000000AA',
       TURNSTILE_SECRET_KEY: '1x0000000000000000000000000000000AA',
+      /*
+        GNO-122 - config de e-mail. Valores obviamente falsos: o SDK do Resend
+        é mockado em toda a suite, nenhum e-mail sai daqui, e a key real vive
+        só como env Secret do Vercel. Ficam aqui porque o módulo falha rápido
+        quando faltam, e falhar por env ausente é o que os testes DEDICADOS a
+        isso devem provar, não um efeito colateral de todos os outros.
+      */
+      RESEND_API_KEY: 're_test_key_nao_e_real',
+      EMAIL_FROM: 'hello@gnosiq.ai',
     },
     coverage: {
       provider: 'v8',

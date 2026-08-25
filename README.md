@@ -243,8 +243,10 @@ npm run dev
 
 | Variable | Required | Description |
 |---|---|---|
-| `SENDGRID_API_KEY` | M1 | Waitlist confirmation + report delivery |
-| `SENDGRID_FROM_EMAIL` | M1 | Sender email address |
+| `RESEND_API_KEY` | M1 | Waitlist confirmation + report delivery |
+| `EMAIL_FROM` | M1 | Sender email address (`hello@gnosiq.ai`) |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | M1 | Cloudflare Turnstile sitekey (public) |
+| `TURNSTILE_SECRET_KEY` | M1 | Cloudflare Turnstile siteverify secret |
 | `NEXT_PUBLIC_POSTHOG_KEY` | M1 | Analytics |
 | `GCP_PROJECT_ID` | M1 | Firestore target project · waitlist + sessions persistence |
 | `GOOGLE_APPLICATION_CREDENTIALS_JSON` | M1 | Service account JSON **content** (serverless has no key file) |
@@ -278,7 +280,7 @@ gnosiq-web/
 ├── lib/
 │   ├── constants/           # App constants (proprietary)
 │   ├── firestore.ts        # DB client (canonical pattern — GoogleAuth anti-pattern banned)
-│   └── sendgrid.ts         # Email client
+│   └── email.ts            # Email client (Resend)
 ├── prompts/                # Cognitive Engine (proprietary · not documented)
 ├── public/
 │   ├── gnosiq-logo.png     # Brand logo — LOCKED, do not replace

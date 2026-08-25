@@ -16,6 +16,20 @@ vi.mock('@/lib/posthog-server', () => ({
   captureServerEvent: (...args: unknown[]) => captureServerEvent(...args),
 }))
 
+/**
+ * GNO-122 — o sender agora mora em lib/email.ts, e é ele que a rota chama.
+ * As classes de erro são reais (não mockadas): é o `instanceof` delas que
+ * decide se a falha foi de configuração ou de entrega.
+ */
+const sendWaitlistConfirmationPT = vi.fn()
+vi.mock('@/lib/email', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/email')>()
+  return {
+    ...actual,
+    sendWaitlistConfirmationPT: (...args: unknown[]) => sendWaitlistConfirmationPT(...args),
+  }
+})
+
 const { POST } = await import('./route')
 
 /**
@@ -345,12 +359,10 @@ describe('GNO-120 · Turnstile (GATE CISO, item 6 — parte "b")', () => {
 
   it('token reprovado: ZERO e-mail enviado', async () => {
     turnstileRejects()
-    const sgSend = vi.fn()
-    vi.doMock('@sendgrid/mail', () => ({ default: { setApiKey: vi.fn(), send: sgSend } }))
 
     await POST(req({ ...VALID, email: 'lead@exemplo.com', turnstile_token: 'forjado' }))
 
-    expect(sgSend).not.toHaveBeenCalled()
+    expect(sendWaitlistConfirmationPT).not.toHaveBeenCalled()
   })
 
   it('reprovação é BYTE A BYTE idêntica à resposta de sucesso real', async () => {
@@ -509,6 +521,152 @@ describe('GNO-120 · fail-closed do Turnstile', () => {
     expect(logged).not.toContain('vaza@exemplo.com')
     expect(logged).not.toContain('1x0000000000000000000000000000000AA')
 
+    vi.restoreAllMocks()
+  })
+})
+
+describe('GNO-122 · o caminho de e-mail não falha em silêncio', () => {
+  const emailLead = { ...VALID, email: 'lead@exemplo.com' }
+
+  it('inscrição nova com e-mail dispara a confirmação', async () => {
+    await POST(req(emailLead))
+
+    expect(sendWaitlistConfirmationPT).toHaveBeenCalledWith({
+      email: 'lead@exemplo.com',
+      name: '',
+    })
+  })
+
+  it('reinscrição não dispara e-mail de novo', async () => {
+    addToWaitlist.mockResolvedValue({ alreadyExists: true })
+
+    await POST(req(emailLead))
+
+    expect(sendWaitlistConfirmationPT).not.toHaveBeenCalled()
+  })
+
+  it('recusa do provedor VIRA EVENTO — a classe de falha silenciosa morre aqui', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { EmailDeliveryError } = await import('@/lib/email')
+    sendWaitlistConfirmationPT.mockRejectedValue(new EmailDeliveryError('Unauthorized'))
+
+    await POST(req(emailLead))
+
+    expect(captureServerEvent).toHaveBeenCalledWith(
+      'waitlist_email_failed',
+      expect.any(String),
+      expect.objectContaining({ kind: 'delivery', reason: 'Unauthorized' }),
+    )
+    vi.restoreAllMocks()
+  })
+
+  it('env ausente é medida como defeito de CONFIGURAÇÃO, não de entrega', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { EmailConfigError } = await import('@/lib/email')
+    sendWaitlistConfirmationPT.mockRejectedValue(new EmailConfigError('RESEND_API_KEY'))
+
+    await POST(req(emailLead))
+
+    expect(captureServerEvent).toHaveBeenCalledWith(
+      'waitlist_email_failed',
+      expect.any(String),
+      expect.objectContaining({ kind: 'config' }),
+    )
+    vi.restoreAllMocks()
+  })
+
+  it('a falha sai em log ESTRUTURADO, filtrável no Vercel', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { EmailDeliveryError } = await import('@/lib/email')
+    sendWaitlistConfirmationPT.mockRejectedValue(new EmailDeliveryError('rate limited'))
+
+    await POST(req(emailLead))
+
+    const linha = errorSpy.mock.calls.flat().find((c) => String(c).includes('waitlist_email_failed'))
+    expect(JSON.parse(String(linha))).toMatchObject({
+      level: 'error',
+      event: 'waitlist_email_failed',
+      provider: 'resend',
+      kind: 'delivery',
+    })
+    vi.restoreAllMocks()
+  })
+
+  it('o e-mail do inscrito NÃO vaza no log nem no evento, mesmo quando o provedor o ecoa', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { EmailDeliveryError } = await import('@/lib/email')
+    // Recusa realista do Resend: o provedor devolve o campo que rejeitou.
+    sendWaitlistConfirmationPT.mockRejectedValue(
+      new EmailDeliveryError('Invalid `to` field: lead@exemplo.com is not a valid address'),
+    )
+
+    await POST(req(emailLead))
+
+    const tudo = JSON.stringify([...errorSpy.mock.calls, ...captureServerEvent.mock.calls])
+    expect(tudo).not.toContain('lead@exemplo.com')
+    expect(tudo).toContain('[e-mail]')
+    vi.restoreAllMocks()
+  })
+
+  it('mensagem hostil do provedor não trava a rota (typescript:S8786)', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { EmailDeliveryError } = await import('@/lib/email')
+
+    /*
+      Caso adversarial da redação. A mensagem de erro do provedor é entrada
+      influenciada pelo usuário, então a regex que a redige é superfície de
+      ataque: com backtracking não-linear, uma string longa custa tempo
+      QUADRÁTICO no caminho de falha.
+
+      A forma abaixo é a pior possível, e o detalhe importa: a string tem
+      muitos caracteres e NENHUM match completável (um `@` no fim, sem cauda
+      depois dele). Encher a string de `@` seria mais fraco, não mais forte -
+      aí existe match, o motor acha um cedo e vai embora rápido. O custo mora
+      no caminho SEM match, onde ele precisa provar que nenhuma divisão serve.
+
+      Medido: regex anterior 2062ms, regex atual 37ms, na mesma string. O teto
+      de 1s é folgado o bastante para não piscar em runner lento e apertado o
+      bastante para reprovar a regressão.
+    */
+    const hostil = `${'a'.repeat(60_000)}@`
+    sendWaitlistConfirmationPT.mockRejectedValue(new EmailDeliveryError(hostil))
+
+    const inicio = performance.now()
+    const res = await POST(req(emailLead))
+    const decorrido = performance.now() - inicio
+
+    expect(res.status).toBe(200)
+    expect(decorrido).toBeLessThan(1_000)
+    vi.restoreAllMocks()
+  })
+
+  it('endereço longo é redigido INTEIRO — nada de meia redação', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { EmailDeliveryError } = await import('@/lib/email')
+    // Local-part no limite que a própria rota aceita (MAX_FIELD_LENGTH).
+    const longo = `${'x'.repeat(254)}@exemplo.com`
+    sendWaitlistConfirmationPT.mockRejectedValue(
+      new EmailDeliveryError(`Invalid \`to\` field: ${longo} rejeitado`),
+    )
+
+    await POST(req(emailLead))
+
+    const tudo = JSON.stringify([...errorSpy.mock.calls, ...captureServerEvent.mock.calls])
+    expect(tudo).not.toContain('xxx')
+    expect(tudo).not.toContain('@exemplo.com')
+    expect(tudo).toContain('[e-mail]')
+    vi.restoreAllMocks()
+  })
+
+  it('falha de e-mail NÃO derruba a inscrição — o lead já está gravado', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { EmailDeliveryError } = await import('@/lib/email')
+    sendWaitlistConfirmationPT.mockRejectedValue(new EmailDeliveryError('Unauthorized'))
+
+    const res = await POST(req(emailLead))
+
+    expect(res.status).toBe(200)
+    expect(addToWaitlist).toHaveBeenCalledTimes(1)
     vi.restoreAllMocks()
   })
 })
