@@ -39,8 +39,11 @@ export const CLINICAL_REFERRAL_TRIGGERS = {
 
 // ─── Privacy Policy ────────────────────────────────────────────────
 // GNO-49 | 2026-04-28
-export const PRIVACY_POLICY_VERSION = '1.0';
-export const PRIVACY_POLICY_DATE = '2026-04-28';
+// GNO-115: 1.0 -> 1.1. A v1.0 afirmava que telefone NÃO era coletado; a LP v2
+// coleta WhatsApp. Mudança material de escopo de dados exige carimbo novo —
+// uma política que muda de conteúdo sem mudar de versão mente sobre si mesma.
+export const PRIVACY_POLICY_VERSION = '1.1';
+export const PRIVACY_POLICY_DATE = '2026-08-25';
 export const PRIVACY_POLICY_URL = '/privacy';
 
 // Disclaimer canônico CFP/LGPD — usar em todos os relatórios de avaliação

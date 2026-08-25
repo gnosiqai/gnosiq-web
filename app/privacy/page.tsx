@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { PRIVACY_POLICY_VERSION, PRIVACY_POLICY_DATE } from '@/lib/constants/legal';
 
 export const metadata: Metadata = {
   title: 'Política de Privacidade | GnosIQ',
@@ -7,8 +8,10 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const PRIVACY_VERSION = '1.0';
-const PRIVACY_DATE = '2026-04-28';
+// GNO-115: versão e data vêm de lib/constants/legal.ts, que declara a regra
+// DRY. Estavam duplicadas aqui e podiam divergir do SSOT sem ninguém notar.
+const PRIVACY_VERSION = PRIVACY_POLICY_VERSION;
+const PRIVACY_DATE = PRIVACY_POLICY_DATE;
 
 export default function PrivacyPage() {
   return (
@@ -48,13 +51,15 @@ export default function PrivacyPage() {
               1. Dados Coletados
             </h2>
             <p className="leading-relaxed" style={{ color: '#D1D5DB' }}>
-              A GnosIQ coleta exclusivamente o <strong>domínio do seu e-mail</strong> (ex:{' '}
-              <code style={{ color: '#8B5CF6', fontSize: '0.9em' }}>gmail.com</code>,{' '}
-              <code style={{ color: '#8B5CF6', fontSize: '0.9em' }}>empresa.com</code>) no momento
-              do cadastro na lista de espera. Opcionalmente, coletamos a{' '}
-              <strong>área de atuação</strong> (campo opcional informado no formulário de acesso
-              beta). Não coletamos nome, CPF, telefone ou qualquer outro dado pessoal identificável
-              (PII) nesta fase.
+              <strong>Lista de espera:</strong> coletamos o seu endereço de e-mail e/ou número de
+              WhatsApp (pelo menos um, fornecido por você) e, opcionalmente, o seu papel
+              profissional. <strong>Finalidade:</strong> comunicação sobre o acesso antecipado ao
+              beta e as condições de fundador. <strong>Base legal:</strong> consentimento (art. 7º,
+              I, LGPD). Você pode solicitar a exclusão desses dados a qualquer momento pelo e-mail{' '}
+              <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
+                hello@gnosiq.ai
+              </a>
+              .
             </p>
           </div>
 
@@ -165,12 +170,15 @@ export default function PrivacyPage() {
               1. Data Collected
             </h3>
             <p style={{ color: '#D1D5DB' }}>
-              GnosIQ collects only the <strong>email domain</strong> (e.g.,{' '}
-              <code style={{ color: '#8B5CF6', fontSize: '0.9em' }}>gmail.com</code>) when you
-              join the waitlist. Optionally, we collect the{' '}
-              <strong>area of expertise</strong> (optional field provided in the beta access form).
-              No name, national ID, phone, or other personally identifiable information (PII) is
-              collected at this stage.
+              <strong>Waitlist:</strong> we collect your email address and/or WhatsApp number (at
+              least one, provided by you) and, optionally, your professional role.{' '}
+              <strong>Purpose:</strong> communication about early beta access and founder
+              conditions. <strong>Legal basis:</strong> consent (art. 7, I, LGPD). You may request
+              deletion of this data at any time by emailing{' '}
+              <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
+                hello@gnosiq.ai
+              </a>
+              .
             </p>
           </div>
 
