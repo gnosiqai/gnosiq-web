@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { FAQ_ITEMS } from '@/lib/constants/faq'
 
-// GNO-115 — FAQ com perguntas reais de DM/comentários.
+// FAQ com perguntas reais de DM/comentários.
 //
 // O conteúdo vem de lib/constants/faq.ts, o MESMO array que alimenta o
 // JSON-LD FAQPage. Divergir schema de conteúdo visível é structured data spam

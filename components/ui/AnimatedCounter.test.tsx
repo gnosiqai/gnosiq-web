@@ -9,10 +9,10 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-describe('AnimatedCounter (GNO-93 regression)', () => {
+describe('AnimatedCounter ( regression)', () => {
   it('renders the exact final value on static/SSR output, not an intermediate frame', () => {
-    // Before the fix, static output showed Math.floor(value * 0.85) — e.g. 22 -> 18,
-    // 30 -> 25, 18 -> 15 — which is exactly the "stale" counters reported in prod.
+ // Before the fix, static output showed Math.floor(value * 0.85) — e.g. 22 -> 18,
+ // 30 -> 25, 18 -> 15 — which is exactly the "stale" counters reported in prod.
     const fill = renderToStaticMarkup(<AnimatedCounter value={22} suffix="min" />)
     const delivery = renderToStaticMarkup(<AnimatedCounter value={30} suffix="min" />)
     const pages = renderToStaticMarkup(<AnimatedCounter value={18} />)
@@ -25,8 +25,8 @@ describe('AnimatedCounter (GNO-93 regression)', () => {
   })
 
   it('still respects an explicit `from` for the eventual client-side animation start', () => {
-    // `from` only affects the animated count-up after hydration; static output is
-    // always the target value.
+ // `from` only affects the animated count-up after hydration; static output is
+ // always the target value.
     expect(renderToStaticMarkup(<AnimatedCounter value={22} from={10} />)).toContain('22')
   })
 
@@ -58,21 +58,21 @@ describe('AnimatedCounter (GNO-93 regression)', () => {
 
     const { container } = render(<AnimatedCounter value={22} duration={1000} />)
 
-    // Before intersecting, the SSR/hydration value (22) is still shown.
+ // Before intersecting, the SSR/hydration value (22) is still shown.
     expect(container.textContent).toBe('22')
 
     act(() => {
       observerCallback([{ isIntersecting: true }])
     })
 
-    // Once armed, the progressive-enhancement count-up restarts from 0...
+ // Once armed, the progressive-enhancement count-up restarts from 0...
     expect(container.textContent).toBe('0')
 
     act(() => {
       rafCallback(1000) // full duration elapsed
     })
 
-    // ...and lands back on the exact target value.
+ // ...and lands back on the exact target value.
     expect(container.textContent).toBe('22')
   })
 })

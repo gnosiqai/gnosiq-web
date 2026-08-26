@@ -13,47 +13,31 @@ import { sendWaitlistConfirmationPT, EmailConfigError } from '@/lib/email'
 export const runtime = 'nodejs'
 
 /**
- * GNO-115 — waitlist-first com WhatsApp.
+ * Entrada da lista de espera.
  *
- * GATE CISO T1: o campo WhatsApp é DADO PESSOAL NOVO neste endpoint. Regras
- * aplicadas aqui, para revisão no PR:
+ * O corpo carrega dado pessoal (telefone e e-mail), então as regras abaixo
+ * valem para toda alteração neste arquivo:
  *
- *  1. Nenhum telefone (nem e-mail) aparece em log. A v1 mandava o e-mail
- *     para o PostHog como propriedade do evento; a v2 não manda nenhum dos
- *     dois — o identificador do PostHog basta para atribuir a conversão.
- *  2. O número é normalizado para E.164 ANTES de tocar o Firestore. Um
- *     formato só por documento evita dedupe furada e evita que o mesmo
- *     humano vire dois leads.
+ *  1. Nenhum telefone e nenhum e-mail aparece em log ou em propriedade de
+ *     evento. O identificador do produto basta para atribuir a conversão.
+ *  2. O número é normalizado para E.164 antes de tocar o Firestore. Um
+ *     formato só por documento evita que o mesmo humano vire dois registros.
  *  3. Validação é server-side de verdade: o cliente valida para dar feedback,
  *     esta rota valida para decidir. Payload malformado morre com 400.
  *  4. Erro interno nunca vaza stack trace nem conteúdo de credencial.
- *  5. Consentimento LGPD é obrigatório e registrado — sem ele, 400.
- *  6. Honeypot server-side contra flood de bot (item 6 do checklist CISO,
- *     parte "a").
- *
- * GNO-120 fecha a parte "b" do mesmo item: Cloudflare Turnstile verificado no
- * servidor ANTES de qualquer escrita ou envio. As duas camadas compartilham a
- * mesma regra de saída — reprovar devolve a resposta de sucesso, byte a byte,
- * porque uma resposta distinta seria um oráculo contando ao atacante qual
- * defesa ele acabou de tocar.
+ *  5. Consentimento é obrigatório e registrado — sem ele, 400.
  */
 
-/**
- * Campo-isca. Invisível para humano, irresistível para bot que preenche
- * tudo que encontra no formulário. Preenchido = descarta em silêncio.
- *
- * O nome é plausível de propósito: um campo chamado "honeypot" seria
- * ignorado por qualquer bot minimamente esperto.
- */
-const HONEYPOT_FIELD = 'website'
+/** Campo do corpo cuja presença invalida o envio. */
+const DISCARD_FIELD = 'website'
 
-/** Identidade única para todos os trips — conta eventos, não pessoas. */
-const HONEYPOT_DISTINCT_ID = 'honeypot-bot'
+/** Identidade única para os descartes — conta eventos, não pessoas. */
+const DISCARD_DISTINCT_ID = 'discarded-submission'
 
 /** Campo do corpo que carrega o token emitido pelo widget Turnstile. */
 const TURNSTILE_FIELD = 'turnstile_token'
 
-/** Mesma lógica do honeypot: conta reprovações, não pessoas. */
+/** Mesma lógica: conta reprovações, não pessoas. */
 const TURNSTILE_DISTINCT_ID = 'turnstile-bot'
 
 /** Falha de e-mail é evento de INFRA. Conta incidentes, não inscritos. */
@@ -144,7 +128,7 @@ function parseSubmission(body: unknown): ParsedSubmission {
     return { ok: false, error: 'Requisição inválida.' }
   }
 
-  // LGPD: consentimento explícito é condição de entrada, não checkbox decorativo.
+ // Consentimento explícito é condição de entrada, não checkbox decorativo.
   if (fields.consent !== true) {
     return {
       ok: false,
@@ -172,15 +156,12 @@ function parseSubmission(body: unknown): ParsedSubmission {
  * Resposta de sucesso ÚNICA, idêntica para inscrição nova e para quem já
  * estava na lista.
  *
- * GATE CISO T1 (itens 4 e 7 do checklist): a versão anterior devolvia
- * `alreadyExists` e duas mensagens distintas. Isso é um ORÁCULO DE
- * ENUMERAÇÃO — qualquer um podia postar um e-mail ou telefone e descobrir,
- * pela resposta, se aquela pessoa está na waitlist. Numa lista de espera de
- * avaliação cognitiva, confirmar que alguém se inscreveu já é informação
- * pessoal sobre essa pessoa.
+ * Uma resposta que variasse permitiria a qualquer um postar um e-mail ou
+ * telefone e descobrir, pela diferença, se aquela pessoa está na lista. Numa
+ * lista de espera de avaliação cognitiva, confirmar que alguém se inscreveu já
+ * é informação pessoal sobre essa pessoa.
  *
- * Custo aceito: o evento do PostHog perdeu a propriedade `already_existed`.
- * O DoD pede o evento de conversão com UTM, e isso continua de pé.
+ * Custo aceito: o evento do produto perdeu a propriedade `already_existed`.
  */
 const SUCCESS_RESPONSE = {
   success: true,
@@ -190,11 +171,10 @@ const SUCCESS_RESPONSE = {
 /**
  * UTMs da origem do envio, lidos do cabeçalho `Referer`.
  *
- * DELIBERADAMENTE não vêm do corpo: quem dispara o honeypot é um bot, e o
- * corpo dele é dado hostil. O Referer é o que o navegador (ou o cliente)
- * declara como página de origem — continua sendo dado de terceiro, mas é
- * metadado de transporte, não payload, e passa por uma allowlist de 5
- * chaves com valor truncado antes de virar propriedade de evento.
+ * Deliberadamente não vêm do corpo: o corpo de um envio descartado é dado
+ * hostil. O Referer continua sendo dado de terceiro, mas é metadado de
+ * transporte, não payload, e passa por uma allowlist de 5 chaves com valor
+ * truncado antes de virar propriedade de evento.
  */
 function utmFromReferer(req: NextRequest): Record<string, string> {
   const referer = req.headers.get('referer')
@@ -206,7 +186,7 @@ function utmFromReferer(req: NextRequest): Record<string, string> {
       Object.entries(utm).map(([key, value]) => [key, String(value).slice(0, 100)]),
     )
   } catch {
-    // Referer malformado — some com ele, não quebra a resposta.
+ // Referer malformado — some com ele, não quebra a resposta.
     return {}
   }
 }
@@ -217,24 +197,18 @@ function fieldOf(body: unknown, name: string): unknown {
 }
 
 /**
- * As duas camadas anti-bot, na ordem em que custam.
- *
- * HONEYPOT primeiro, porque é decisão local: nem gasta chamada de rede com um
- * bot que já se entregou. Um bot não pode receber nem sequer feedback de
- * "campo inválido" — isso já seria sinal de que a armadilha existe.
- *
- * TURNSTILE depois, e ainda assim antes de qualquer escrita no Firestore ou
- * envio de e-mail: é essa ordem que a issue exige, e é ela que garante que um
- * token reprovado não deixe rastro nenhum no placar de fundadores.
+ * Triagem do envio, antes de qualquer escrita no Firestore ou envio de
+ * e-mail. Nada que não passe por aqui deixa rastro no placar.
  *
  * Retorna a resposta a devolver quando o request deve morrer aqui, ou `null`
  * quando ele está liberado para seguir. A resposta é sempre a MESMA de
- * sucesso — nunca um oráculo dizendo qual defesa reprovou.
+ * sucesso: uma resposta distinta contaria ao remetente o que aconteceu com o
+ * envio dele.
  */
-async function screenForBots(req: NextRequest, body: unknown): Promise<NextResponse | null> {
-  const trap = fieldOf(body, HONEYPOT_FIELD)
-  if (typeof trap === 'string' && trap.trim().length > 0) {
-    await captureServerEvent('waitlist_honeypot_tripped', HONEYPOT_DISTINCT_ID, {
+async function screenSubmission(req: NextRequest, body: unknown): Promise<NextResponse | null> {
+  const discard = fieldOf(body, DISCARD_FIELD)
+  if (typeof discard === 'string' && discard.trim().length > 0) {
+    await captureServerEvent('waitlist_submission_discarded', DISCARD_DISTINCT_ID, {
       lp_version: 'v2',
       ...utmFromReferer(req),
     })
@@ -243,11 +217,10 @@ async function screenForBots(req: NextRequest, body: unknown): Promise<NextRespo
 
   const verdict = await verifyTurnstileToken(fieldOf(body, TURNSTILE_FIELD))
   if (!verdict.ok) {
-    /*
-      `reason` separa "nem mandou token" (bot que ignora o widget) de "mandou
-      token reprovado" (token forjado, expirado ou já gasto). É métrica de
-      operação, não de pessoa: nenhum campo do formulário entra no evento.
-    */
+ /*
+      `reason` é métrica de operação, não de pessoa: nenhum campo do
+      formulário entra no evento.
+ */
     await captureServerEvent('waitlist_turnstile_rejected', TURNSTILE_DISTINCT_ID, {
       lp_version: 'v2',
       reason: verdict.reason,
@@ -263,22 +236,20 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => null)
 
-    /*
-      Corpo ilegível morre aqui, ANTES do gate anti-bot, e continua sendo 400
-      como na GNO-115.
+ /*
+      Corpo ilegível morre aqui, antes da triagem, e continua sendo 400.
 
-      Não é inconsistência com a regra do não-oráculo: isto é erro de
-      TRANSPORTE, não veredito sobre quem enviou. Não dá para screenar o que
-      não dá para ler, e um 400 aqui não conta nada sobre nenhuma pessoa - só
-      diz que o que chegou não era JSON. Devolver a resposta de sucesso neste
+      Isto é erro de TRANSPORTE, não veredito sobre quem enviou: não dá para
+      triar o que não dá para ler, e um 400 aqui não conta nada sobre nenhuma
+      pessoa — só diz que o que chegou não era JSON. Devolver sucesso neste
       caso esconderia bug de cliente nosso atrás de uma tela verde.
-    */
+ */
     if (!body || typeof body !== 'object') {
       return NextResponse.json({ success: false, error: 'Requisição inválida.' }, { status: 400 })
     }
 
-    // Gate anti-bot ANTES de validar, de persistir e de enviar e-mail.
-    const blocked = await screenForBots(req, body)
+ // Triagem antes de validar, de persistir e de enviar e-mail.
+    const blocked = await screenSubmission(req, body)
     if (blocked) return blocked
 
     const parsed = parseSubmission(body)
@@ -294,35 +265,30 @@ export async function POST(req: NextRequest) {
       icpSegment: parsed.icpSegment,
     })
 
-    // E-mail de confirmação só para inscrição nova e só se houver e-mail.
-    // O `alreadyExists` decide o efeito colateral, mas NUNCA vaza na resposta.
+ // E-mail de confirmação só para inscrição nova e só se houver e-mail.
+ // O `alreadyExists` decide o efeito colateral, mas NUNCA vaza na resposta.
     if (!alreadyExists && parsed.email) {
       await sendConfirmationEmail(parsed.email)
     }
 
     return NextResponse.json(SUCCESS_RESPONSE, { status: 200 })
   } catch (err) {
-    /*
-      FAIL-CLOSED do Turnstile, explícito.
+ /*
+      Quando a verificação do Turnstile não consegue decidir — secret ausente
+      (defeito de configuração nosso) ou serviço fora do ar — a inscrição não
+      passa: nada é escrito, nada é enviado.
 
-      Secret ausente (defeito de configuração nosso) e siteverify fora do ar
-      são as DUAS situações em que a camada anti-bot não consegue decidir. Nas
-      duas, a inscrição não passa: nada é escrito, nada é enviado.
-
-      E a resposta aqui é 503, não a resposta genérica de sucesso — de
-      propósito. Não há oráculo nisso: a falha independe do que a pessoa
-      digitou, então não conta nada sobre ninguém. O que ela conta é para o
-      humano legítimo, que recebe "tente de novo em instantes" em vez de uma
-      tela de sucesso mentindo sobre uma inscrição que não aconteceu. Essa
-      mentira silenciosa é exatamente a classe de falha que a GNO-122 está
-      matando no caminho de e-mail.
-    */
+      E a resposta aqui é 503, não a de sucesso. A falha independe do que a
+      pessoa digitou, então não conta nada sobre ninguém; o que ela conta é
+      para o humano legítimo, que recebe "tente de novo em instantes" em vez
+      de uma tela de sucesso mentindo sobre uma inscrição que não aconteceu.
+ */
     if (err instanceof TurnstileConfigError || err instanceof TurnstileUnavailableError) {
-      console.error('[waitlist] Turnstile fail-closed:', err.message)
+      console.error('[waitlist] Turnstile indisponível:', err.message)
       return NextResponse.json({ success: false, error: GENERIC_ERROR }, { status: 503 })
     }
 
-    // Log interno sem PII: só a mensagem do erro, nunca o corpo da requisição.
+ // Log interno sem dado pessoal: só a mensagem do erro, nunca o corpo.
     console.error('[waitlist] Erro:', err instanceof Error ? err.message : 'desconhecido')
     return NextResponse.json({ success: false, error: GENERIC_ERROR }, { status: 503 })
   }
@@ -333,15 +299,11 @@ export async function POST(req: NextRequest) {
  *
  * Duas decisões, e as duas são de segurança:
  *
- *  1. `@` está EXCLUÍDO das duas classes. A versão anterior
- *     (`[^\s<>()"',;]+@[^\s<>()"',;]+`) deixava o `@` cair dentro das
- *     classes, então existiam N formas de dividir a mesma string em
- *     "antes do @" e "depois do @". Numa string longa sem match, o motor
- *     testava todas: custo quadrático. Medido antes da correção, com uma
- *     string de 'a' e nenhum `@`: 4k chars = 9ms, 64k = 2369ms (16x a
- *     entrada, 249x o tempo). Sem o `@` nas classes só existe uma divisão
- *     possível, e o mesmo teste vira 2,4ms e 39ms (16x a entrada, 16x o
- *     tempo). Achado typescript:S8786.
+ *  1. `@` está EXCLUÍDO das duas classes. Deixá-lo cair dentro delas cria N
+ *     formas de dividir a mesma string em "antes do @" e "depois do @", e
+ *     numa string longa sem match o motor testa todas: custo quadrático.
+ *     Sem o `@` nas classes só existe uma divisão possível, e o custo volta
+ *     a ser linear. Achado typescript:S8786.
  *
  *  2. Quantificadores LIMITADOS, como defesa em profundidade: mesmo que
  *     alguém reintroduza ambiguidade aqui um dia, o trabalho por posição
@@ -355,23 +317,22 @@ export async function POST(req: NextRequest) {
  * mensagem de ERRO do provedor, e provedor gosta de ecoar o campo que
  * recusou ("Invalid `to` field: fulano@..."). Ou seja, entrada influenciada
  * pelo usuário atravessa esta regex, no caminho de falha. A regra de zero
- * PII em log é anterior a qualquer conveniência de diagnóstico, e o custo
- * de casar essa regra não pode ser uma superfície de DoS.
+ * dado pessoal em log é anterior a qualquer conveniência de diagnóstico, e o
+ * custo de casar essa regra não pode ser uma superfície de negação de serviço.
  */
 function redactEmails(text: string): string {
   return text.replace(/[^\s<>()"',;:@]{1,254}@[^\s<>()"',;:@]{1,254}/g, '[e-mail]')
 }
 
 /**
- * GNO-122 — a falha de e-mail vira sinal, não silêncio.
+ * A falha de e-mail vira sinal, não silêncio.
  *
- * Esta função é a resposta direta ao incidente que originou a issue: o erro
- * ia para `console.error` numa função serverless que ninguém lê, enquanto a
- * pessoa via tela de sucesso. Agora ele sai em DOIS lugares:
+ * O erro ia para `console.error` numa função serverless que ninguém lê,
+ * enquanto a pessoa via tela de sucesso. Agora ele sai em DOIS lugares:
  *
- *  · log estruturado (JSON de uma linha), que dá para filtrar no Vercel;
- *  · evento de produto, que aparece no PostHog junto do resto e permite
- *    alarme sobre "e-mail parou de sair" sem ninguém abrir log nenhum.
+ *  log estruturado (JSON de uma linha), que dá para filtrar no Vercel;
+ *  evento de produto, que permite alarme sobre "e-mail parou de sair" sem
+ *    ninguém abrir log nenhum.
  *
  * `kind` separa defeito de CONFIGURAÇÃO (env faltando, que é problema nosso e
  * some com um deploy) de recusa de ENTREGA (provedor disse não), porque as
@@ -402,15 +363,15 @@ async function reportEmailFailure(err: unknown): Promise<void> {
  * Confirmação por e-mail. Falha aqui NUNCA derruba a inscrição: o lead já está
  * no Firestore, e uma recusa do provedor não é problema de quem se inscreveu.
  *
- * O que MUDOU na GNO-122 não é isso, é o oposto disso: continuar não derrubando
- * a inscrição, mas parar de esconder a falha. Devolver erro para a pessoa aqui
- * seria trocar uma mentira por outra - a inscrição dela deu certo mesmo.
+ * Continuar não derrubando a inscrição, mas parar de esconder a falha.
+ * Devolver erro para a pessoa aqui seria trocar uma mentira por outra — a
+ * inscrição dela deu certo mesmo.
  *
- * GNO-123: o `name` NÃO é mais repassado ao template. Ele entrava cru no HTML
- * do e-mail, e o destinatário também vem do corpo: era conteúdo arbitrário
- * entregue a endereço arbitrário pelo nosso domínio autenticado. O campo
- * continua sendo persistido no Firestore; o que morreu é a ponte dele para o
- * corpo da mensagem.
+ * O `name` NÃO é repassado ao template. Ele entrava cru no HTML do e-mail, e o
+ * destinatário também vem do corpo: era conteúdo arbitrário entregue a
+ * endereço arbitrário pelo nosso domínio autenticado. O campo continua sendo
+ * persistido no Firestore; o que morreu é a ponte dele para o corpo da
+ * mensagem.
  */
 async function sendConfirmationEmail(email: string): Promise<void> {
   try {

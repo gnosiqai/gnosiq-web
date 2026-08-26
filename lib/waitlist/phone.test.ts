@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { normalizeToE164, isValidWhatsApp, isValidEmail } from './phone'
 
-// GNO-115 · GATE CISO T1 — o WhatsApp é dado pessoal novo no endpoint.
+// revisão de segurança — o WhatsApp é dado pessoal novo no endpoint.
 // A normalização é a fronteira: o que passa daqui vai para o Firestore em
 // formato único, e o que não passa nunca chega lá.
 
@@ -89,7 +89,7 @@ describe('isValidEmail', () => {
   })
 
   it('rejeita rótulo de domínio vazio', () => {
-    // A regex anterior aceitava "a@b..c"; a atual descreve rótulo a rótulo.
+ // A regex anterior aceitava "a@b..c"; a atual descreve rótulo a rótulo.
     expect(isValidEmail('a@b..c')).toBe(false)
     expect(isValidEmail('a@.com')).toBe(false)
     expect(isValidEmail('a@b.')).toBe(false)
@@ -100,7 +100,7 @@ describe('isValidEmail', () => {
   })
 
   it('entrada patológica não trava — a regex é linear, não backtracking', () => {
-    // Formato que fazia a versão ambígua explodir: muitos pontos sem TLD.
+ // Formato que fazia a versão ambígua explodir: muitos pontos sem TLD.
     const pathological = `a@${'.'.repeat(120)}`
     const started = performance.now()
     expect(isValidEmail(pathological)).toBe(false)

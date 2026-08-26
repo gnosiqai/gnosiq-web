@@ -1,6 +1,6 @@
 /**
  * @file lib/constants/founder.ts
- * @description Constantes da oferta "Condições de Fundador" (GNO-115).
+ * @description Constantes da oferta "Condições de Fundador".
  *
  * VETO GATE: nenhum preço numérico mora aqui — nem como teto, nem como
  * comentário. A LP v2 não publica número até o GATE fixar o preço final.
@@ -8,5 +8,5 @@
  * travado"), nunca quantificada.
  */
 
-/** Tamanho da turma de fundadores. Espelha FOUNDER_LIMIT do materializador (GNO-113). */
+/** Tamanho da turma de fundadores. */
 export const FOUNDER_SLOTS = 100

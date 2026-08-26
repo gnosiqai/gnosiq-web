@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-// GNO-115 — dedupe e contagem de fundadores.
+// dedupe e contagem de fundadores.
 //
 // A dedupe decide se um humano vira um lead ou dois. Com WhatsApp e e-mail
 // ambos opcionais, o campo usado na busca passou a ser condicional — e é
 // exatamente o tipo de lógica que quebra em silêncio.
 //
-// lib/firestore.test.ts cobre a validação de credencial (GNO-105); aqui o
+// lib/firestore.test.ts cobre a validação de credencial; aqui o
 // alvo são os helpers de domínio, com o client inteiro mockado.
 
 const where = vi.fn()
@@ -99,7 +99,7 @@ describe('addToWaitlist — dedupe', () => {
 })
 
 describe('countFounderTier', () => {
-  it('conta pela flag materializada, não pelo total da coleção', async () => {
+  it('conta pela flag persistida, não pelo total da coleção', async () => {
     countGet.mockResolvedValue({ data: () => ({ count: 42 }) })
     const { countFounderTier } = await load()
 

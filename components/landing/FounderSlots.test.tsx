@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor, cleanup } from '@testing-library/react'
 import FounderSlots from './FounderSlots'
 
-// GNO-115 (item 8 do delta) — "nunca número inventado".
+// (item 8 do delta) — "nunca número inventado".
 //
 // A regra não é "mostrar o contador": é NÃO mostrar placar que não veio do
 // banco. O componente anterior falhava exatamente aqui — tinha 3 inscritos
@@ -91,7 +91,7 @@ describe('estado inicial', () => {
     const { unmount } = render(<FounderSlots />)
     unmount()
     resolve({ ok: true, json: async () => ({ available: true, slotsRemaining: 87 }) })
-    // Sem o guard `cancelled`, isto emitiria warning de setState pós-unmount.
+ // Sem o guard `cancelled`, isto emitiria warning de setState pós-unmount.
     await waitFor(() => expect(screen.queryByText(/87 de 100/)).toBeNull())
   })
 })

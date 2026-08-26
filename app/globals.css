@@ -31,7 +31,7 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* GNO-93: visível por padrão (SSR/no-JS safe) — opacity:0 só é aplicado via
+/* visível por padrão (SSR/no-JS safe) — opacity:0 só é aplicado via
    JS (.reveal-armed) quando o IntersectionObserver está de fato observando */
 .reveal {
   opacity: 1;
@@ -66,7 +66,7 @@ body {
   animation: pulse-glow 3s ease-in-out infinite;
 }
 
-/* Hero disclaimer — aviso cognitivo abaixo do CTA (GNO-67) */
+/* Hero disclaimer — aviso cognitivo abaixo do CTA */
 .hero-disclaimer {
   font-style: italic;
   font-size: clamp(0.70rem, 1.5vw, 0.875rem);
@@ -74,7 +74,7 @@ body {
   margin-top: 0.5rem;
 }
 
-/* Campo-isca do honeypot (GNO-115).
+/* Campo auxiliar do formulário.
    Fora da tela em vez de display:none / visibility:hidden de propósito:
    bot minimamente esperto pula campo declaradamente oculto, mas preenche
    um que, para o parser dele, é um input de texto comum. Humano nunca vê,

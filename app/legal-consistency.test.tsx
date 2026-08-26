@@ -5,7 +5,7 @@ import Terms from '@/app/terms/page'
 import { PRIVACY_POLICY_VERSION } from '@/lib/constants/legal'
 
 /**
- * GNO-115 — a review CISO T1 bloqueou o merge porque /privacy afirmava
+ * a revisão de segurança bloqueou o merge porque /privacy afirmava
  * "Não coletamos ... telefone" enquanto o código passava a coletar WhatsApp.
  * O checkbox de consentimento aponta para essa política, então o usuário
  * consentia por referência a um documento que negava a coleta.
@@ -40,7 +40,7 @@ describe('/privacy descreve os dados que o código coleta', () => {
   })
 
   it('o EN explica o que é a LGPD — sigla nua não informa leitor em inglês', () => {
-    // Redação chancelada pelo CLO em 2026-08-25.
+ // Redação chancelada pelo CLO em 2026-08-25.
     expect(t).toMatch(/art\.\s*7\(I\) of the LGPD, the Brazilian data protection law/i)
   })
 
@@ -75,22 +75,22 @@ describe('/terms descreve os mesmos dados', () => {
 
 describe('coerência entre o formulário e a política', () => {
   it('todo canal que a rota aceita está declarado em /privacy', () => {
-    // Os canais são os que app/api/waitlist/route.ts persiste.
+ // Os canais são os que app/api/waitlist/route.ts persiste.
     for (const canal of ['e-mail', 'WhatsApp']) {
       expect(text(privacy)).toContain(canal)
     }
   })
 })
 
-describe('GNO-120 · sub-processadores declarados nos DOIS idiomas', () => {
+describe('sub-processadores declarados nos DOIS idiomas', () => {
   const t = text(privacy)
 
-  /**
-   * O espelho EN não tinha seção de compartilhamento com terceiros: PostHog e
-   * SendGrid estavam declarados só em PT. Declarar o Turnstile apenas em PT
-   * repetiria a divergência, e é exatamente a classe de incoerência que esta
-   * suite existe para impedir. A seção EN foi criada como tradução fiel da PT.
-   */
+ /**
+ * O espelho EN não tinha seção de compartilhamento com terceiros: PostHog e
+ * SendGrid estavam declarados só em PT. Declarar o Turnstile apenas em PT
+ * repetiria a divergência, e é exatamente a classe de incoerência que esta
+ * suite existe para impedir. A seção EN foi criada como tradução fiel da PT.
+ */
   it('declara o Cloudflare Turnstile, em PT e em EN', () => {
     expect(t).toMatch(/proteção anti-bot do formulário de lista de espera/i)
     expect(t).toMatch(/anti-bot protection of the waiting list form/i)
@@ -108,7 +108,7 @@ describe('GNO-120 · sub-processadores declarados nos DOIS idiomas', () => {
   })
 })
 
-describe('GNO-122 · a política nomeia o provedor de e-mail REAL', () => {
+describe('a política nomeia o provedor de e-mail REAL', () => {
   const t = text(privacy)
 
   it('declara Resend nos dois idiomas', () => {
@@ -116,8 +116,8 @@ describe('GNO-122 · a política nomeia o provedor de e-mail REAL', () => {
   })
 
   it('não sobrou nenhuma menção a SendGrid', () => {
-    // O provedor saiu do código nesta issue. Política que cita sub-processador
-    // que não processa mais nada é declaração falsa, não sobra inofensiva.
+ // O provedor saiu do código nesta issue. Política que cita sub-processador
+ // que não processa mais nada é declaração falsa, não sobra inofensiva.
     expect(t).not.toContain('SendGrid')
   })
 })

@@ -5,16 +5,16 @@ import { useStaggerReveal } from '@/hooks/useStaggerReveal'
 import founderPhoto from '@/public/foto-de-perfil-linkedin.jpg'
 import { FILL_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 
-// GNO-115 — "Isso tem base científica?" · bloco de PROVA da categoria.
+// "Isso tem base científica?" · bloco de PROVA da categoria.
 //
 // ⚠️ ESTE BLOCO EXIGE REVIEW RISK DOCUMENTADA ANTES DO DEPLOY (issue, correção 3).
 //
 // Lição Rafael/WAIS-IV, aplicada aqui:
-//  · cita o modelo CHC (taxonomia pública, acadêmica) e a expressão genérica
-//    "instrumentos validados";
-//  · NÃO lista bateria nominal de frameworks teóricos;
-//  · NÃO nomeia instrumento clínico proprietário (WAIS, WISC, Raven e afins);
-//  · NÃO afirma correlação, equivalência ou validação cruzada com nenhum deles.
+// cita o modelo CHC (taxonomia pública, acadêmica) e a expressão genérica
+// "instrumentos validados";
+// NÃO lista bateria nominal de frameworks teóricos;
+// NÃO nomeia instrumento clínico proprietário (WAIS, WISC, Raven e afins);
+// NÃO afirma correlação, equivalência ou validação cruzada com nenhum deles.
 // Qualquer nome próprio de instrumento que voltar a esta seção reabre o risco
 // que a correção 3 fechou.
 //
@@ -84,7 +84,7 @@ export default function Science() {
               cai no caminho de descritor `w` e lista de 16w a 3840w, fazendo
               o browser buscar 256px para exibir 72.
               `loading="lazy"` porque a byline está bem abaixo da dobra.
-            */}
+ */}
             <Image
               src={founderPhoto}
               alt="Carlos Alberto Gomes, CEO &amp; Founder da GnosIQ"

@@ -1,6 +1,6 @@
 /**
  * @file lib/constants/faq.ts
- * @description Fonte única do FAQ da LP (GNO-115).
+ * @description Fonte única do FAQ da LP.
  *
  * O bloco visível e o JSON-LD FAQPage leem DESTE array. Google trata
  * divergência entre schema e conteúdo visível como structured data spam —

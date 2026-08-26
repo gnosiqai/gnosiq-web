@@ -4,7 +4,7 @@ import { useStaggerReveal } from '@/hooks/useStaggerReveal'
 import { DELIVERY_MINUTES } from '@/lib/constants/metrics'
 import { FOUNDER_SLOTS } from '@/lib/constants/founder'
 
-// GNO-115 — "Condições de Fundador" (correção 1 da issue).
+// "Condições de Fundador" (correção 1 da issue).
 //
 // VETO GATE: este bloco SUBSTITUI o card de preço "R$97" do wireframe. Não há
 // número de preço aqui, nem na tabela, nem em atributo, nem em comentário de
@@ -36,7 +36,7 @@ interface ComparisonRow {
   depth: string
   depthTone: 'positive' | 'negative'
   delivery: string
-  /** Só a linha da GnosIQ. */
+ /** Só a linha da GnosIQ. */
   highlight?: boolean
 }
 

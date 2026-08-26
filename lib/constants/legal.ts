@@ -38,8 +38,8 @@ export const CLINICAL_REFERRAL_TRIGGERS = {
 } as const
 
 // ─── Privacy Policy ────────────────────────────────────────────────
-// GNO-49 | 2026-04-28
-// GNO-115: 1.0 -> 1.1. A v1.0 afirmava que telefone NÃO era coletado; a LP v2
+// | 2026-04-28
+// 1.0 -> 1.1. A v1.0 afirmava que telefone NÃO era coletado; a LP v2
 // coleta WhatsApp. Mudança material de escopo de dados exige carimbo novo —
 // uma política que muda de conteúdo sem mudar de versão mente sobre si mesma.
 export const PRIVACY_POLICY_VERSION = '1.1';
@@ -51,7 +51,7 @@ export const COGNITIVE_ASSESSMENT_DISCLAIMER =
   'Este relatório é gerado por IA e não substitui diagnóstico clínico. ' +
   'Os dados são confidenciais e nunca saem do perímetro GnosIQ.';
 
-// --- Disclaimer da landing page (GNO-115) ------------------------------
+// --- Disclaimer da landing page ------------------------------
 // CFP: a LP não pode conter a palavra "diagnóstico" em nenhuma flexão.
 // DISCLAIMER_PT acima diz "avaliação diagnóstica" e por isso NÃO pode ser
 // renderizado na LP — ele continua válido para relatório e páginas legais,

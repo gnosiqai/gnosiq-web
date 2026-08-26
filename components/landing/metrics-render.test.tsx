@@ -12,11 +12,11 @@ import Science from '@/components/landing/Science'
 import FounderConditions from '@/components/landing/FounderConditions'
 import { FILL_MINUTES, DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 
-// GNO-93 (mantido) — os componentes que consomem lib/constants/metrics.ts
+// (mantido) — os componentes que consomem lib/constants/metrics.ts
 // devem renderizar os valores canônicos, nunca números soltos no JSX.
-// GNO-115 — lista atualizada para as seções da LP v2: ApiSection, Solution,
+// lista atualizada para as seções da LP v2: ApiSection, Solution,
 // HowItWorks e SocialProof deixaram de existir.
-describe('seções da LP renderizam as métricas canônicas (SSOT)', () => {
+describe('seções da LP renderizam as métricas canônicas', () => {
   it('Hero traz preenchimento, entrega e páginas no answer block', () => {
     const html = renderToStaticMarkup(<Hero />)
     expect(html).toContain(`${REPORT_PAGES} páginas`)

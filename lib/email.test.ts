@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 /**
- * GNO-122 — contrato do provedor de e-mail.
+ * contrato do provedor de e-mail.
  *
  * O SDK do Resend é mockado: nenhuma mensagem sai desta suite e nenhuma key
  * real existe aqui. O alvo destes testes não é "o e-mail é bonito", é a
@@ -61,7 +61,7 @@ describe('remetente', () => {
   })
 })
 
-describe('fail-fast de configuração (absorve o item 7 da GNO-119)', () => {
+describe('fail-fast de configuração (absorve o item 7 da )', () => {
   it('RESEND_API_KEY ausente: erro explícito, ZERO tentativa de envio', async () => {
     vi.stubEnv('RESEND_API_KEY', '')
 
@@ -77,8 +77,8 @@ describe('fail-fast de configuração (absorve o item 7 da GNO-119)', () => {
     await expect(
       sendWaitlistConfirmationPT({ email: 'lead@exemplo.com' }),
     ).rejects.toBeInstanceOf(EmailConfigError)
-    // A versão SendGrid caía em `|| 'noreply@gnosiq.ai'` aqui: um endereço que
-    // não existe no domínio. Entrega quebrada disfarçada de código que roda.
+ // A versão SendGrid caía em `|| 'noreply@gnosiq.ai'` aqui: um endereço que
+ // não existe no domínio. Entrega quebrada disfarçada de código que roda.
     expect(send).not.toHaveBeenCalled()
   })
 
@@ -162,14 +162,14 @@ describe('copy dos dois templates', () => {
 })
 
 /**
- * GNO-123 — a trava do achado R1 da auditoria CISO T3 do PR #106.
+ * a trava do achado R1 da auditoria de segurança do PR #106.
  *
  * O que estes testes seguram não é a copy, é a PROPRIEDADE: nada que venha de
  * quem chama atravessa para o corpo da mensagem. Enquanto ela valer, não
  * existe caminho para conteúdo escolhido por terceiro sair pelo nosso domínio
  * autenticado, com escape ou sem escape.
  */
-describe('GNO-123 · corpo do e-mail é constante, entrada de usuário não entra', () => {
+describe('corpo do e-mail é constante, entrada de usuário não entra', () => {
   it('PT: duas chamadas com destinatários diferentes produzem corpo IDÊNTICO', async () => {
     await sendWaitlistConfirmationPT({ email: 'a@exemplo.com' })
     await sendWaitlistConfirmationPT({ email: 'b@exemplo.com' })
@@ -178,7 +178,7 @@ describe('GNO-123 · corpo do e-mail é constante, entrada de usuário não entr
     expect(segunda.html).toBe(primeira.html)
     expect(segunda.text).toBe(primeira.text)
     expect(segunda.subject).toBe(primeira.subject)
-    // O destinatário é a ÚNICA coisa que varia entre um envio e outro.
+ // O destinatário é a ÚNICA coisa que varia entre um envio e outro.
     expect(segunda.to).not.toBe(primeira.to)
   })
 
@@ -192,12 +192,12 @@ describe('GNO-123 · corpo do e-mail é constante, entrada de usuário não entr
   })
 
   it('`name` reintroduzido por engano não chega ao HTML de nenhum dos dois', async () => {
-    /*
+ /*
       O `as never` é o ponto do teste, não um atalho: o TypeScript já recusa
       este objeto, e é essa recusa que impede a regressão em código nosso. O
       cast força o caso mesmo assim, para provar que a defesa não depende só
       do compilador - um corpo de JSON não passa por type-check nenhum.
-    */
+ */
     const payload = '<img/src=x/onerror=1>'
 
     await sendWaitlistConfirmationPT({ email: 'vitima@exemplo.com', name: payload } as never)

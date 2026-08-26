@@ -20,18 +20,18 @@ export default function AnimatedCounter({
   className = '',
   from,
 }: AnimatedCounterProps) {
-  // GNO-93: SSR/hidratação inicial SEMPRE mostram o valor final — crawlers
-  // (Googlebot, OG de LinkedIn/WhatsApp/X) e qualquer captura antes do JS
-  // rodar veem o número real, nunca um frame intermediário. A contagem
-  // (progressive enhancement) só reinicia do zero/from depois que o
-  // IntersectionObserver dispara, cliente-side.
+ // SSR/hidratação inicial SEMPRE mostram o valor final — crawlers
+ // (Googlebot, OG de LinkedIn/WhatsApp/X) e qualquer captura antes do JS
+ // rodar veem o número real, nunca um frame intermediário. A contagem
+ // (progressive enhancement) só reinicia do zero/from depois que o
+ // IntersectionObserver dispara, cliente-side.
   const [display, setDisplay] = useState(value)
   const [started, setStarted] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
   const rafRef = useRef<number | null>(null)
 
   useEffect(() => {
-    // prefers-reduced-motion: manter o valor final, sem animação
+ // prefers-reduced-motion: manter o valor final, sem animação
     const prefersReduced =
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -64,7 +64,7 @@ export default function AnimatedCounter({
         cancelAnimationFrame(rafRef.current)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+ // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function AnimatedCounter({
       const elapsed = now - startTime
       const progress = Math.min(elapsed / duration, 1)
       const eased = easeOutCubic(progress)
-      // Anima de startValue até value
+ // Anima de startValue até value
       setDisplay(Math.round(startValue + eased * (value - startValue)))
 
       if (progress < 1) {

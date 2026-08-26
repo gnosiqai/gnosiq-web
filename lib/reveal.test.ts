@@ -6,13 +6,13 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-describe('armRevealObserver (GNO-93 reveal SSR/no-JS safety)', () => {
+describe('armRevealObserver ( reveal SSR/no-JS safety)', () => {
   it('leaves content visible until JS arms it, then reveals on intersection', () => {
     document.body.innerHTML = '<section class="reveal">content</section>'
     const section = document.querySelector('.reveal') as HTMLElement
 
-    // Without any JS running (SSR / no-JS client), nothing hides the section —
-    // opacity:1 is the CSS default; `.reveal-armed` is only ever added by JS.
+ // Without any JS running (SSR / no-JS client), nothing hides the section —
+ // opacity:1 is the CSS default; `.reveal-armed` is only ever added by JS.
     expect(section.classList.contains('reveal-armed')).toBe(false)
 
     let observerCallback: (entries: { isIntersecting: boolean; target: Element }[]) => void = () => {}
@@ -28,8 +28,8 @@ describe('armRevealObserver (GNO-93 reveal SSR/no-JS safety)', () => {
 
     const disconnect = armRevealObserver()
 
-    // Once the observer initializes client-side, the section is armed (hidden
-    // pre-animation) — this only ever happens after JS has taken over.
+ // Once the observer initializes client-side, the section is armed (hidden
+ // pre-animation) — this only ever happens after JS has taken over.
     expect(section.classList.contains('reveal-armed')).toBe(true)
 
     observerCallback([{ isIntersecting: true, target: section }])

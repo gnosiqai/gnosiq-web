@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
-// GNO-115 · GATE CISO T1 — o campo WhatsApp é dado pessoal NOVO neste
+// revisão de segurança — o campo WhatsApp é dado pessoal NOVO neste
 // endpoint. Estes testes seguram o contrato que a review vai auditar:
 // consentimento obrigatório, pelo menos um canal, normalização antes de
 // persistir, allowlist de role e nenhuma PII em log.
@@ -17,7 +17,7 @@ vi.mock('@/lib/posthog-server', () => ({
 }))
 
 /**
- * GNO-122 — o sender agora mora em lib/email.ts, e é ele que a rota chama.
+ * o sender agora mora em lib/email.ts, e é ele que a rota chama.
  * As classes de erro são reais (não mockadas): é o `instanceof` delas que
  * decide se a falha foi de configuração ou de entrega.
  */
@@ -33,7 +33,7 @@ vi.mock('@/lib/email', async (importOriginal) => {
 const { POST } = await import('./route')
 
 /**
- * GNO-120 — o siteverify da Cloudflare é mockado em TODA esta suite. Nenhum
+ * o siteverify da Cloudflare é mockado em TODA esta suite. Nenhum
  * teste fala com a rede, e a secret usada é a dummy oficial "always passes"
  * injetada por vitest.config.ts.
  */
@@ -188,7 +188,7 @@ describe('role — allowlist, não texto livre', () => {
   })
 })
 
-describe('honeypot (GATE CISO, item 6 — parte "a")', () => {
+describe('campo auxiliar (revisão de segurança, item 6 — parte "a")', () => {
   it('preenchido: ZERO escrita no Firestore', async () => {
     const res = await POST(req({ ...VALID, website: 'http://spam.example' }))
     expect(res.status).toBe(200)
@@ -209,7 +209,7 @@ describe('honeypot (GATE CISO, item 6 — parte "a")', () => {
   })
 
   it('preenchido: dispara antes da validação — nem feedback de erro o bot recebe', async () => {
-    // Payload que falharia em TODAS as validações. Ainda assim: 200 e silêncio.
+ // Payload que falharia em TODAS as validações. Ainda assim: 200 e silêncio.
     const res = await POST(
       req({ whatsapp: 'lixo', email: 'lixo', consent: false, website: 'x' }),
     )
@@ -232,7 +232,7 @@ describe('honeypot (GATE CISO, item 6 — parte "a")', () => {
     )
 
     expect(captureServerEvent).toHaveBeenCalledWith(
-      'waitlist_honeypot_tripped',
+      'waitlist_submission_discarded',
       expect.any(String),
       { lp_version: 'v2', utm_source: 'linkedin', utm_campaign: 'inpi' },
     )
@@ -245,7 +245,7 @@ describe('honeypot (GATE CISO, item 6 — parte "a")', () => {
 
   it('sem Referer: evento sai só com lp_version, sem quebrar', async () => {
     await POST(req({ ...VALID, website: 'x' }))
-    expect(captureServerEvent).toHaveBeenCalledWith('waitlist_honeypot_tripped', expect.any(String), {
+    expect(captureServerEvent).toHaveBeenCalledWith('waitlist_submission_discarded', expect.any(String), {
       lp_version: 'v2',
     })
   })
@@ -273,7 +273,7 @@ describe('honeypot (GATE CISO, item 6 — parte "a")', () => {
   })
 })
 
-describe('sem oráculo de enumeração (GATE CISO, itens 4 e 7)', () => {
+describe('sem resposta distinguível (revisão de segurança, itens 4 e 7)', () => {
   it('inscrição nova e reinscrição produzem resposta BYTE A BYTE idêntica', async () => {
     addToWaitlist.mockResolvedValue({ alreadyExists: false })
     const novo = await POST(req({ ...VALID, email: 'alguem@exemplo.com' }))
@@ -296,8 +296,8 @@ describe('sem oráculo de enumeração (GATE CISO, itens 4 e 7)', () => {
   })
 
   it('o efeito colateral ainda distingue os casos — só a resposta não', async () => {
-    // O e-mail de confirmação continua saindo só para inscrição nova; o que
-    // mudou é que isso não é observável por quem chama a rota.
+ // O e-mail de confirmação continua saindo só para inscrição nova; o que
+ // mudou é que isso não é observável por quem chama a rota.
     addToWaitlist.mockResolvedValue({ alreadyExists: true })
     const res = await POST(req({ ...VALID, email: 'alguem@exemplo.com' }))
     expect(res.status).toBe(200)
@@ -340,7 +340,7 @@ describe('robustez e vazamento', () => {
   })
 })
 
-describe('GNO-120 · Turnstile (GATE CISO, item 6 — parte "b")', () => {
+describe('Turnstile (revisão de segurança, item 6 — parte "b")', () => {
   it('token ausente: ZERO escrita no Firestore', async () => {
     const res = await POST(req({ ...VALID, turnstile_token: undefined }))
 
@@ -378,23 +378,23 @@ describe('GNO-120 · Turnstile (GATE CISO, item 6 — parte "b")', () => {
     expect(JSON.stringify(corpoBot)).toBe(JSON.stringify(corpoReal))
   })
 
-  it('reprovação é indistinguível do honeypot — nenhuma defesa se denuncia', async () => {
-    const honeypot = await POST(req({ ...VALID, website: 'http://spam.example' }))
-    const corpoHoneypot = await honeypot.json()
+  it('reprovação é indistinguível do campo auxiliar — nenhuma defesa se denuncia', async () => {
+    const descartado = await POST(req({ ...VALID, website: 'http://spam.example' }))
+    const corpoDescartado = await descartado.json()
 
     turnstileRejects()
     const turnstile = await POST(req({ ...VALID, turnstile_token: 'forjado' }))
     const corpoTurnstile = await turnstile.json()
 
-    expect(turnstile.status).toBe(honeypot.status)
-    expect(JSON.stringify(corpoTurnstile)).toBe(JSON.stringify(corpoHoneypot))
+    expect(turnstile.status).toBe(descartado.status)
+    expect(JSON.stringify(corpoTurnstile)).toBe(JSON.stringify(corpoDescartado))
   })
 
   it('a verificação acontece ANTES da validação do payload', async () => {
     turnstileRejects()
 
-    // Payload que falharia em todas as validações: ainda assim 200 e silêncio,
-    // porque o gate decidiu antes de qualquer validação olhar o conteúdo.
+ // Payload que falharia em todas as validações: ainda assim 200 e silêncio,
+ // porque o gate decidiu antes de qualquer validação olhar o conteúdo.
     const res = await POST(
       req({ whatsapp: 'lixo', consent: false, turnstile_token: 'forjado' }),
     )
@@ -404,12 +404,12 @@ describe('GNO-120 · Turnstile (GATE CISO, item 6 — parte "b")', () => {
     expect(addToWaitlist).not.toHaveBeenCalled()
   })
 
-  it('honeypot decide antes do Turnstile — bot entregue não gasta chamada de rede', async () => {
+  it('campo auxiliar decide antes do Turnstile — bot entregue não gasta chamada de rede', async () => {
     await POST(req({ ...VALID, website: 'http://spam.example' }))
 
     expect(fetchMock).not.toHaveBeenCalled()
     expect(captureServerEvent).toHaveBeenCalledWith(
-      'waitlist_honeypot_tripped',
+      'waitlist_submission_discarded',
       expect.any(String),
       expect.any(Object),
     )
@@ -471,7 +471,7 @@ describe('GNO-120 · Turnstile (GATE CISO, item 6 — parte "b")', () => {
   })
 })
 
-describe('GNO-120 · fail-closed do Turnstile', () => {
+describe('indisponibilidade do Turnstile', () => {
   it('secret ausente: 503 explícito e ZERO escrita — nunca sucesso silencioso', async () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     vi.stubEnv('TURNSTILE_SECRET_KEY', '')
@@ -497,7 +497,7 @@ describe('GNO-120 · fail-closed do Turnstile', () => {
     errorSpy.mockRestore()
   })
 
-  it('o 503 do fail-closed devolve o erro genérico, sem detalhe do provedor', async () => {
+  it('o 503 do indisponibilidade devolve o erro genérico, sem detalhe do provedor', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
     fetchMock.mockResolvedValue({ ok: false, status: 500, json: async () => ({}) })
 
@@ -509,7 +509,7 @@ describe('GNO-120 · fail-closed do Turnstile', () => {
     vi.restoreAllMocks()
   })
 
-  it('nenhum log do fail-closed carrega a secret ou dado do inscrito', async () => {
+  it('nenhum log do indisponibilidade carrega a secret ou dado do inscrito', async () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     fetchMock.mockRejectedValue(new Error('ECONNREFUSED'))
@@ -525,13 +525,13 @@ describe('GNO-120 · fail-closed do Turnstile', () => {
   })
 })
 
-describe('GNO-122 · o caminho de e-mail não falha em silêncio', () => {
+describe('o caminho de e-mail não falha em silêncio', () => {
   const emailLead = { ...VALID, email: 'lead@exemplo.com' }
 
   it('inscrição nova com e-mail dispara a confirmação', async () => {
     await POST(req(emailLead))
 
-    // GNO-123: o destinatário é o único argumento. `name` não é mais repassado.
+ // o destinatário é o único argumento. `name` não é mais repassado.
     expect(sendWaitlistConfirmationPT).toHaveBeenCalledWith({ email: 'lead@exemplo.com' })
   })
 
@@ -593,7 +593,7 @@ describe('GNO-122 · o caminho de e-mail não falha em silêncio', () => {
   it('o e-mail do inscrito NÃO vaza no log nem no evento, mesmo quando o provedor o ecoa', async () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const { EmailDeliveryError } = await import('@/lib/email')
-    // Recusa realista do Resend: o provedor devolve o campo que rejeitou.
+ // Recusa realista do Resend: o provedor devolve o campo que rejeitou.
     sendWaitlistConfirmationPT.mockRejectedValue(
       new EmailDeliveryError('Invalid `to` field: lead@exemplo.com is not a valid address'),
     )
@@ -610,7 +610,7 @@ describe('GNO-122 · o caminho de e-mail não falha em silêncio', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
     const { EmailDeliveryError } = await import('@/lib/email')
 
-    /*
+ /*
       Caso adversarial da redação. A mensagem de erro do provedor é entrada
       influenciada pelo usuário, então a regex que a redige é superfície de
       ataque: com backtracking não-linear, uma string longa custa tempo
@@ -625,7 +625,7 @@ describe('GNO-122 · o caminho de e-mail não falha em silêncio', () => {
       Medido: regex anterior 2062ms, regex atual 37ms, na mesma string. O teto
       de 1s é folgado o bastante para não piscar em runner lento e apertado o
       bastante para reprovar a regressão.
-    */
+ */
     const hostil = `${'a'.repeat(60_000)}@`
     sendWaitlistConfirmationPT.mockRejectedValue(new EmailDeliveryError(hostil))
 
@@ -641,7 +641,7 @@ describe('GNO-122 · o caminho de e-mail não falha em silêncio', () => {
   it('endereço longo é redigido INTEIRO — nada de meia redação', async () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const { EmailDeliveryError } = await import('@/lib/email')
-    // Local-part no limite que a própria rota aceita (MAX_FIELD_LENGTH).
+ // Local-part no limite que a própria rota aceita (MAX_FIELD_LENGTH).
     const longo = `${'x'.repeat(254)}@exemplo.com`
     sendWaitlistConfirmationPT.mockRejectedValue(
       new EmailDeliveryError(`Invalid \`to\` field: ${longo} rejeitado`),
@@ -670,14 +670,14 @@ describe('GNO-122 · o caminho de e-mail não falha em silêncio', () => {
 })
 
 /**
- * GNO-123 — hotfix pós-auditoria CISO T3, na fronteira da rota.
+ * hotfix pós-auditoria de segurança, na fronteira da rota.
  *
  * Os testes unitários de lib/turnstile.ts e lib/email.ts já provam cada trava
  * isolada. Estes provam o que só a rota pode provar: que o EFEITO combinado é
  * o esperado (503 sem escrita, resposta genérica sem escrita, nada do corpo
  * hostil chegando ao provedor de e-mail).
  */
-describe('GNO-123 · guard anti-dummy-key em produção (achado R1 do PR #105)', () => {
+describe('guard anti-dummy-key em produção (achado R1 do PR #105)', () => {
   it('produção com chave de TESTE: 503, ZERO escrita, ZERO e-mail', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
     vi.stubEnv('VERCEL_ENV', 'production')
@@ -687,7 +687,7 @@ describe('GNO-123 · guard anti-dummy-key em produção (achado R1 do PR #105)',
     expect(res.status).toBe(503)
     expect(addToWaitlist).not.toHaveBeenCalled()
     expect(sendWaitlistConfirmationPT).not.toHaveBeenCalled()
-    // Fail-closed de verdade: nem a chamada ao siteverify chegou a sair.
+ // Indisponibilidade de verdade: nem a chamada ao siteverify chegou a sair.
     expect(fetchMock).not.toHaveBeenCalled()
 
     vi.restoreAllMocks()
@@ -712,8 +712,8 @@ describe('GNO-123 · guard anti-dummy-key em produção (achado R1 do PR #105)',
   })
 
   it('fora da Vercel (teste, dev local) a dummy continua funcionando', async () => {
-    // Sem VERCEL_ENV a trava não dispara: é assim que Preview e Development
-    // seguem usando as chaves de teste oficiais.
+ // Sem VERCEL_ENV a trava não dispara: é assim que Preview e Development
+ // seguem usando as chaves de teste oficiais.
     const res = await POST(req(VALID))
 
     expect(res.status).toBe(200)
@@ -721,7 +721,7 @@ describe('GNO-123 · guard anti-dummy-key em produção (achado R1 do PR #105)',
   })
 })
 
-describe('GNO-123 · teto do turnstile_token (achado R2 do PR #105)', () => {
+describe('teto do turnstile_token (achado R2 do PR #105)', () => {
   it('token gigante: resposta genérica, ZERO escrita e ZERO banda gasta', async () => {
     const res = await POST(req({ ...VALID, turnstile_token: 'a'.repeat(500_000) }))
 
@@ -743,7 +743,7 @@ describe('GNO-123 · teto do turnstile_token (achado R2 do PR #105)', () => {
   })
 })
 
-describe('GNO-123 · `name` não atravessa para o e-mail (achado R1 do PR #106)', () => {
+describe('`name` não atravessa para o e-mail (achado R1 do PR #106)', () => {
   it('name hostil no corpo do POST não chega ao provedor', async () => {
     const payload = '<img/src=x/onerror=1>'
 

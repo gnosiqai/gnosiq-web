@@ -11,7 +11,7 @@ import Footer from '@/components/landing/Footer'
 import StructuredData from '@/components/landing/StructuredData'
 import RevealObserver from '@/components/landing/RevealObserver'
 
-// GNO-115 — LP v2, formato AEO waitlist-first.
+// LP v2, formato AEO waitlist-first.
 //
 // A ordem é a do wireframe: pergunta (hero) → prova de produto → problema →
 // prova científica → oferta → conversão → FAQ. Cada H2 é uma pergunta que a

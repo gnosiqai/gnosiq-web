@@ -1,0 +1,59 @@
+name: Content Policy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  content-policy:
+    name: Content Policy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # O log desta execução é PÚBLICO. O step nunca imprime o padrão que
+      # casou, o arquivo, a linha ou o trecho — só quantas ocorrências existem.
+      # Quem precisa corrigir reproduz localmente com o mesmo conjunto.
+      - name: Verificar política de conteúdo
+        env:
+          PATTERNS: ${{ secrets.CONTENT_POLICY_PATTERNS }}
+        run: |
+          set -eu
+
+          if [ -z "${PATTERNS:-}" ]; then
+            echo "content-policy: conjunto de padrões indisponível — o portão não consegue decidir."
+            echo "Em PR vindo de fork o segredo não é exposto; revisar manualmente antes do merge."
+            exit 1
+          fi
+
+          pf="$(mktemp)"
+          trap 'rm -f "$pf"' EXIT
+          chmod 600 "$pf"
+          printf '%s\n' "$PATTERNS" | sed '/^[[:space:]]*$/d' > "$pf"
+
+          # Isenções DELIBERADAS: o vocabulário nesses dois arquivos é
+          # funcional (regras que impedem commitar arquivo interno, e o caminho
+          # que o hook local lê). Removê-lo quebraria a proteção, não a
+          # reforçaria. Qualquer adição a esta lista é decisão de review.
+          hits=0
+          scanned=0
+          while IFS= read -r f; do
+            case "$f" in
+              package-lock.json|.gitignore|install-hooks.sh) continue ;;
+            esac
+            [ -f "$f" ] || continue
+            n="$(grep -I -c -E -i -f "$pf" -- "$f" 2>/dev/null || true)"
+            hits=$(( hits + ${n:-0} ))
+            scanned=$(( scanned + 1 ))
+          done <<< "$(git ls-files)"
+
+          if [ "$hits" -gt 0 ]; then
+            echo "content-policy: FALHOU — $hits linha(s) fora da política em $scanned arquivo(s) varrido(s)."
+            echo "Nada é ecoado aqui de propósito. Reproduza localmente:"
+            echo "  printf '%s\\n' \"\$CONTENT_POLICY_PATTERNS\" > /tmp/p && git ls-files | xargs grep -I -n -E -i -f /tmp/p"
+            exit 1
+          fi
+
+          echo "content-policy: OK — 0 ocorrências em $scanned arquivo(s)."

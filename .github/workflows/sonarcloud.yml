@@ -17,7 +17,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      # GNO-93: gera coverage/lcov.info — sem isso o Quality Gate falha
+      # gera coverage/lcov.info — sem isso o Quality Gate falha
       # 0% em new code para qualquer PR, independente de haver testes.
       - run: npm run test:coverage
       - uses: SonarSource/sonarcloud-github-action@master

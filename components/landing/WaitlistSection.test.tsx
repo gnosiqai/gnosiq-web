@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
 
-// GNO-115 · GATE CISO T1 — comportamento do formulário no cliente.
+// revisão de segurança — comportamento do formulário no cliente.
 //
 // A rota já é coberta por app/api/waitlist/route.test.ts. Aqui o alvo é o
 // que só acontece no browser: o que é ENVIADO, o que é MEDIDO e, sobretudo,
@@ -16,7 +16,7 @@ import WaitlistSection from './WaitlistSection'
 const fetchMock = vi.fn()
 
 /**
- * GNO-120 — dublê do widget Turnstile.
+ * dublê do widget Turnstile.
  *
  * O script real da Cloudflare nunca é baixado nesta suite: o componente monta
  * o widget na hora quando `window.turnstile` já existe, e é esse ponto que o
@@ -171,7 +171,7 @@ describe('envio', () => {
   })
 })
 
-describe('honeypot no formulário (GATE CISO, item 6)', () => {
+describe('campo auxiliar no formulário (revisão de segurança, item 6)', () => {
   it('o campo existe e é enviado vazio numa submissão humana', async () => {
     render(<WaitlistSection />)
     type(/whatsapp/i, '11912345678')
@@ -212,7 +212,7 @@ describe('honeypot no formulário (GATE CISO, item 6)', () => {
   })
 })
 
-describe('evento de conversão — DoD e GATE CISO', () => {
+describe('evento de conversão — DoD e revisão de segurança', () => {
   it('não dispara antes da confirmação da API', async () => {
     fetchMock.mockResolvedValue({ ok: false, json: async () => ({ success: false }) })
     render(<WaitlistSection />)
@@ -268,7 +268,7 @@ describe('evento de conversão — DoD e GATE CISO', () => {
   })
 })
 
-describe('GNO-120 · Turnstile no formulário', () => {
+describe('Turnstile no formulário', () => {
   it('o widget é montado com a sitekey do ambiente, em tema escuro', () => {
     render(<WaitlistSection />)
 
@@ -288,7 +288,7 @@ describe('GNO-120 · Turnstile no formulário', () => {
     expect(sentBody().turnstile_token).toBe(TEST_TOKEN)
   })
 
-  it('sem token não chama a API — fail-closed também no cliente', async () => {
+  it('sem token não chama a API — indisponibilidade também no cliente', async () => {
     stubTurnstile(null)
     render(<WaitlistSection />)
     type(/whatsapp/i, '(11) 91234-5678')
@@ -301,7 +301,7 @@ describe('GNO-120 · Turnstile no formulário', () => {
   })
 
   it('script bloqueado: avisa e não deixa enviar', async () => {
-    // Sem API e sem script que carregue: é o cenário de bloqueador de anúncio.
+ // Sem API e sem script que carregue: é o cenário de bloqueador de anúncio.
     vi.stubGlobal('turnstile', undefined)
     render(<WaitlistSection />)
     type(/whatsapp/i, '(11) 91234-5678')

@@ -1,8 +1,8 @@
 /**
  * @file lib/waitlist/utm.ts
- * @description Captura de parâmetros UTM para o evento de conversão (GNO-115).
+ * @description Captura de parâmetros UTM para o evento de conversão.
  *
- * O DoD da GNO-115 exige medir conversão v1 vs v2. Sem UTM no evento, o
+ * O DoD da  exige medir conversão v1 vs v2. Sem UTM no evento, o
  * PostHog mostra que alguém converteu mas não de onde veio — e a comparação
  * entre versões vira palpite.
  *

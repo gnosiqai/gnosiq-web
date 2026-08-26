@@ -3,13 +3,13 @@
 import AnimatedCounter from '@/components/ui/AnimatedCounter'
 import { FILL_MINUTES, DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 
-// GNO-115 — faixa de métricas reais, preservada da LP atual (a issue lista
+// faixa de métricas reais, preservada da LP atual (a issue lista
 // "~22 min preenchimento · ~30 min entrega · 18 páginas" entre os itens que
 // o wireframe cortou e que DEVEM sobreviver).
 //
 // Substitui components/landing/SocialProof.tsx, cujo nome já não descrevia o
-// conteúdo: os depoimentos saíram na GNO-45 e o NPS na GNO-57, sobrando só
-// esta faixa. Valores vêm do SSOT em lib/constants/metrics.ts (GNO-93).
+// conteúdo: os depoimentos saíram na e o NPS na sobrando só
+// esta faixa. Valores vêm da fonte canônica em lib/constants/metrics.ts.
 
 export default function MetricsStrip() {
   return (

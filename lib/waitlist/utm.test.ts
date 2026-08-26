@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { parseUtm } from './utm'
 
-// GNO-115 — o DoD exige medir conversão v1 vs v2. Sem UTM no evento, o
+// o DoD exige medir conversão v1 vs v2. Sem UTM no evento, o
 // PostHog registra a conversão sem a origem e a comparação vira palpite.
 
 describe('parseUtm', () => {

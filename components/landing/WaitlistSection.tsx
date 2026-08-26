@@ -6,21 +6,21 @@ import FounderSlots from './FounderSlots'
 import { isValidEmail, isValidWhatsApp } from '@/lib/waitlist/phone'
 import { getUtmParams } from '@/lib/waitlist/utm'
 
-// GNO-115 — bloco de conversão. Objetivo único da LP v2.
+// bloco de conversão. Objetivo único da LP v2.
 //
 // WhatsApp-first: o canal vem primeiro porque é o canal real do público BR.
 // E-mail continua aceito. Pelo menos UM dos dois é obrigatório — nenhum é
 // obrigatório sozinho. É a regra da issue e do mockup ("Informe o WhatsApp ou
 // o e-mail — pelo menos um dos dois").
 //
-// GATE CISO T1 (WhatsApp = dado pessoal novo), lado cliente:
-//  · nenhum evento do PostHog carrega telefone, e-mail ou nome. A v1 mandava
-//    `email` como propriedade de `icp_selected` E de `waitlist_signed_up`;
-//    isso saiu. O distinct_id do PostHog já atribui a conversão.
-//  · consentimento LGPD é checkbox explícito e obrigatório, não pré-marcado,
-//    e a rota recusa a inscrição sem ele.
+// revisão de segurança (WhatsApp = dado pessoal novo), lado cliente:
+// nenhum evento do PostHog carrega telefone, e-mail ou nome. A v1 mandava
+// `email` como propriedade de `icp_selected` E de `waitlist_signed_up`;
+// isso saiu. O distinct_id do PostHog já atribui a conversão.
+// consentimento LGPD é checkbox explícito e obrigatório, não pré-marcado,
+// e a rota recusa a inscrição sem ele.
 //
-// GNO-120 — Cloudflare Turnstile, modo MANAGED. O widget aqui só PRODUZ o
+// Cloudflare Turnstile, modo MANAGED. O widget aqui só PRODUZ o
 // token; quem decide é o servidor, que revalida contra o siteverify antes de
 // escrever qualquer coisa. Nada nesta tela é barreira de segurança: um bot
 // pode ignorar o componente inteiro e postar direto na rota. O valor de ter o
@@ -79,23 +79,23 @@ export default function WaitlistSection() {
   const [email, setEmail] = useState('')
   const [role, setRole] = useState('')
   const [consent, setConsent] = useState(false)
-  // Campo-isca: humano nunca preenche, então qualquer valor aqui é bot.
+ // Campo auxiliar: humano nunca preenche, então qualquer valor aqui é bot.
   const [website, setWebsite] = useState('')
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
-  // Token do Turnstile. `null` = ainda não veio, expirou ou já foi gasto.
+ // Token do Turnstile. `null` = ainda não veio, expirou ou já foi gasto.
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
-  // Script bloqueado (bloqueador de anúncio, rede fora): sem widget, sem token.
+ // Script bloqueado (bloqueador de anúncio, rede fora): sem widget, sem token.
   const [widgetFailed, setWidgetFailed] = useState(false)
   const widgetRef = useRef<HTMLDivElement>(null)
   const widgetIdRef = useRef<string | undefined>(undefined)
 
-  /*
+ /*
     Sitekey é público por definição (vai no HTML de qualquer jeito), por isso
     NEXT_PUBLIC. Ausente = configuração incompleta: o formulário assume o
-    mesmo fail-closed do servidor e não deixa enviar, em vez de mandar um POST
+    mesmo indisponibilidade do servidor e não deixa enviar, em vez de mandar um POST
     que a rota vai descartar em silêncio.
-  */
+ */
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? ''
 
   useEffect(() => {
@@ -109,18 +109,18 @@ export default function WaitlistSection() {
         sitekey: siteKey,
         theme: 'dark',
         callback: (token: string) => setTurnstileToken(token),
-        // Token do Turnstile é de uso único e expira. Nos dois casos o
-        // estado volta a `null` e o widget se reapresenta sozinho.
+ // Token do Turnstile é de uso único e expira. Nos dois casos o
+ // estado volta a `null` e o widget se reapresenta sozinho.
         'error-callback': () => setTurnstileToken(null),
         'expired-callback': () => setTurnstileToken(null),
       })
     }
 
-    /*
+ /*
       API já presente (remontagem do componente, navegação client-side) =
       monta na hora, sem passar pelo carregamento de novo. Fora a economia,
       isso evita o piscar de um espaço vazio onde o widget já poderia estar.
-    */
+ */
     if (window.turnstile) {
       mountWidget()
     } else {
@@ -138,13 +138,13 @@ export default function WaitlistSection() {
     }
   }, [siteKey])
 
-  /** Devolve o widget ao estado inicial: token gasto não serve para reenvio. */
+ /** Devolve o widget ao estado inicial: token gasto não serve para reenvio. */
   const resetWidget = () => {
     setTurnstileToken(null)
     if (widgetIdRef.current) window.turnstile?.reset(widgetIdRef.current)
   }
 
-  /** Espelha a regra do servidor. O servidor revalida — isto é só feedback. */
+ /** Espelha a regra do servidor. O servidor revalida — isto é só feedback. */
   const validate = (): string | null => {
     const hasWhatsapp = whatsapp.trim().length > 0
     const hasEmail = email.trim().length > 0
@@ -170,7 +170,7 @@ export default function WaitlistSection() {
     return null
   }
 
-  /** Qual canal a pessoa usou — nunca o valor digitado (GATE CISO). */
+ /** Qual canal a pessoa usou — nunca o valor digitado (revisão de segurança). */
   const resolveChannel = (): 'both' | 'whatsapp' | 'email' => {
     const hasWhatsapp = whatsapp.trim().length > 0
     const hasEmail = email.trim().length > 0
@@ -209,19 +209,19 @@ export default function WaitlistSection() {
       const data = await res.json().catch(() => ({}))
 
       if (!res.ok || !data?.success) {
-        // O token já foi consumido na tentativa: sem reset, o reenvio levaria
-        // um token gasto e o servidor reprovaria de novo, para sempre.
+ // O token já foi consumido na tentativa: sem reset, o reenvio levaria
+ // um token gasto e o servidor reprovaria de novo, para sempre.
         resetWidget()
         setStatus('error')
         setErrorMsg(data?.error ?? 'Serviço temporariamente indisponível. Tente novamente em instantes.')
         return
       }
 
-      /*
+ /*
         EVENTO DE CONVERSÃO — só após confirmação da API, e com UTM anexado
         (DoD: medir conversão v1 vs v2 por origem). Sem PII: o que vai é o
         CANAL escolhido, não o valor digitado.
-      */
+ */
       posthog.capture('waitlist_signed_up', {
         lp_version: 'v2',
         channel: resolveChannel(),
@@ -287,12 +287,12 @@ export default function WaitlistSection() {
 
             <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4 text-left">
               {/*
-                HONEYPOT (GNO-115, item 6 do checklist CISO — parte "a").
+                CAMPO AUXILIAR (item 6 do checklist de segurança — parte "a").
                 Primeiro campo do formulário: é o que um bot que preenche em
                 ordem encontra antes de tudo. Invisível ao humano, fora da
                 ordem de tabulação e ignorado por leitor de tela. O servidor
                 decide — isto aqui só carrega o valor.
-              */}
+ */}
               <input
                 type="text"
                 name="website"
@@ -385,10 +385,10 @@ export default function WaitlistSection() {
               </label>
 
               {/*
-                GNO-120 — widget Turnstile (modo Managed). Fica junto do botão
+                widget Turnstile (modo Managed). Fica junto do botão
                 porque é o último passo antes do envio; o desafio interativo,
                 quando aparece, aparece onde o olho já está.
-              */}
+ */}
               <div ref={widgetRef} className="flex justify-center min-h-[65px]" />
 
               {(!siteKey || widgetFailed) && (

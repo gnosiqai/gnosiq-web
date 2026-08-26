@@ -10,7 +10,7 @@ import { FAQ_ITEMS } from '@/lib/constants/faq'
 import { LAST_UPDATED_ISO } from '@/lib/lastUpdated'
 import { DELIVERY_MINUTES } from '@/lib/constants/metrics'
 
-// GNO-115 — schema Organization + Product + FAQPage (DoD: schema válido).
+// schema Organization + Product + FAQPage (DoD: schema válido).
 //
 // VETO GATE dentro do schema: o Product NÃO declara `offers`. Um
 // `offers.price` seria preço numérico no HTML renderizado — a mesma violação
@@ -37,7 +37,7 @@ export default function StructuredData() {
     legalName: COMPANY_LEGAL_NAME,
     url: COMPANY_URL,
     email: COMPANY_EMAIL,
-    // CNPJ é o registro fiscal brasileiro — `taxID` é o campo do schema.org.
+ // CNPJ é o registro fiscal brasileiro — `taxID` é o campo do schema.org.
     taxID: COMPANY_CNPJ,
     address: {
       '@type': 'PostalAddress',
@@ -51,7 +51,7 @@ export default function StructuredData() {
     founder: { '@id': FOUNDER_ID },
   }
 
-  /*
+ /*
     O founder é um nó próprio do grafo, referenciado por @id pela Organization.
     Como Person separado ele pode ser citado por outras entidades (o autor da
     metodologia no bloco científico) sem duplicar a descrição.
@@ -59,7 +59,7 @@ export default function StructuredData() {
     `image` aponta para o asset ORIGINAL em /public, não para a URL otimizada
     do next/image: aquela carrega query string de tamanho e qualidade e não é
     endereço estável para consumidor de schema.
-  */
+ */
   const founder = {
     '@type': 'Person',
     '@id': FOUNDER_ID,
@@ -82,7 +82,7 @@ export default function StructuredData() {
     brand: { '@type': 'Brand', name: 'GnosIQ' },
     category: 'Avaliação cognitiva',
     url: COMPANY_URL,
-    // Sem `offers`: ver nota do VETO GATE no topo do arquivo.
+ // Sem `offers`: ver nota do VETO GATE no topo do arquivo.
   }
 
   const faqPage = {
@@ -101,7 +101,7 @@ export default function StructuredData() {
     url: COMPANY_URL,
     name: 'Como a sua mente realmente funciona? - GnosIQ',
     isPartOf: { '@id': `${COMPANY_URL}/#organization` },
-    // last-updated real: mesmo instante que o rodapé exibe.
+ // last-updated real: mesmo instante que o rodapé exibe.
     dateModified: LAST_UPDATED_ISO,
   }
 
@@ -113,8 +113,8 @@ export default function StructuredData() {
   return (
     <script
       type="application/ld+json"
-      // JSON.stringify de dados nossos, sem entrada de usuário. O escape de
-      // '<' evita que uma string com "</script>" feche a tag cedo.
+ // JSON.stringify de dados nossos, sem entrada de usuário. O escape de
+ // '<' evita que uma string com "</script>" feche a tag cedo.
       dangerouslySetInnerHTML={{
         __html: JSON.stringify(graph).replace(/</g, String.raw`\u003c`),
       }}

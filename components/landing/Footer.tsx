@@ -9,7 +9,7 @@ import {
 import { CLINICAL_DISCLAIMER_LP, LGPD_NOTICE_PT } from '@/lib/constants/legal'
 import { LAST_UPDATED_ISO, LAST_UPDATED_LABEL } from '@/lib/lastUpdated'
 
-// GNO-115 — rodapé legal REAL (item 7 do delta).
+// rodapé legal REAL (item 7 do delta).
 //
 // O mockup trazia um CNPJ com um dígito trocado (66.473.782/...). O valor
 // correto — confirmado pelo founder em 2026-08-24 — mora em
