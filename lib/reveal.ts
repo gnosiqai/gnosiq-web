@@ -1,4 +1,4 @@
-// GNO-93: conteúdo com classe .reveal já é visível via CSS por padrão (SSR/no-JS
+// conteúdo com classe .reveal já é visível via CSS por padrão (SSR/no-JS
 // safe — ver .reveal em globals.css). O estado oculto pré-animação (.reveal-armed)
 // só é aplicado quando este observer de fato inicializa, client-side.
 export function armRevealObserver(): () => void {

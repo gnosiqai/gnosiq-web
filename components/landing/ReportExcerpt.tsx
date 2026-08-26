@@ -1,4 +1,4 @@
-// GNO-115 — TRECHO REAL do relatório, em HTML navegável.
+// TRECHO REAL do relatório, em HTML navegável.
 //
 // O wireframe é explícito: "navegável, não print". Um print seria invisível
 // para crawler e para motor de resposta, e é justamente esta a prova nº 1 do
@@ -60,7 +60,7 @@ export default function ReportExcerpt() {
         Item 1 do delta: o insight narrativo real. A voz do relatório é a
         prova nº 1 — features genéricas não convertem, um parágrafo que soa
         como o produto converte.
-      */}
+ */}
       <div className="border-t border-accent/20 mt-6 pt-5">
         <p className="font-mono text-[11px] text-accent-light tracking-[0.12em] mb-3">
           EXEMPLO DE INSIGHT · RELATÓRIO REAL

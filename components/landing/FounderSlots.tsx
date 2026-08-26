@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { FOUNDER_SLOTS } from '@/lib/constants/founder'
 
-// GNO-115 (item 8 do delta) — escassez REAL.
+// (item 8 do delta) — escassez REAL.
 //
 // O componente anterior (components/VagasCounter.tsx, órfão: nenhum import no
 // repo) tinha `VAGAS_OCUPADAS_INICIAL = 3` chumbado e um fallback SSR que
@@ -44,8 +44,8 @@ export default function FounderSlots({ className = '' }: Readonly<{ className?: 
     }
   }, [])
 
-  // Loading e falha renderizam a MESMA frase — sem número, sem layout shift
-  // entre os dois estados, e sem nunca exibir um placar que não veio do banco.
+ // Loading e falha renderizam a MESMA frase — sem número, sem layout shift
+ // entre os dois estados, e sem nunca exibir um placar que não veio do banco.
   if (state.status !== 'ready') {
     return (
       <p className={className}>

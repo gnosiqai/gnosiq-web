@@ -5,7 +5,7 @@ import HeroBackground from './HeroBackground'
 import FounderSlots from './FounderSlots'
 import { FILL_MINUTES, DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 
-// GNO-115 — Hero v2 (AEO waitlist-first).
+// Hero v2 (AEO waitlist-first).
 //
 // Formato "Million-Dollar": H1 é a pergunta do comprador, e a primeira coisa
 // abaixo dela é a RESPOSTA em 40–60 palavras, acima da dobra. É o bloco que
@@ -66,7 +66,7 @@ export default function Hero() {
           ANSWER BLOCK — 40–60 palavras, texto real, acima da dobra.
           Autocontido de propósito: é o trecho que um motor de resposta cita
           sem o resto da página junto.
-        */}
+ */}
         <p className="text-lg md:text-xl text-text-secondary leading-relaxed max-w-2xl mx-auto">
           A GnosIQ mapeia o seu perfil cognitivo com uma combinação única de
           instrumentos validados e IA especializada, e entrega um relatório de{' '}

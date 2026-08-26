@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react'
  * Observa um container e aplica animação stagger nos filhos com classe .stagger-item.
  * Cada filho recebe `animation-delay` incremental de `staggerMs`.
  *
- * GNO-115: genérico no elemento do container. Antes era fixo em
+ * genérico no elemento do container. Antes era fixo em
  * HTMLDivElement, o que forçava usar <div> mesmo onde a marcação correta é
  * uma lista — e a LP v2 depende de HTML semântico para o AEO.
  */
@@ -26,7 +26,7 @@ export function useStaggerReveal<T extends HTMLElement = HTMLDivElement>(stagger
     )
 
     if (prefersReduced) {
-      // Estado final imediato — sem animação
+ // Estado final imediato — sem animação
       items.forEach((el) => {
         el.style.opacity = '1'
         el.style.transform = 'translateY(0)'
@@ -34,7 +34,7 @@ export function useStaggerReveal<T extends HTMLElement = HTMLDivElement>(stagger
       return
     }
 
-    // Preparar estado inicial
+ // Preparar estado inicial
     items.forEach((el, i) => {
       el.style.opacity = '0'
       el.style.transform = 'translateY(16px)'

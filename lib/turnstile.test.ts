@@ -6,7 +6,7 @@ import {
 } from './turnstile'
 
 /**
- * GNO-120 — contrato do verificador contra o siteverify da Cloudflare.
+ * contrato do verificador contra o siteverify da Cloudflare.
  *
  * A rede é mockada em TODOS os casos: nenhum teste desta suite fala com a
  * Cloudflare de verdade, e nenhuma secret real existe aqui. A chave usada é a
@@ -52,12 +52,12 @@ describe('token ausente ou malformado', () => {
   })
 })
 
-describe('GNO-123 · teto de tamanho do token', () => {
-  /*
-    O achado R2 da auditoria CISO T3 do PR #105: sem teto, o token atravessava
+describe('teto de tamanho do token', () => {
+ /*
+    O achado R2 da auditoria de segurança do PR #105: sem teto, o token atravessava
     inteiro para a Cloudflare (500.000 bytes medidos a partir de um POST). Um
     token real não passa de ~2 KB.
-  */
+ */
   it('acima de 2048 caracteres reprova SEM chamada de rede', async () => {
     const verdict = await verifyTurnstileToken('a'.repeat(2049))
 
@@ -111,8 +111,8 @@ describe('veredito da Cloudflare', () => {
     const [url, init] = fetchMock.mock.calls[0]
     expect(url).toBe(SITEVERIFY_URL)
     expect(init.method).toBe('POST')
-    // PRIVACIDADE: `remoteip` é opcional e fica de fora de propósito. Este
-    // teste trava a decisão — o IP do visitante não vai para a Cloudflare.
+ // PRIVACIDADE: `remoteip` é opcional e fica de fora de propósito. Este
+ // teste trava a decisão — o IP do visitante não vai para a Cloudflare.
     expect(JSON.parse(init.body)).toEqual({
       secret: '1x0000000000000000000000000000000AA',
       response: 'token-valido',
@@ -132,7 +132,7 @@ describe('veredito da Cloudflare', () => {
   })
 })
 
-describe('fail-closed', () => {
+describe('indisponibilidade', () => {
   it('secret ausente é erro de configuração, não reprovação silenciosa', async () => {
     vi.stubEnv('TURNSTILE_SECRET_KEY', '')
 
@@ -172,12 +172,12 @@ describe('fail-closed', () => {
     )
   })
 
-  /*
-    GNO-123, achado R1 da auditoria CISO T3 do PR #105. A chave dummy
+ /*
+    achado R1 da auditoria de segurança do PR #105. A chave dummy
     "always passes" em Production faz o siteverify aprovar TUDO: a camada
     anti-bot vira enfeite e nada denuncia. Aqui ela é defeito de CONFIGURAÇÃO,
-    e cai no mesmo fail-closed do secret ausente.
-  */
+    e cai no mesmo indisponibilidade do secret ausente.
+ */
   it('chave de TESTE em produção é erro de configuração, não aprovação', async () => {
     vi.stubEnv('VERCEL_ENV', 'production')
 
@@ -219,8 +219,8 @@ describe('fail-closed', () => {
   it('a trava é INDEPENDENTE do input: token ausente em produção também é 503', async () => {
     vi.stubEnv('VERCEL_ENV', 'production')
 
-    // Se a checagem viesse depois do token, um bot sem token receberia a
-    // resposta genérica e o defeito de configuração ficaria invisível.
+ // Se a checagem viesse depois do token, um bot sem token receberia a
+ // resposta genérica e o defeito de configuração ficaria invisível.
     await expect(verifyTurnstileToken(undefined)).rejects.toBeInstanceOf(
       TurnstileConfigError,
     )

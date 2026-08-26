@@ -4,7 +4,7 @@
  * REGRA DRY: rodapé, schema JSON-LD e páginas legais leem daqui — nunca
  * repetir CNPJ ou endereço literal em componente.
  *
- * GNO-115: o item 7 do DELTA DE EXECUÇÃO e o mockup do Claude Design trazem
+ * o item 7 do DELTA DE EXECUÇÃO e o mockup do Claude Design trazem
  * o CNPJ como `66.473.782/0001-13`. O valor abaixo (`...762...`) foi
  * confirmado pelo founder em 2026-08-24 como o correto: as duas fontes de
  * design transcreveram um dígito errado. A hierarquia issue+delta > mockup
@@ -41,6 +41,6 @@ export const COMPANY_SOCIAL = [
   'https://linkedin.com/company/gnosiq',
 ] as const
 
-/** Marcas depositadas no INPI — sinal de seriedade no rodapé (issue GNO-115). */
+/** Marcas depositadas no INPI — sinal de seriedade no rodapé (issue ). */
 export const TRADEMARK_NOTICE_PT =
   'GnosIQ™ e GnoScore™ são marcas depositadas no INPI.'

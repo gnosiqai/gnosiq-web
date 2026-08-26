@@ -19,7 +19,7 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-// GNO-115 — VETO GATE: a descrição anterior terminava em "por R$97." e era
+// VETO GATE: a descrição anterior terminava em "por R$97." e era
 // reusada em `description`, `openGraph` e `twitter`. Três <meta> com preço
 // numérico no HTML renderizado — o DoD exige zero. Uma constante só para as
 // três, para que a próxima edição não reintroduza a divergência.
@@ -30,16 +30,16 @@ const META_DESCRIPTION =
 
 export const metadata: Metadata = {
   title: "Como a sua mente realmente funciona? - GnosIQ",
-  // GNO-93: indexação explícita (remoção de sinais de stealth)
+ // indexação explícita (remoção de sinais de stealth)
   robots: { index: true, follow: true },
-  // GNO-92: icons servidos pelas rotas geradas app/icon.tsx e app/apple-icon.tsx
-  // (Next injeta os <link rel="icon"> automaticamente — não declarar aqui)
+ // icons servidos pelas rotas geradas app/icon.tsx e app/apple-icon.tsx
+ // (Next injeta os <link rel="icon"> automaticamente — não declarar aqui)
   description:
     META_DESCRIPTION,
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL ?? "https://gnosiq.ai"
   ),
-  // GNO-92: canonical explícito na raiz (resolvido contra metadataBase)
+ // canonical explícito na raiz (resolvido contra metadataBase)
   alternates: {
     canonical: "/",
   },
@@ -51,8 +51,8 @@ export const metadata: Metadata = {
     siteName: "GnosIQ",
     locale: "pt_BR",
     type: "website",
-    // GNO-92: og:image vem da rota gerada app/opengraph-image.tsx —
-    // Next injeta automaticamente. Não declarar `images` aqui (conflitaria).
+ // og:image vem da rota gerada app/opengraph-image.tsx —
+ // Next injeta automaticamente. Não declarar `images` aqui (conflitaria).
   },
   twitter: {
     card: "summary_large_image",
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     description:
       META_DESCRIPTION,
     creator: "@gnosiqai",
-    // GNO-92: twitter:image vem da rota gerada app/twitter-image.tsx
+ // twitter:image vem da rota gerada app/twitter-image.tsx
   },
 };
 

@@ -10,7 +10,7 @@ import { FAQ_ITEMS } from '@/lib/constants/faq'
 import { COMPANY_CNPJ } from '@/lib/constants/company'
 
 /**
- * GNO-115 — travas do DoD.
+ * travas do DoD.
  *
  * Estes testes não checam estética: eles seguram as duas proibições que têm
  * custo real se vazarem para produção (CFP e VETO GATE) e a validade do
@@ -34,7 +34,7 @@ describe('DoD · CFP — a palavra "diagnóstico" não existe na LP', () => {
 
 describe('DoD · VETO GATE — nenhum preço numérico na LP', () => {
   it('não há cifra seguida de dígito', () => {
-    // Pega R$97, R$ 97, $97, US$ 97. "R$ milhares" passa: não tem dígito.
+ // Pega R$97, R$ 97, $97, US$ 97. "R$ milhares" passa: não tem dígito.
     const matches = html.match(/(?:R\$|US\$|\$)\s*\d/g) ?? []
     expect(matches).toEqual([])
   })
@@ -85,7 +85,7 @@ describe('DoD · schema JSON-LD', () => {
       /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
     )
     expect(match).not.toBeNull()
-    // O componente escapa '<' como < para não fechar a tag cedo.
+ // O componente escapa '<' como < para não fechar a tag cedo.
     return JSON.parse(match![1].replace(/\\u003c/g, '<'))
   }
 
@@ -116,7 +116,7 @@ describe('DoD · schema JSON-LD', () => {
     FAQ_ITEMS.forEach((item, index) => {
       expect(faq.mainEntity[index].name).toBe(item.question)
       expect(faq.mainEntity[index].acceptedAnswer.text).toBe(item.answer)
-      // E a mesma pergunta tem que estar no HTML visível, não só no schema.
+ // E a mesma pergunta tem que estar no HTML visível, não só no schema.
       expect(html).toContain(item.question)
     })
   })
@@ -127,8 +127,8 @@ describe('DoD · schema JSON-LD', () => {
       (node: { '@type': string }) => node['@type'] === 'WebPage',
     )
     expect(webPage.dateModified).toMatch(/^\d{4}-\d{2}-\d{2}T/)
-    // renderToStaticMarkup emite `dateTime`; o browser/Next emitem `datetime`.
-    // Atributo HTML é case-insensitive, então a asserção também é.
+ // renderToStaticMarkup emite `dateTime`; o browser/Next emitem `datetime`.
+ // Atributo HTML é case-insensitive, então a asserção também é.
     expect(html).toMatch(
       new RegExp(`datetime="${webPage.dateModified}"`, 'i'),
     )
@@ -157,7 +157,7 @@ describe('DoD · cortes confirmados do wireframe', () => {
   })
 
   it('a escassez nunca vira número inventado antes da resposta do endpoint', () => {
-    // No SSR o contador ainda não buscou: a frase tem que ser a sem número.
+ // No SSR o contador ainda não buscou: a frase tem que ser a sem número.
     expect(html).toContain('Vagas de fundador limitadas aos')
     expect(html).not.toContain('vagas de fundador restantes')
   })

@@ -1,8 +1,8 @@
 /**
  * @file lib/posthog-server.ts
- * @description Captura de evento do lado do SERVIDOR (GNO-115).
+ * @description Captura de evento do lado do SERVIDOR.
  *
- * Um bot que cai no honeypot nunca executa o JavaScript da página, então o
+ * Um bot que cai no campo auxiliar nunca executa o JavaScript da página, então o
  * `posthog-js` do cliente não registra nada. Sem isto, a armadilha dispara
  * em silêncio e ninguém sabe se está pegando alguma coisa.
  *

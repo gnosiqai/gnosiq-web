@@ -4,16 +4,16 @@ import ReportExcerpt from './ReportExcerpt'
 import { useStaggerReveal } from '@/hooks/useStaggerReveal'
 import { DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 
-// GNO-115 — "O que eu recebo exatamente?" (H2 como pergunta).
+// "O que eu recebo exatamente?" (H2 como pergunta).
 //
 // Prova de produto logo após o hero: o trecho real do relatório converte mais
 // que features genéricas, e é o bloco que a issue manda subir na página.
 //
 // Substitui Solution.tsx + ApiSection.tsx:
-//  · o conteúdo dos 6 cards de benefício da v1 sobrevive como TEXTO crawlable
-//    (item da issue: "Conteúdo dos 6 cards de benefício como texto crawlable");
-//  · a ApiSection inteira (H2 próprio, CTA próprio, "Solicitar acesso beta")
-//    vira UMA linha sem CTA, como a issue determina — a v2 tem CTA único.
+// o conteúdo dos 6 cards de benefício da v1 sobrevive como TEXTO crawlable
+// (item da issue: "Conteúdo dos 6 cards de benefício como texto crawlable");
+// a ApiSection inteira (H2 próprio, CTA próprio, "Solicitar acesso beta")
+// vira UMA linha sem CTA, como a issue determina — a v2 tem CTA único.
 
 const BENEFITS = [
   {

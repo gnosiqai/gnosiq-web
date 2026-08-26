@@ -1,4 +1,4 @@
-// GNO-115 — "Por que o mapeamento cognitivo profundo era inacessível?"
+// "Por que o mapeamento cognitivo profundo era inacessível?"
 //
 // CFP (correção 2 da issue): o H2 do wireframe dizia "Por que o DIAGNÓSTICO
 // profundo era inacessível?". "Diagnóstico" é palavra proibida em qualquer

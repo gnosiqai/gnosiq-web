@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
-// GNO-92: carregamento das TTFs para o Satori (ImageResponse).
+// carregamento das TTFs para o Satori (ImageResponse).
 // Satori exige TTF/OTF — woff2 não é suportado. Os arquivos vivem em
 // assets/fonts/ e são incluídos no bundle serverless via
 // `outputFileTracingIncludes` (next.config.ts).
@@ -13,7 +13,7 @@ import { join } from 'node:path'
 const FONT_DIR = join(process.cwd(), 'assets', 'fonts')
 
 /**
- * GNO-102: nome da família registrado no Satori. Fonte única — precisa bater
+ * nome da família registrado no Satori. Fonte única — precisa bater
  * entre o `fontFamily` do CSS e o `name` de cada entrada em `fonts[]`, senão
  * o Satori cai no fallback silenciosamente.
  */

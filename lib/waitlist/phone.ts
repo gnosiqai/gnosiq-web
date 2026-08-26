@@ -1,6 +1,6 @@
 /**
  * @file lib/waitlist/phone.ts
- * @description Normalização e validação de WhatsApp em E.164 (GNO-115).
+ * @description Normalização e validação de WhatsApp em E.164.
  *
  * Compartilhado entre o formulário (feedback imediato) e a rota de API
  * (validação de verdade). O cliente NUNCA é a fonte de verdade: a rota
@@ -42,16 +42,16 @@ export function normalizeToE164(raw: string): string | null {
   if (hasPlus) {
     candidate = `+${digits}`
   } else if (digits.length === 10 || digits.length === 11) {
-    // Número local brasileiro: DDD + 8 ou 9 dígitos
+ // Número local brasileiro: DDD + 8 ou 9 dígitos
     candidate = `+${DEFAULT_COUNTRY_CODE}${digits}`
   } else if (
     (digits.length === 12 || digits.length === 13) &&
     digits.startsWith(DEFAULT_COUNTRY_CODE)
   ) {
-    // DDI presente, '+' esquecido
+ // DDI presente, '+' esquecido
     candidate = `+${digits}`
   } else {
-    // Internacional sem '+': assumir que os dígitos já incluem o DDI
+ // Internacional sem '+': assumir que os dígitos já incluem o DDI
     candidate = `+${digits}`
   }
 

@@ -20,7 +20,7 @@ const LocaleContext = createContext<LocaleContextType>({
   switchLocale: () => {},
 })
 
-// GNO-93: EN desconectado até M2 — sem auto-detecção via navigator.language/localStorage,
+// EN desconectado até M2 — sem auto-detecção via navigator.language/localStorage,
 // que fazia o Googlebot (Accept-Language: en) renderizar os placeholders "Coming in M2".
 // locale nasce e permanece 'pt'; setLocale/switchLocale ficam prontos para o toggle voltar em M2.
 export function LocaleProvider({ children }: { children: ReactNode }) {
@@ -52,5 +52,5 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   )
 }
 
-// Hook canônico — substituir useLocale() anterior em TODOS os componentes
+// Hook canônico — substituir useLocale anterior em TODOS os componentes
 export const useLocale = () => useContext(LocaleContext)

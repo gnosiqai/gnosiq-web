@@ -8,8 +8,8 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-// GNO-115: versão e data vêm de lib/constants/legal.ts, que declara a regra
-// DRY. Estavam duplicadas aqui e podiam divergir do SSOT sem ninguém notar.
+// versão e data vêm de lib/constants/legal.ts, que declara a regra
+// DRY. Estavam duplicadas aqui e podiam divergir da fonte canônica sem ninguém notar.
 const PRIVACY_VERSION = PRIVACY_POLICY_VERSION;
 const PRIVACY_DATE = PRIVACY_POLICY_DATE;
 

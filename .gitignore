@@ -1,32 +1,32 @@
-# Dependencies
+#Dependencies
 node_modules/
 /.pnp
 .pnp.js
 .yarn/install-state.gz
 
-# Testing
+#Testing
 /coverage
 
-# Next.js
+#Next.js
 /.next/
 /out/
 
-# Production
+#Production
 /build
 dist/
 
-# Misc
+#Misc
 .DS_Store
 Thumbs.db
 *.pem
 
-# Debug
+#Debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Local env files — NUNCA commitar credenciais
+#Local env files — NUNCA commitar credenciais
 .env
 .env.*
 !.env.example
@@ -38,21 +38,21 @@ pnpm-debug.log*
 .env*.backup
 .envrc
 
-# Vercel
+#Vercel
 .vercel
 
-# TypeScript
+#TypeScript
 *.tsbuildinfo
 next-env.d.ts
 
-# IDE
+#IDE
 .vscode/
 .vscode/settings.json
 .idea/
 *.swp
 *.swo
 
-# GCP / Firebase credentials — padrões explícitos (não usar *.json amplo)
+#GCP / Firebase credentials — padrões explícitos (não usar *.json amplo)
 service-account*.json
 *-service-account.json
 gcp-key*.json
@@ -61,18 +61,18 @@ firebase-admin*.json
 credentials*.json
 secrets*.json
 
-# GNO-113 — o GCP Console baixa a chave com o nome PADRÃO `<project-id>-<hash>.json`,
-# que nenhum padrão acima pegava. É exatamente o arquivo que o founder baixa para
-# rodar scripts/founder-tier-materialize.mjs. Continua sem `*.json` amplo.
+# O GCP Console baixa a chave de service account com o nome PADRÃO
+# `<project-id>-<hash>.json`, que nenhum padrão acima pegava. Continua sem
+# `*.json` amplo, para não engolir config legítima.
 project-*.json
 *-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]*.json
 key.json
 sa.json
 *-sa.json
-# Local recomendado para a chave admin (fora da árvore de fontes)
+#Local recomendado para a chave admin (fora da árvore de fontes)
 .secrets/
 
-# Additional secrets / certificates
+#Additional secrets / certificates
 *.key
 *.crt
 *.p12
@@ -80,24 +80,24 @@ sa.json
 *.secrets
 secrets.*
 
-# Logs / runtime / temp
+#Logs / runtime / temp
 *.log
 logs/
 tmp/
 temp/
 .cache/
 
-# Build tooling
+#Build tooling
 .turbo/
 
-# Python incidental (scripts auxiliares)
+#Python incidental (scripts auxiliares)
 __pycache__/
 *.pyc
 .pytest_cache/
 .venv/
 venv/
 
-# Cloud / tooling
+#Cloud / tooling
 .firebase/
 .sonar/
 .scannerwork/
@@ -105,12 +105,12 @@ venv/
 *.tfstate
 *.tfstate.*
 
-# SSOT e arquivos internos (NUNCA no repo público)
+#SSOT e arquivos internos (NUNCA no repo público)
 SSOT-dynamic*.json
 *-SSOT-*.json
 GNOSIQ-SSOT-*.json
 
-# GNO-90 — Proprietary IP (never commit to public repo)
+#Proprietary IP (never commit to public repo)
 prompts/
 docs/architecture/
 .gnosiq/

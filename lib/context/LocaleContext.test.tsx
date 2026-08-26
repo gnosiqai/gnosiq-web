@@ -12,11 +12,11 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-describe('LocaleContext (GNO-93 Googlebot regression)', () => {
+describe('LocaleContext ( Googlebot regression)', () => {
   it('stays pt even when the browser reports an English locale', () => {
-    // Before the fix, an effect read navigator.language and switched to 'en'.
-    // Googlebot renders with Accept-Language: en, which used to flip this and
-    // serve the "Coming in M2" placeholders to the crawler.
+ // Before the fix, an effect read navigator.language and switched to 'en'.
+ // Googlebot renders with Accept-Language: en, which used to flip this and
+ // serve the "Coming in M2" placeholders to the crawler.
     vi.stubGlobal('navigator', { ...navigator, language: 'en-US' })
 
     render(
@@ -29,7 +29,7 @@ describe('LocaleContext (GNO-93 Googlebot regression)', () => {
   })
 
   it('stays pt even when a previous EN selection is stored in localStorage', () => {
-    // Before the fix, an effect also read a stored 'gnosiq_locale' value on mount.
+ // Before the fix, an effect also read a stored 'gnosiq_locale' value on mount.
     localStorage.setItem('gnosiq_locale', 'en')
 
     render(

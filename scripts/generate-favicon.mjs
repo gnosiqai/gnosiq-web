@@ -1,8 +1,8 @@
-// GNO-102: gera app/favicon.ico a partir do PNG que a rota app/icon.tsx
+// gera app/favicon.ico a partir do PNG que a rota app/icon.tsx
 // renderiza — assim o .ico legado nunca diverge do ícone servido em /icon.
 //
 // Requer um build prévio (o script lê o corpo prerenderizado da rota):
-//   npm run build && npm run favicon:generate
+// npm run build && npm run favicon:generate
 //
 // `sonar.sources` não inclui scripts/, então este arquivo fica fora do
 // Quality Gate de cobertura.

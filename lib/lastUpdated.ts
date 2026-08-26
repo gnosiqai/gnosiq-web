@@ -1,6 +1,6 @@
 /**
  * @file lib/lastUpdated.ts
- * @description Carimbo "Atualizado em" REAL (GNO-115).
+ * @description Carimbo "Atualizado em" REAL.
  *
  * O wireframe trazia "AGO 2026" escrito à mão. Uma data chumbada envelhece
  * em silêncio e vira mentira no rodapé — exatamente o sinal de frescor que o

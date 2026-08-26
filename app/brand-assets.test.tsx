@@ -30,12 +30,12 @@ async function renderToPng(route: () => Promise<Response>) {
   return { res, buf }
 }
 
-describe('GNO-92 fontes do renderizador (Satori)', () => {
+describe(' fontes do renderizador (Satori)', () => {
   it('carrega as TTFs do disco — woff2 não é aceito pelo Satori', async () => {
     const { extraBold, regular } = await loadInter()
 
-    // Assinatura TrueType: 0x00010000. Se algum dia alguém trocar por woff2
-    // (0x774F4632), o Satori quebra em runtime — este teste pega antes.
+ // Assinatura TrueType: 0x00010000. Se algum dia alguém trocar por woff2
+ // (0x774F4632), o Satori quebra em runtime — este teste pega antes.
     expect(extraBold.readUInt32BE(0)).toBe(0x00010000)
     expect(regular.readUInt32BE(0)).toBe(0x00010000)
     expect(extraBold.length).toBeGreaterThan(1000)
@@ -51,7 +51,7 @@ describe('GNO-92 fontes do renderizador (Satori)', () => {
   })
 })
 
-describe('GNO-92 OG image', () => {
+describe(' OG image', () => {
   it('expõe os metadados que o Next injeta no <head>', () => {
     expect(ogSize).toEqual({ width: 1200, height: 630 })
     expect(ogContentType).toBe('image/png')
@@ -67,7 +67,7 @@ describe('GNO-92 OG image', () => {
   })
 })
 
-describe('GNO-92 twitter image', () => {
+describe(' twitter image', () => {
   it('reusa exatamente a mesma imagem do OG', () => {
     expect(TwitterImage).toBe(OgImage)
     expect(twSize).toEqual(ogSize)
@@ -76,7 +76,7 @@ describe('GNO-92 twitter image', () => {
   })
 })
 
-describe('GNO-92 ícones', () => {
+describe(' ícones', () => {
   it('icon renderiza PNG 512×512', async () => {
     expect(iconSize).toEqual({ width: 512, height: 512 })
     expect(iconContentType).toBe('image/png')

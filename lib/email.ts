@@ -1,7 +1,7 @@
 import { Resend } from 'resend'
 
 /**
- * GNO-122 — e-mail transacional via Resend.
+ * e-mail transacional via Resend.
  *
  * Substitui `lib/sendgrid.ts` e o template PT que vivia inline em
  * `app/api/waitlist/route.ts`. Os dois senders passam a morar aqui: eram duas
@@ -76,8 +76,8 @@ type Payload = {
 async function send({ to, subject, text, html }: Payload): Promise<string> {
   const { apiKey, from } = requireEmailConfig()
 
-  // Instância por chamada: cliente no topo do módulo explode no cold start
-  // quando a env não está lá, e derruba a rota inteira por causa do e-mail.
+ // Instância por chamada: cliente no topo do módulo explode no cold start
+ // quando a env não está lá, e derruba a rota inteira por causa do e-mail.
   const resend = new Resend(apiKey)
 
   const { data, error } = await resend.emails.send({
@@ -88,10 +88,10 @@ async function send({ to, subject, text, html }: Payload): Promise<string> {
     html,
   })
 
-  /*
+ /*
     O ponto exato da classe de falha silenciosa que esta issue mata: o SDK
     devolve o erro em vez de lançar. Sem este `if`, um 401 vira sucesso.
-  */
+ */
   if (error) {
     throw new EmailDeliveryError(error.message || error.name || 'erro sem detalhe do provedor')
   }
@@ -104,9 +104,9 @@ async function send({ to, subject, text, html }: Payload): Promise<string> {
 }
 
 /**
- * GNO-123 — o destinatário é o ÚNICO parâmetro, e isso é decisão de segurança.
+ * o destinatário é o ÚNICO parâmetro, e isso é decisão de segurança.
  *
- * Até a auditoria CISO T3 estes dois templates recebiam `name` e o
+ * Até a auditoria de segurança estes dois templates recebiam `name` e o
  * interpolavam CRU no HTML. `name` é campo de corpo do POST /api/waitlist:
  * quem passasse uma vez pelo Turnstile fazia o nosso domínio autenticado
  * (DKIM/SPF/Return-Path no Cloudflare) entregar, a um destinatário à escolha
@@ -128,10 +128,10 @@ interface ConfirmationParams {
 /**
  * Confirmação PT da lista de espera.
  *
- * Copy inalterada desde a GNO-122, exceto pela saudação personalizada, que a
- * GNO-123 removeu (ver `ConfirmationParams`). O corpo é CONSTANTE: nenhuma
+ * Copy inalterada desde a exceto pela saudação personalizada, que a
+ *  removeu (ver `ConfirmationParams`). O corpo é CONSTANTE: nenhuma
  * entrada de usuário atravessa para o HTML, e é isso que um teste desta suite
- * trava. A regra de voz da GNO-121 continua valendo e continua coberta.
+ * trava. A regra de voz da  continua valendo e continua coberta.
  */
 export async function sendWaitlistConfirmationPT({
   email,
@@ -146,7 +146,7 @@ export async function sendWaitlistConfirmationPT({
 
 /**
  * Confirmação EN. Mesma regra do template PT: corpo constante, sem saudação
- * personalizada desde a GNO-123.
+ * personalizada desde a .
  */
 export async function sendWaitlistConfirmation({
   email,

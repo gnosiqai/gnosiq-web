@@ -1,5 +1,5 @@
 /**
- * GNO-105 — trava do init de credencial.
+ * trava do init de credencial.
  *
  * Mudança T1: o project-id saiu de hardcoded para variável de ambiente. O risco
  * que estes testes seguram é o de um fallback silencioso reaparecer — um
@@ -13,14 +13,14 @@ const VALID_CREDENTIALS = JSON.stringify({
   private_key: '-----BEGIN PRIVATE KEY-----\\nFAKE\\n-----END PRIVATE KEY-----\\n',
 })
 
-// Importa em módulo novo a cada teste: getFirestore() memoiza em escopo de
+// Importa em módulo novo a cada teste: getFirestore memoiza em escopo de
 // módulo, então um import compartilhado mascararia o caminho de validação.
 async function loadGetFirestore() {
   vi.resetModules()
   return (await import('./firestore')).getFirestore
 }
 
-describe('getFirestore — validação de ambiente (GNO-105)', () => {
+describe('getFirestore — validação de ambiente ()', () => {
   const saved = { ...process.env }
 
   beforeEach(() => {
@@ -54,12 +54,12 @@ describe('getFirestore — validação de ambiente (GNO-105)', () => {
   it('não restou project-id hardcoded: com credencial válida e sem env, ainda morre', async () => {
     process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON = VALID_CREDENTIALS
     const getFirestore = await loadGetFirestore()
-    // Se algum default sobrevivesse, esta chamada teria sucesso silenciosamente.
+ // Se algum default sobrevivesse, esta chamada teria sucesso silenciosamente.
     expect(() => getFirestore()).toThrow()
   })
 
   it('a mensagem de erro cita só o NOME da variável, nunca o conteúdo da credencial', async () => {
-    // app/api/health-gcp/route.ts devolve `err.message` no corpo da resposta.
+ // app/api/health-gcp/route.ts devolve `err.message` no corpo da resposta.
     process.env.GCP_PROJECT_ID = 'some-project'
     process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON = VALID_CREDENTIALS
     const getFirestore = await loadGetFirestore()

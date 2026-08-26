@@ -10,7 +10,7 @@ vi.mock('next/navigation', () => ({
 /**
  * Captura o payload do Resend sem sair para a rede.
  *
- * GNO-122 — o mock migrou de `@sendgrid/mail` para `resend` junto com o
+ * o mock migrou de `@sendgrid/mail` para `resend` junto com o
  * provedor. A trava de voz continua olhando exatamente os mesmos campos
  * (subject, text, html) dos MESMOS dois templates: o que mudou foi por onde
  * eles saem, não o que eles dizem.
@@ -43,7 +43,7 @@ import { sendWaitlistConfirmation } from '@/lib/email'
 import { POST } from '@/app/api/waitlist/route'
 
 /**
- * GNO-121 — trava permanente de voz da marca.
+ * trava permanente de voz da marca.
  *
  * Regra do CMO doc (`CMO_GNOSIQ_v5.md`, linhas 56 e 81): travessão (—, U+2014)
  * e meia-risca (–, U+2013) são PROIBIDOS em texto público. O substituto é
@@ -125,7 +125,7 @@ const PAGES = [
   ['/terms', renderToStaticMarkup(<Terms />)],
 ] as const
 
-describe('GNO-121 · voz da marca — zero travessão no HTML renderizado', () => {
+describe('voz da marca — zero travessão no HTML renderizado', () => {
   for (const [label, html] of PAGES) {
     it(`${label} não renderiza U+2014 nem U+2013`, () => {
       expect(findDashes(html)).toEqual([])
@@ -133,7 +133,7 @@ describe('GNO-121 · voz da marca — zero travessão no HTML renderizado', () =
   }
 })
 
-describe('GNO-121 · voz da marca — meta tags e assets de compartilhamento', () => {
+describe('voz da marca — meta tags e assets de compartilhamento', () => {
   for (const file of ['app/layout.tsx', 'app/opengraph-image.tsx']) {
     it(`${file} não declara travessão em nenhum literal`, () => {
       expect(findDashes(sourceWithoutComments(file))).toEqual([])
@@ -141,25 +141,25 @@ describe('GNO-121 · voz da marca — meta tags e assets de compartilhamento', (
   }
 })
 
-describe('GNO-121 · voz da marca — e-mails transacionais', () => {
+describe('voz da marca — e-mails transacionais', () => {
   beforeAll(async () => {
     sentMessages.length = 0
 
-    /*
-      GNO-120 — a rota agora verifica o Turnstile antes de escrever ou enviar
+ /*
+      a rota agora verifica o Turnstile antes de escrever ou enviar
       qualquer coisa, então o e-mail PT só existe para ser inspecionado se o
       token passar. O siteverify é mockado: nenhuma chamada de rede sai daqui.
-    */
+ */
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => ({ success: true }) }),
     )
 
-    // EN: lib/email.ts. GNO-123 removeu o parâmetro `name` dos dois templates;
-    // a trava de voz olha os mesmos campos, que agora são constantes.
+ // EN: lib/email.ts. removeu o parâmetro `name` dos dois templates;
+ // a trava de voz olha os mesmos campos, que agora são constantes.
     await sendWaitlistConfirmation({ email: 'lead@example.com' })
 
-    // PT: lib/email.ts, disparado pela rota (é ela que decide se o e-mail sai)
+ // PT: lib/email.ts, disparado pela rota (é ela que decide se o e-mail sai)
     await POST({
       json: async () => ({
         email: 'lead@example.com',
@@ -187,7 +187,7 @@ describe('GNO-121 · voz da marca — e-mails transacionais', () => {
   })
 })
 
-describe('GNO-121 · copy de valorização "combinação única"', () => {
+describe('copy de valorização "combinação única"', () => {
   const [, homeHtml] = PAGES[0]
   const text = homeHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')
 
@@ -212,14 +212,14 @@ describe('GNO-121 · copy de valorização "combinação única"', () => {
   })
 })
 
-describe('GNO-121 · correções legais menores', () => {
+describe('correções legais menores', () => {
   const privacyHtml = PAGES[1][1]
   const termsHtml = PAGES[2][1]
 
   it('/privacy §4 lista só sub-processadores REAIS — agora Resend, não SendGrid', () => {
-    // GNO-122 inverteu esta trava: o provedor migrou, e a política acompanha
-    // o código. Declarar SendGrid depois da migração seria a mesma classe de
-    // mentira que a GNO-121 corrigiu ao remover Resend antes da migração.
+ // inverteu esta trava: o provedor migrou, e a política acompanha
+ // o código. Declarar SendGrid depois da migração seria a mesma classe de
+ // mentira que a corrigiu ao remover Resend antes da migração.
     expect(privacyHtml).toContain('Resend')
     expect(privacyHtml).not.toContain('SendGrid')
   })

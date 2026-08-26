@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   robots: 'index, follow',
 }
 
-// GNO-115: 1.0 -> 1.1. A cláusula 3 listava só e-mail na lista de espera;
+// 1.0 -> 1.1. A cláusula 3 listava só e-mail na lista de espera;
 // a LP v2 coleta WhatsApp. Mesmo princípio da Política de Privacidade —
 // documento legal que muda de conteúdo tem que mudar de carimbo.
 const TERMS_VERSION = '1.1'

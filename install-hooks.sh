@@ -1,7 +1,7 @@
 #!/bin/bash
 # install-hooks.sh — GnosIQ Ralph Loop Camada 2
 # Instala pre-commit hook que valida .gnosiq/ssot-ref.md antes de cada commit
-# Ref: GNO-61 — https://linear.app/gnosiq/issue/GNO-61
+# Ref: https://linear.app/gnosiq/issue/
 
 HOOK=".git/hooks/pre-commit"
 

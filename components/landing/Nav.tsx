@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import posthog from 'posthog-js'
 
-// GNO-115 — navbar da v2. Os links espelham os H2-pergunta da página
+// navbar da v2. Os links espelham os H2-pergunta da página
 // (formato AEO: a navegação é o índice das perguntas que a LP responde).
 // CTA único, igual ao do hero e ao do formulário.
 
@@ -14,7 +14,7 @@ const LINKS = [
 ] as const
 
 export default function Nav() {
-  /** Scroll programático — sem empurrar hash para a URL (mantido da v1). */
+ /** Scroll programático — sem empurrar hash para a URL (mantido da v1). */
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
   }
