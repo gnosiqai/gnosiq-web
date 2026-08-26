@@ -11,7 +11,7 @@ jobs:
     name: Content Policy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # O log desta execução é PÚBLICO. O step nunca imprime o padrão que
       # casou, o arquivo, a linha ou o trecho — só quantas ocorrências existem.
