@@ -12,9 +12,7 @@
     "lint": "next lint",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "favicon:generate": "node scripts/generate-favicon.mjs",
-    "founder:materialize": "node scripts/founder-tier-materialize.mjs",
-    "founder:materialize:apply": "node scripts/founder-tier-materialize.mjs --apply"
+    "favicon:generate": "node scripts/generate-favicon.mjs"
   },
   "dependencies": {
     "@google-cloud/firestore": "latest",
