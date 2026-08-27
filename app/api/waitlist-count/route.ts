@@ -59,6 +59,15 @@ export async function GET() {
   } catch (err) {
  // Log interno detalhado — a resposta não expõe nada da credencial.
     console.error('[waitlist-count] Erro ao contar inscritos:', err)
-    return NextResponse.json({ available: false }, { status: 503 })
+
+ // `no-store` explícito, e NUNCA o `s-maxage` do caminho de sucesso: uma
+ // falha transitória do Firestore não pode ser fixada na borda. Sem header
+ // nenhum aqui a decisão fica com a heurística do CDN, e o pior caso é a
+ // página anunciar indisponibilidade por até 10s depois de a fonte ter
+ // voltado.
+    return NextResponse.json(
+      { available: false },
+      { status: 503, headers: { 'Cache-Control': 'no-store' } },
+    )
   }
 }
