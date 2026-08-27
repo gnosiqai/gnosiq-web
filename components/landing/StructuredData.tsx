@@ -8,16 +8,20 @@ import {
 } from '@/lib/constants/company'
 import { FAQ_ITEMS } from '@/lib/constants/faq'
 import { LAST_UPDATED_ISO } from '@/lib/lastUpdated'
-import { DELIVERY_MINUTES } from '@/lib/constants/metrics'
 
-// schema Organization + Product + FAQPage (DoD: schema válido).
+// schema Organization + WebSite + FAQPage (DoD: schema válido).
 //
-// VETO GATE dentro do schema: o Product NÃO declara `offers`. Um
-// `offers.price` seria preço numérico no HTML renderizado — a mesma violação
-// que o bloco de preço, só que escondida no JSON-LD. Product sem offers é
-// válido; o Rich Results Test avisa que sem `offers`/`review`/`aggregateRating`
-// o snippet de produto não é elegível, e isso é aceito conscientemente: a v2
-// é pré-lançamento sem preço público.
+// SEM `Product`, por decisão. O Google exige que um `Product` declare ao
+// menos um de `offers` / `review` / `aggregateRating`; os três estão
+// vetados aqui: `offers` seria preço numérico em superfície pública (decisão
+// GATE pendente) e `review`/`aggregateRating` não existem num produto
+// pré-lançamento — fabricá-los viola a política do Google e a nossa. O nó
+// ficava órfão: inelegível a rich result e reportado como erro no Search
+// Console. Reintroduzir como `Product`/`SoftwareApplication` com `offers`
+// REAIS quando houver pricing público (pós-GATE).
+//
+// O alvo real de AEO é o FAQPage, elegível a rich result sem nenhum dos
+// campos vetados.
 //
 // O FAQPage é gerado do MESMO array que renderiza o bloco visível
 // (lib/constants/faq.ts) — schema divergente do conteúdo é spam para o Google.
@@ -71,18 +75,21 @@ export default function StructuredData() {
     worksFor: { '@id': `${COMPANY_URL}/#organization` },
   }
 
-  const product = {
-    '@type': 'Product',
-    '@id': `${COMPANY_URL}/#product`,
-    name: 'GnosIQ - Mapeamento cognitivo com GnoScore™',
-    description:
-      `Mapeamento do perfil cognitivo com instrumentos validados e IA especializada, ` +
-      `com relatório e GnoScore™ entregues em cerca de ${DELIVERY_MINUTES} minutos. ` +
-      `Não substitui avaliação clínica.`,
-    brand: { '@type': 'Brand', name: 'GnosIQ' },
-    category: 'Avaliação cognitiva',
+ /*
+    O WebSite é o nó do site como um todo — o container que a WebPage declara
+    como seu `isPartOf`. Não exige nenhum campo comercial, então entra no lugar
+    do Product sem herdar o problema dele.
+
+    Sem `potentialAction`/SearchAction: o site não tem busca interna, e declarar
+    uma que não existe é schema divergente do conteúdo.
+ */
+  const website = {
+    '@type': 'WebSite',
+    '@id': `${COMPANY_URL}/#website`,
     url: COMPANY_URL,
- // Sem `offers`: ver nota do VETO GATE no topo do arquivo.
+    name: 'GnosIQ',
+    inLanguage: 'pt-BR',
+    publisher: { '@id': `${COMPANY_URL}/#organization` },
   }
 
   const faqPage = {
@@ -100,14 +107,14 @@ export default function StructuredData() {
     '@id': `${COMPANY_URL}/#webpage`,
     url: COMPANY_URL,
     name: 'Como a sua mente realmente funciona? - GnosIQ',
-    isPartOf: { '@id': `${COMPANY_URL}/#organization` },
+    isPartOf: { '@id': `${COMPANY_URL}/#website` },
  // last-updated real: mesmo instante que o rodapé exibe.
     dateModified: LAST_UPDATED_ISO,
   }
 
   const graph = {
     '@context': 'https://schema.org',
-    '@graph': [organization, founder, product, faqPage, webPage],
+    '@graph': [organization, founder, website, faqPage, webPage],
   }
 
   return (

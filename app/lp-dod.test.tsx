@@ -93,16 +93,34 @@ describe('DoD · schema JSON-LD', () => {
     const graph = extractGraph()
     const types = graph['@graph'].map((node: { '@type': string }) => node['@type'])
     expect(types).toContain('Organization')
-    expect(types).toContain('Product')
+    expect(types).toContain('WebSite')
     expect(types).toContain('FAQPage')
   })
 
-  it('o Product NÃO declara offers — seria preço numérico escondido no schema', () => {
+ /*
+    O Product exige `offers`/`review`/`aggregateRating` e os três estão vetados (preço público é decisão GATE; avaliação de produto
+    pré-lançamento seria fabricada). Sem nenhum deles o nó é erro no Search
+    Console, não só inelegível. Enquanto o veto valer, Product não volta —
+    nem "só a descrição", que é como ele entrou da primeira vez.
+ */
+  it('NENHUM nó Product no grafo enquanto offers estiver vetado', () => {
     const graph = extractGraph()
-    const product = graph['@graph'].find(
-      (node: { '@type': string }) => node['@type'] === 'Product',
-    )
-    expect(product.offers).toBeUndefined()
+    const types = graph['@graph'].map((node: { '@type': string }) => node['@type'])
+    expect(types).not.toContain('Product')
+    expect(types).not.toContain('SoftwareApplication')
+  })
+
+  it('a WebPage é parte do WebSite, e o WebSite é publicado pela Organization', () => {
+    const graph = extractGraph()
+    const byType = (type: string) =>
+      graph['@graph'].find((node: { '@type': string }) => node['@type'] === type)
+
+    const website = byType('WebSite')
+    const webPage = byType('WebPage')
+
+ // Referência pendurada em @id inexistente é grafo quebrado para o Google.
+    expect(webPage.isPartOf['@id']).toBe(website['@id'])
+    expect(website.publisher['@id']).toBe(byType('Organization')['@id'])
   })
 
   it('o FAQPage bate 1:1 com o FAQ visível — schema divergente é spam', () => {
