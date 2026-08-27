@@ -9,6 +9,28 @@ vi.mock('@/lib/firestore', () => ({
   countFounderTier: () => countFounderTier(),
 }))
 
+/*
+  `unstable_cache` exige o contexto de request do Next; fora dele lança
+  `Invariant: incrementalCache missing`. O mock deixa a função passar direto e
+  registra COMO ela foi configurada — que é o que este arquivo consegue travar.
+  O comportamento do cache em si é do Next e foi medido com sonda, não aqui.
+*/
+const cacheSpy = vi.hoisted(() => ({
+  keys: undefined as readonly string[] | undefined,
+  revalidate: undefined as number | undefined,
+}))
+vi.mock('next/cache', () => ({
+  unstable_cache: (
+    fn: () => Promise<number>,
+    keys: readonly string[],
+    opts: { revalidate?: number },
+  ) => {
+    cacheSpy.keys = keys
+    cacheSpy.revalidate = opts?.revalidate
+    return fn
+  },
+}))
+
 const route = await import('./route')
 const { GET, runtime, revalidate } = route
 
@@ -19,13 +41,21 @@ it('roda em nodejs — @google-cloud/firestore não existe no edge', () => {
 })
 
 /*
-  `force-dynamic` tem precedência sobre o header: a Vercel
-  descartava o `s-maxage=10` e cobrava uma aggregation do Firestore por page
-  view. O `s-maxage` testado logo abaixo só vale alguma coisa se a rota for
-  cacheável, então as duas asserções andam juntas.
+  A amortização é de LEITURA, não de borda: uma aggregation do Firestore serve
+  todas as requests da janela de 10s. As duas asserções andam juntas porque
+  uma sem a outra não segura nada.
+
+  `revalidate` ausente é requisito, não descuido: declará-lo faz o Next tentar
+  pré-renderizar a rota no build, o que exige a coleção acessível naquele
+  momento. Quando não está, a rota cai para dinâmica e a amortização evapora —
+  foi o que aconteceu em produção. Sem `revalidate` não há pré-render, e o
+  cache de dados amortiza em runtime, que é onde a leitura de fato acontece.
 */
-it('é cacheável na borda por 10s — sem force-dynamic anulando o s-maxage', () => {
-  expect(revalidate).toBe(10)
+it('a leitura é amortizada em janela de 10s, e a rota não é pré-renderizada', () => {
+  expect(cacheSpy.revalidate).toBe(10)
+  expect(cacheSpy.keys).toEqual(['waitlist-count'])
+
+  expect(revalidate).toBeUndefined()
   expect((route as { dynamic?: string }).dynamic).toBeUndefined()
 })
 
