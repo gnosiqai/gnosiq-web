@@ -3,7 +3,22 @@ import { countWaitlist } from '@/lib/firestore'
 import { FOUNDER_SLOTS } from '@/lib/constants/founder'
 
 export const runtime = 'nodejs'
-export const dynamic = 'force-dynamic'
+
+/*
+  `revalidate = 10`, NÃO `force-dynamic`.
+
+  Medido em produção: com `force-dynamic` a Vercel marcava a rota como
+  nunca-cacheável e REMOVIA o `s-maxage=10` do header abaixo —
+  `x-vercel-cache: MISS` e `age: 0` em requests consecutivas na mesma borda.
+  Resultado: uma aggregation query do Firestore por page view, custo linear
+  com visitantes.
+
+  Com `revalidate = 10` a borda absorve a rajada servindo valor cacheado por
+  até 10s. A defasagem de 10s no placar é o desenho pretendido desde que o
+  contador passou a ler a coleção, não uma concessão nova: o número continua
+  vindo da mesma fonte, só que amortizado.
+*/
+export const revalidate = 10
 
 /**
  * Placar público de vagas restantes.
@@ -44,6 +59,15 @@ export async function GET() {
   } catch (err) {
  // Log interno detalhado — a resposta não expõe nada da credencial.
     console.error('[waitlist-count] Erro ao contar inscritos:', err)
-    return NextResponse.json({ available: false }, { status: 503 })
+
+ // `no-store` explícito, e NUNCA o `s-maxage` do caminho de sucesso: uma
+ // falha transitória do Firestore não pode ser fixada na borda. Sem header
+ // nenhum aqui a decisão fica com a heurística do CDN, e o pior caso é a
+ // página anunciar indisponibilidade por até 10s depois de a fonte ter
+ // voltado.
+    return NextResponse.json(
+      { available: false },
+      { status: 503, headers: { 'Cache-Control': 'no-store' } },
+    )
   }
 }

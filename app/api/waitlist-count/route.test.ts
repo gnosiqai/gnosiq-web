@@ -9,12 +9,24 @@ vi.mock('@/lib/firestore', () => ({
   countFounderTier: () => countFounderTier(),
 }))
 
-const { GET, runtime } = await import('./route')
+const route = await import('./route')
+const { GET, runtime, revalidate } = route
 
 beforeEach(() => vi.clearAllMocks())
 
 it('roda em nodejs — @google-cloud/firestore não existe no edge', () => {
   expect(runtime).toBe('nodejs')
+})
+
+/*
+  `force-dynamic` tem precedência sobre o header: a Vercel
+  descartava o `s-maxage=10` e cobrava uma aggregation do Firestore por page
+  view. O `s-maxage` testado logo abaixo só vale alguma coisa se a rota for
+  cacheável, então as duas asserções andam juntas.
+*/
+it('é cacheável na borda por 10s — sem force-dynamic anulando o s-maxage', () => {
+  expect(revalidate).toBe(10)
+  expect((route as { dynamic?: string }).dynamic).toBeUndefined()
 })
 
 describe('sucesso', () => {
@@ -62,6 +74,29 @@ describe('cache', () => {
     const sMaxAge = Number(/s-maxage=(\d+)/.exec(cc ?? '')?.[1])
     expect(sMaxAge).toBeGreaterThan(0)
     expect(sMaxAge).toBeLessThanOrEqual(15)
+  })
+
+ /*
+    Os dois caminhos numa asserção só, porque o que importa é o CONTRASTE:
+    a rota é cacheável na borda, então uma falha transitória do Firestore sem
+    diretiva própria fica à mercê da heurística do CDN — e a página anunciaria
+    indisponibilidade por até 10s depois de a fonte ter voltado. Sucesso
+    cacheia; erro nunca.
+ */
+  it('sucesso cacheia na borda, erro NUNCA — os dois lados do mesmo contrato', async () => {
+    countWaitlist.mockResolvedValue(1)
+    const ok = (await GET()).headers.get('Cache-Control')
+
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    countWaitlist.mockRejectedValue(new Error('indisponível'))
+    const fail = (await GET()).headers.get('Cache-Control')
+    spy.mockRestore()
+
+    expect(ok).toMatch(/s-maxage=\d+/)
+    expect(ok).not.toContain('no-store')
+
+    expect(fail).toContain('no-store')
+    expect(fail).not.toMatch(/s-maxage/)
   })
 })
 
