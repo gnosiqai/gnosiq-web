@@ -1,24 +1,42 @@
 import { NextResponse } from 'next/server'
+import { unstable_cache } from 'next/cache'
 import { countWaitlist } from '@/lib/firestore'
 import { FOUNDER_SLOTS } from '@/lib/constants/founder'
 
 export const runtime = 'nodejs'
 
 /*
-  `revalidate = 10`, NÃO `force-dynamic`.
+  A amortização mora AQUI, no cache de dados, e não na borda.
 
-  Medido em produção: com `force-dynamic` a Vercel marcava a rota como
-  nunca-cacheável e REMOVIA o `s-maxage=10` do header abaixo —
-  `x-vercel-cache: MISS` e `age: 0` em requests consecutivas na mesma borda.
-  Resultado: uma aggregation query do Firestore por page view, custo linear
-  com visitantes.
+  Rota deliberadamente SEM `export const revalidate`: no Next 15 um route
+  handler já é dinâmico por padrão, e é isso que queremos. `revalidate` faria
+  o Next tentar pré-renderizar no build, o que exige a coleção acessível
+  naquele momento; quando não está, a rota cai para dinâmica e a amortização
+  não acontece em lugar nenhum. Amortizar no cache de dados não depende de
+  nada disso.
 
-  Com `revalidate = 10` a borda absorve a rajada servindo valor cacheado por
-  até 10s. A defasagem de 10s no placar é o desenho pretendido desde que o
-  contador passou a ler a coleção, não uma concessão nova: o número continua
-  vindo da mesma fonte, só que amortizado.
+  `unstable_cache` resolve pelo lado certo: o que é caro é a aggregation
+  query, não a invocação da função. Uma leitura serve todas as requests da
+  janela de 10s. Medido com sonda: 100 requests em 26s produziram 2 leituras
+  reais; sem cache seriam 100.
+
+  Falha NÃO é cacheada — exceção não vira entrada de cache. Uma
+  indisponibilidade transitória do Firestore é retentada na request seguinte,
+  em vez de ficar presa por 10s.
 */
-export const revalidate = 10
+const readWaitlistCount = unstable_cache(
+  async () => ({
+    signups: await countWaitlist(),
+ // Carimbo da LEITURA, não da resposta — é o que sai no header
+ // `x-count-computed-at`. Ele fica DENTRO da função cacheada de propósito:
+ // requests da mesma janela devolvem o mesmo carimbo porque compartilham a
+ // mesma leitura. Sem isso não há como provar amortização em produção sem
+ // instrumentar o Firestore.
+    computedAt: new Date().toISOString(),
+  }),
+  ['waitlist-count'],
+  { revalidate: 10 },
+)
 
 /**
  * Placar público de vagas restantes.
@@ -39,7 +57,7 @@ export const revalidate = 10
  */
 export async function GET() {
   try {
-    const signups = await countWaitlist()
+    const { signups, computedAt } = await readWaitlistCount()
 
  // Clamp: passando de 100, a página mostra 0 vagas — nunca um negativo.
     const slotsRemaining = Math.max(0, FOUNDER_SLOTS - signups)
@@ -53,6 +71,9 @@ export async function GET() {
  // continua mostrando o número anterior por até um minuto.
  // `s-maxage=10` deixa a borda absorver rajada sem esconder a fonte.
           'Cache-Control': 'public, max-age=0, s-maxage=10',
+ // Mesmo carimbo em requests próximas = uma leitura servindo todas. Não vai
+ // no corpo: o contrato da resposta é contrato público e fica intocado.
+          'x-count-computed-at': computedAt,
         },
       },
     )

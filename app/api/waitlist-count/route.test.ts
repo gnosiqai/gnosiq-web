@@ -9,23 +9,69 @@ vi.mock('@/lib/firestore', () => ({
   countFounderTier: () => countFounderTier(),
 }))
 
+/*
+  `unstable_cache` exige o contexto de request do Next; fora dele lança
+  `Invariant: incrementalCache missing`. O mock deixa a função passar direto e
+  registra COMO ela foi configurada — que é o que este arquivo consegue travar.
+  O comportamento do cache em si é do Next e foi medido com sonda, não aqui.
+*/
+const cacheSpy = vi.hoisted(() => ({
+  keys: undefined as readonly string[] | undefined,
+  revalidate: undefined as number | undefined,
+  evict: () => {},
+}))
+vi.mock('next/cache', () => ({
+  unstable_cache: <T,>(
+    fn: () => Promise<T>,
+    keys: readonly string[],
+    opts: { revalidate?: number },
+  ) => {
+    cacheSpy.keys = keys
+    cacheSpy.revalidate = opts?.revalidate
+
+ /*
+      Memoização de uma entrada, simulando a janela do Next. Não é o cache
+      real — é o mínimo para este arquivo travar o NOSSO wiring: que a leitura
+      passa por uma camada de cache e que o carimbo viaja junto do valor, em
+      vez de ser gerado por request. `evict` reabre a janela entre os testes.
+ */
+    let memo: Promise<T> | null = null
+    cacheSpy.evict = () => {
+      memo = null
+    }
+    return () => (memo ??= fn())
+  },
+}))
+
 const route = await import('./route')
 const { GET, runtime, revalidate } = route
 
-beforeEach(() => vi.clearAllMocks())
+beforeEach(() => {
+  vi.clearAllMocks()
+ // Cada teste começa com a janela aberta, senão herda a leitura do anterior.
+  cacheSpy.evict()
+})
 
 it('roda em nodejs — @google-cloud/firestore não existe no edge', () => {
   expect(runtime).toBe('nodejs')
 })
 
 /*
-  `force-dynamic` tem precedência sobre o header: a Vercel
-  descartava o `s-maxage=10` e cobrava uma aggregation do Firestore por page
-  view. O `s-maxage` testado logo abaixo só vale alguma coisa se a rota for
-  cacheável, então as duas asserções andam juntas.
+  A amortização é de LEITURA, não de borda: uma aggregation do Firestore serve
+  todas as requests da janela de 10s. As duas asserções andam juntas porque
+  uma sem a outra não segura nada.
+
+  `revalidate` ausente é requisito, não descuido: declará-lo faz o Next tentar
+  pré-renderizar a rota no build, o que exige a coleção acessível naquele
+  momento. Quando não está, a rota cai para dinâmica e a amortização evapora —
+  foi o que aconteceu em produção. Sem `revalidate` não há pré-render, e o
+  cache de dados amortiza em runtime, que é onde a leitura de fato acontece.
 */
-it('é cacheável na borda por 10s — sem force-dynamic anulando o s-maxage', () => {
-  expect(revalidate).toBe(10)
+it('a leitura é amortizada em janela de 10s, e a rota não é pré-renderizada', () => {
+  expect(cacheSpy.revalidate).toBe(10)
+  expect(cacheSpy.keys).toEqual(['waitlist-count'])
+
+  expect(revalidate).toBeUndefined()
   expect((route as { dynamic?: string }).dynamic).toBeUndefined()
 })
 
@@ -83,9 +129,54 @@ describe('cache', () => {
     indisponibilidade por até 10s depois de a fonte ter voltado. Sucesso
     cacheia; erro nunca.
  */
+ /*
+    O header é o instrumento da verificação em produção: sem ele, provar
+    amortização exigiria instrumentar o Firestore. Duas propriedades importam
+    e são testadas juntas — o carimbo vem da LEITURA (uma leitura, um carimbo,
+    N respostas) e o corpo não muda, porque o contrato da resposta é público.
+ */
+  it('x-count-computed-at carimba a leitura, e uma leitura serve N respostas', async () => {
+    countWaitlist.mockResolvedValue(17)
+
+    const primeira = await GET()
+    const segunda = await GET()
+    const terceira = await GET()
+
+    const carimbo = primeira.headers.get('x-count-computed-at')
+    expect(carimbo).toMatch(/^\d{4}-\d{2}-\d{2}T.*Z$/)
+    expect(segunda.headers.get('x-count-computed-at')).toBe(carimbo)
+    expect(terceira.headers.get('x-count-computed-at')).toBe(carimbo)
+
+ // Três respostas, UMA leitura: é isso que o header prova em produção.
+    expect(countWaitlist).toHaveBeenCalledTimes(1)
+
+ // E o corpo segue exatamente o contrato, sem o carimbo dentro.
+    expect(await terceira.json()).toEqual({
+      available: true, signups: 17, slotsRemaining: 83, total: 100,
+    })
+  })
+
+  it('a resposta de erro não carimba nada — não houve leitura', async () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    countWaitlist.mockRejectedValue(new Error('indisponível'))
+
+    const res = await GET()
+
+    expect(res.status).toBe(503)
+    expect(res.headers.get('x-count-computed-at')).toBeNull()
+    spy.mockRestore()
+  })
+
   it('sucesso cacheia na borda, erro NUNCA — os dois lados do mesmo contrato', async () => {
     countWaitlist.mockResolvedValue(1)
     const ok = (await GET()).headers.get('Cache-Control')
+
+ /*
+      A janela precisa expirar entre as duas metades. Dentro dela uma falha
+      posterior nem chega ao Firestore — a resposta cacheada serve, que é o
+      comportamento certo e mais uma razão para o cache estar aqui.
+ */
+    cacheSpy.evict()
 
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
     countWaitlist.mockRejectedValue(new Error('indisponível'))
