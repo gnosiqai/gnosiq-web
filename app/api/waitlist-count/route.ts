@@ -24,9 +24,19 @@ export const runtime = 'nodejs'
   indisponibilidade transitória do Firestore é retentada na request seguinte,
   em vez de ficar presa por 10s.
 */
-const countWaitlistCached = unstable_cache(countWaitlist, ['waitlist-count'], {
-  revalidate: 10,
-})
+const readWaitlistCount = unstable_cache(
+  async () => ({
+    signups: await countWaitlist(),
+ // Carimbo da LEITURA, não da resposta — é o que sai no header
+ // `x-count-computed-at`. Ele fica DENTRO da função cacheada de propósito:
+ // requests da mesma janela devolvem o mesmo carimbo porque compartilham a
+ // mesma leitura. Sem isso não há como provar amortização em produção sem
+ // instrumentar o Firestore.
+    computedAt: new Date().toISOString(),
+  }),
+  ['waitlist-count'],
+  { revalidate: 10 },
+)
 
 /**
  * Placar público de vagas restantes.
@@ -47,7 +57,7 @@ const countWaitlistCached = unstable_cache(countWaitlist, ['waitlist-count'], {
  */
 export async function GET() {
   try {
-    const signups = await countWaitlistCached()
+    const { signups, computedAt } = await readWaitlistCount()
 
  // Clamp: passando de 100, a página mostra 0 vagas — nunca um negativo.
     const slotsRemaining = Math.max(0, FOUNDER_SLOTS - signups)
@@ -61,6 +71,9 @@ export async function GET() {
  // continua mostrando o número anterior por até um minuto.
  // `s-maxage=10` deixa a borda absorver rajada sem esconder a fonte.
           'Cache-Control': 'public, max-age=0, s-maxage=10',
+ // Mesmo carimbo em requests próximas = uma leitura servindo todas. Não vai
+ // no corpo: o contrato da resposta é contrato público e fica intocado.
+          'x-count-computed-at': computedAt,
         },
       },
     )
