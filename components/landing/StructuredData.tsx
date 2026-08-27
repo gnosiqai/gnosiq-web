@@ -11,8 +11,8 @@ import { LAST_UPDATED_ISO } from '@/lib/lastUpdated'
 
 // schema Organization + WebSite + FAQPage (DoD: schema válido).
 //
-// SEM `Product` — decisão da GNO-125. O Google exige que um `Product` declare
-// ao menos um de `offers` / `review` / `aggregateRating`; os três estão
+// SEM `Product`, por decisão. O Google exige que um `Product` declare ao
+// menos um de `offers` / `review` / `aggregateRating`; os três estão
 // vetados aqui: `offers` seria preço numérico em superfície pública (decisão
 // GATE pendente) e `review`/`aggregateRating` não existem num produto
 // pré-lançamento — fabricá-los viola a política do Google e a nossa. O nó

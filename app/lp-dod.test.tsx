@@ -98,8 +98,7 @@ describe('DoD · schema JSON-LD', () => {
   })
 
  /*
-    Trava da GNO-125. O Product exige `offers`/`review`/`aggregateRating` e os
-    três estão vetados (preço público é decisão GATE; avaliação de produto
+    O Product exige `offers`/`review`/`aggregateRating` e os três estão vetados (preço público é decisão GATE; avaliação de produto
     pré-lançamento seria fabricada). Sem nenhum deles o nó é erro no Search
     Console, não só inelegível. Enquanto o veto valer, Product não volta —
     nem "só a descrição", que é como ele entrou da primeira vez.
