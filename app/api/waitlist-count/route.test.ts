@@ -9,12 +9,24 @@ vi.mock('@/lib/firestore', () => ({
   countFounderTier: () => countFounderTier(),
 }))
 
-const { GET, runtime } = await import('./route')
+const route = await import('./route')
+const { GET, runtime, revalidate } = route
 
 beforeEach(() => vi.clearAllMocks())
 
 it('roda em nodejs — @google-cloud/firestore não existe no edge', () => {
   expect(runtime).toBe('nodejs')
+})
+
+/*
+  Trava da GNO-127. `force-dynamic` tem precedência sobre o header: a Vercel
+  descartava o `s-maxage=10` e cobrava uma aggregation do Firestore por page
+  view. O `s-maxage` testado logo abaixo só vale alguma coisa se a rota for
+  cacheável, então as duas asserções andam juntas.
+*/
+it('é cacheável na borda por 10s — sem force-dynamic anulando o s-maxage', () => {
+  expect(revalidate).toBe(10)
+  expect((route as { dynamic?: string }).dynamic).toBeUndefined()
 })
 
 describe('sucesso', () => {

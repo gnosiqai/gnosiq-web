@@ -3,7 +3,22 @@ import { countWaitlist } from '@/lib/firestore'
 import { FOUNDER_SLOTS } from '@/lib/constants/founder'
 
 export const runtime = 'nodejs'
-export const dynamic = 'force-dynamic'
+
+/*
+  `revalidate = 10`, NÃO `force-dynamic`.
+
+  Medido em produção (GNO-127): com `force-dynamic` a Vercel marcava a rota
+  como nunca-cacheável e REMOVIA o `s-maxage=10` do header abaixo —
+  `x-vercel-cache: MISS` e `age: 0` em requests consecutivas na mesma borda.
+  Resultado: uma aggregation query do Firestore por page view, custo linear
+  com visitantes.
+
+  Com `revalidate = 10` a borda absorve a rajada servindo valor cacheado por
+  até 10s. A defasagem de 10s no placar é o desenho pretendido desde o PR
+  #108, não uma concessão nova: o número continua vindo da coleção, só que
+  amortizado.
+*/
+export const revalidate = 10
 
 /**
  * Placar público de vagas restantes.
