@@ -19,7 +19,7 @@ it('roda em nodejs — @google-cloud/firestore não existe no edge', () => {
 })
 
 /*
-  Trava da GNO-127. `force-dynamic` tem precedência sobre o header: a Vercel
+  `force-dynamic` tem precedência sobre o header: a Vercel
   descartava o `s-maxage=10` e cobrava uma aggregation do Firestore por page
   view. O `s-maxage` testado logo abaixo só vale alguma coisa se a rota for
   cacheável, então as duas asserções andam juntas.
