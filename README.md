@@ -1,341 +1,108 @@
 <div align="center">
 
 # GnosIQ
-[![Status](https://img.shields.io/badge/status-pre--launch-8B5CF6?style=flat-square)](https://gnosiq.ai)
-[![Quality](https://img.shields.io/badge/code%20quality-SonarCloud%20A-8B5CF6?style=flat-square)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
-[![Security](https://img.shields.io/badge/security-0%20vulnerabilities-8B5CF6?style=flat-square)](https://sonarcloud.io/project/overview?id=gnosiqai_gnosiq-web)
 
 **The Cognitive Capital API**
 
 *We don't assess people. We unlock the cognitive capital hidden in every human.*
 
-[![Stack](https://img.shields.io/badge/stack-Next.js%2015%20%7C%20Vercel%20%7C%20Cloud%20Run%20%7C%20Firestore-0D0B1E?style=flat-square)](#tech-stack)
-[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions%20→%20Vercel-0D0B1E?style=flat-square)](#tech-stack)
-[![License](https://img.shields.io/badge/license-Proprietary-6D28D9?style=flat-square)](#legal)
+[![Status](https://img.shields.io/badge/status-private%20beta-8B5CF6?style=flat-square)](https://gnosiq.ai)
+[![License](https://img.shields.io/badge/license-BUSL%201.1-6D28D9?style=flat-square)](LICENSE)
 
-[gnosiq.ai](https://gnosiq.ai) · [@gnosiqai](https://x.com/gnosiqai) · [Docs](https://docs.gnosiq.ai) *(coming M4)*
+[gnosiq.ai](https://gnosiq.ai) · [hello@gnosiq.ai](mailto:hello@gnosiq.ai)
 
 </div>
 
 ---
 
-## What is GnosIQ?
+## What is Cognitive Capital
 
-GnosIQ is the first API that turns human potential into computable capital.
+Cognitive capital is the part of human potential that never reached a balance
+sheet: how a person thinks, learns, decides under pressure, and recovers from
+adversity.
 
-Where traditional psychometric tools deliver static PDFs locked behind $15,000 enterprise contracts, GnosIQ delivers **deep cognitive assessment at API scale** — programmatic, affordable, and actionable in 30 minutes.
+Financial capital has been programmable for a decade. Cognitive capital has
+not. Reading it has meant weeks of scheduling, a specialist's calendar, and a
+static PDF at the end.
 
-Think of it as the **Bloomberg Terminal for human intelligence**: the same depth institutional investors have always had, now accessible via a single `POST /v1/evaluate`.
+GnosIQ makes cognitive capital computable: one adaptive session in the browser,
+one structured report, one programmatic surface.
 
-```bash
-curl -X POST https://api.gnosiq.ai/v1/evaluate \
-  -H "Authorization: Bearer giq_sk_..." \
-  -H "Content-Type: application/json" \
-  -d '{"session_id": "sess_abc123", "responses": [...] }'
+## What is GnosIQ
 
-# → 18-page cognitive capital report · delivered in 30 min
-```
+GnosIQ maps a cognitive profile from an adaptive session and returns a written
+report in about 30 minutes, grounded in the CHC model, the most widely accepted
+framework in contemporary intelligence research.
 
+Three specialized AI agents, in sequence:
 
----
-
-## The 3 Surfaces
-
-GnosIQ is one cognitive engine distributed across three independent access surfaces.
-The same `POST /v1/evaluate` powers all three. What changes is the wrapper, the buyer, and the price point.
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    GNOSIQ COGNITIVE ENGINE                      │
-│     Adaptive CAT · 12 Instruments · 4 Layers (A/B/C/D)          │
-└────────────────┬────────────────┬───────────────┬───────────────┘
-                 │                │               │
-            Surface 1        Surface 2       Surface 3
-           B2C Direct        White-Label     Public API
-           (M2 · live)       (M3 · B2B)      (M4+ · devs)
-```
-
-### Cognitive Engine v2.0 — Adaptive CAT
-
-The same cognitive engine powering all 3 surfaces operates via
-**Computerized Adaptive Testing**: Agent1 decides which frameworks
-to activate based on the response profile — no instrument is applied
-blindly.
-
-12+ validated psychometric instruments across 4 progressive assessment layers —
-activated adaptively based on each individual's response profile.
-
-
-> ⚕️ **Clinical Disclaimer:** This engine identifies cognitive and behavioral patterns
-> using internationally validated screening instruments. It does **not replace** clinical
-> assessment by a neurologist, clinical psychologist, or psychiatrist. Always consult a
-> licensed health professional for clinical decisions (ADHD · ASD · depression · anxiety).
-
----
-
-### Surface 1 — B2C Assessment *(M2)*
-
-> **Who:** Founders, Tech Leaders, Executive Coaches
-> **Where:** [gnosiq.ai](https://gnosiq.ai) — direct landing page
-> **Price:** [gnosiq.ai/pricing](https://gnosiq.ai/pricing)
-
-The individual buys directly. Answers a 30-minute adaptive session.
-Receives an **18-page Cognitive Capital Report** by email — covering
-IQ range, Big Five profile, Multiple Intelligences map, Renzulli AH/SD
-indicators, and PTG growth vector.
-
-No enterprise contract. No waiting list. No therapist required.
-
----
-
-### Surface 2 — White-Label B2B *(M3)*
-
-> **Who:** HR Consultancies, Accelerators, EdTechs, Executive Coaches
-> **Where:** Custom-branded dashboard — GnosIQ invisible on the front
-> **Price:** [gnosiq.ai/pricing](https://gnosiq.ai/pricing)
-
-Partners configure their own logo, colors, and domain.
-Their clients take the assessment. Results land in the partner's dashboard.
-GnosIQ is the invisible infrastructure — like Stripe is to payments.
-
----
-
-### Surface 3 — Public API L0 *(M4+)*
-
-> **Who:** Developers, Cognitive Fintechs, HRTechs, EdTechs
-> **Where:** `api.gnosiq.ai` · `npm install @gnosiqai/sdk`
-> **Price:** [gnosiq.ai/pricing](https://gnosiq.ai/pricing)
-
-> ⚠️ **Not started.** Prerequisite: M3 gate validated.
-
-```typescript
-import { GnosIQ } from '@gnosiqai/sdk';
-
-const client = new GnosIQ({ apiKey: process.env.GNOSIQ_API_KEY });
-
-const report = await client.evaluate({
-  sessionId: 'sess_abc123',
-  responses: adaptiveResponses,
-  webhookUrl: 'https://yourapp.com/webhooks/gnosiq',
-});
-
-// report.cognitiveCapitalScore → 0–1000
-// report.pdfUrl → signed URL · expires 72h
-// report.vectors → { iq, bigFive, gardner, renzulli, ptg }
-```
-
----
-
-## Architecture
-
-```
-          ┌─────────────────────┐
-          │   gnosiq.ai (web)   │
-          │  Next.js 15 · Edge  │
-          │   Vercel (global)   │
-          └──────────┬──────────┘
-                     │ HTTPS
-          ┌──────────▼──────────┐
-          │   Cloud Run Gen2    │
-          │   southamerica-east1│
-          │                     │
-          │  POST /api/waitlist │
-          │  POST /api/evaluate │◄── Surface 1 · 2 · 3
-          │  POST /api/webhook  │
-          └──┬───────┬──────────┘
-             │       │
-  ┌──────────▼─┐  ┌──▼─────────────────────┐
-  │  Firestore │  │   AI Cognitive Engine  │
-  │ Native Mode│  │  Adaptive CAT · 3 LLM  │
-  │            │  │  agents · 12 instruments│
-  │  reports/  │  │  4 layers (A/B/C/D)    │
-  │  partners/ │  └────────────────────────┘
-  └────────────┘           │
-                ┌──────────▼──────────┐
-                │      SendGrid       │
-                │   Report delivery   │
-                │  100/day free tier  │
-                └─────────────────────┘
-```
-
-**Design principles (GnosIQ Architecture Manifesto v1.0):**  
-100% Cloud · 100% Serverless · Minimum Cost Max Profit ·  
-Privacy Sovereign · Solo Founder Scalable · API-First · Async-First
-
----
-
-## Tech Stack
-
-| Layer | Technology | Rationale |
+| | Agent | What it does |
 |---|---|---|
-| Frontend | Next.js 15 + TypeScript strict | App Router · Edge-ready · SEO |
-| Styling | Tailwind CSS | Design tokens · zero runtime CSS |
-| Backend | Cloud Run Gen2 · Node.js 22 LTS | Serverless · scales to zero · ~$0 |
-| Database | Firestore Native Mode | Realtime · free tier · no ORM needed |
-| AI Orchestration | Multi-LLM adaptive routing | Cost/quality optimization per cognitive layer |
-| Email | SendGrid API v3 | 100/day free · reliable delivery |
-| Analytics | PostHog Cloud | 1M events/mo free · session replay |
-| DNS / CDN | Cloudflare | DDoS · SSL · proxy · free |
-| CI/CD | GitHub Actions → Vercel | Automated deploy on push to `main` |
-| Code Quality | SonarCloud | AI code trust mitigation · Quality Gate ✅ · A/A/A (Security / Reliability / Maintainability) |
-| Package Manager | npm (only) | yarn/pnpm not used in this repo |
+| 01 | Adaptive assessment | Runs the session and adjusts the path to the answers given |
+| 02 | Psychometric analysis | Computes the GnoScore™ and the profile across CHC domains |
+| 03 | Report writing | Writes the report: what the numbers mean and what to do with them |
 
----
+## Status
 
-## Roadmap
+**Private beta.** The assessment is not open to the public yet.
+Join the waitlist at [gnosiq.ai](https://gnosiq.ai/#waitlist).
 
-GnosIQ ships in sequential milestones, each unlocking the next access surface.
+## Repository scope
 
-**Coming soon:**
-- API access for individual developers and teams
-- Team plans with collaborative cognitive insights
-- Enterprise tier with custom branding and white-label deployment
-- Public API with SDK support for third-party integrations
+This repository is the public web surface only: the landing page, the waitlist
+flow, and the legal pages. The GnosIQ cognitive engine is proprietary, lives
+outside this repository, and is not documented here.
 
-> For early access and updates, join the waitlist at [gnosiq.ai](https://gnosiq.ai).
+## Tech stack
 
----
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router) + TypeScript strict |
+| Styling | Tailwind CSS |
+| Runtime | Vercel serverless · Node.js 24 |
+| Database | Firestore Native Mode |
+| Transactional email | Resend |
+| Anti-bot | Cloudflare Turnstile |
+| Analytics | PostHog Cloud |
+| Tests | Vitest + Testing Library |
 
-## Market
-
-**TAM $125B+** — $31B psychometric assessment market + $94B HR Tech · CAGR 26.7%
-
-| Competitor | Price | Depth | API | GnosIQ Advantage |
-|---|---|---|---|---|
-| Hogan Assessments | $15,000/eval | ✅ Deep | ❌ None | ✅ Same depth · 150× cheaper · programmatic |
-| Crystal Knows | $49/mo | ❌ Surface | ❌ None | ✅ Deep vs. shallow · API infrastructure |
-| BetterUp | $4,700/seat/yr | — (coaching) | ❌ None | ✅ Assessment ≠ coaching — different category |
-
-**Why now:**
-- LLMs crossed the threshold where 3-agent orchestration matches
-  licensed psychometrician accuracy at 1/1000th the cost
-- No competitor has combined: deep assessment + API + affordable pricing
-- Remote-first work created permanent demand for async cognitive tools
-- Founder is ICP — the report maps exactly this cognitive profile.
-  Living proof of concept.
-
----
-
-## Quick Start
-
-> **M1 (current phase):** the engine is not yet public.  
-> This guide reflects the target API shape for M2+.  
-> Join the waitlist at [gnosiq.ai](https://gnosiq.ai) for early access.
-
-### Run locally
+## Run locally
 
 ```bash
-# Prerequisites: Node.js 22 LTS · npm · GCP project configured
-
 git clone https://github.com/gnosiqai/gnosiq-web.git
 cd gnosiq-web
 npm install
 
-# Copy environment variables
 cp .env.example .env.local
-# → fill all required variables documented in .env.example
+# → every variable is documented in .env.example, with its failure mode
 
-npm run dev
-# → http://localhost:3000
+npm run dev    # http://localhost:3000
+npm test       # Vitest suite
+npm run build
 ```
 
-### Environment variables
+## Contact
 
-| Variable | Required | Description |
-|---|---|---|
-| `RESEND_API_KEY` | M1 | Waitlist confirmation + report delivery |
-| `EMAIL_FROM` | M1 | Sender email address (`hello@gnosiq.ai`) |
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | M1 | Cloudflare Turnstile sitekey (public) |
-| `TURNSTILE_SECRET_KEY` | M1 | Cloudflare Turnstile siteverify secret |
-| `NEXT_PUBLIC_POSTHOG_KEY` | M1 | Analytics |
-| `GCP_PROJECT_ID` | M1 | Firestore target project · waitlist + sessions persistence |
-| `GOOGLE_APPLICATION_CREDENTIALS_JSON` | M1 | Service account JSON **content** (serverless has no key file) |
-| `STRIPE_SECRET_KEY` | M2+ | Payment processing |
-| `STRIPE_WEBHOOK_SECRET` | M2+ | Async payment confirmation |
-| CI/CD secrets | CI/CD | Configured in GitHub Actions · not documented here |
+- General: [hello@gnosiq.ai](mailto:hello@gnosiq.ai)
+- Early access: [Join the waitlist](https://gnosiq.ai/#waitlist)
+- Security: report privately, per [`.github/SECURITY.md`](.github/SECURITY.md). Please do not open a public issue for a vulnerability.
+- Legal: [Privacy policy](https://gnosiq.ai/privacy) · [Terms of use](https://gnosiq.ai/terms)
 
-### Deploy
+## License and use
 
-```bash
-# Frontend → auto-deploy via GitHub Actions on push to main
-git push origin main
+Source is published for transparency, not as an open source project.
 
-# Backend → Cloud Run · auto-deploy via GitHub Actions on push to main
-```
+The Licensed Work is covered by the **Business Source License 1.1**
+([`LICENSE`](LICENSE)): non-production use is permitted, with an additional
+grant for personal, non-commercial evaluation. Production use requires a
+commercial license. The license converts to MIT on 2029-01-01.
 
----
+External pull requests are not accepted at this stage. The GnosIQ cognitive
+engine, its scoring models and its prompts are not covered by this license and
+are not published.
 
-## Project Structure
-
-```
-gnosiq-web/
-├── app/
-│   ├── layout.tsx          # Root layout · PostHog · brand tokens
-│   ├── page.tsx            # Landing page
-│   └── api/
-│       ├── waitlist/       # POST /api/waitlist → Firestore + SendGrid
-│       └── evaluate/       # POST /api/evaluate → AI agents (M2+)
-├── components/
-│   └── sections/           # Nav · Hero · WaitlistForm · Footer · ...
-├── lib/
-│   ├── constants/           # App constants (proprietary)
-│   ├── firestore.ts        # DB client (canonical pattern — GoogleAuth anti-pattern banned)
-│   └── email.ts            # Email client (Resend)
-├── prompts/                # Cognitive Engine (proprietary · not documented)
-├── public/
-│   ├── gnosiq-logo.png     # Brand logo — LOCKED, do not replace
-│   └── report-preview.png  # Mockup do relatório (Solution.tsx)
-├── .github/
-│   └── workflows/          # CI/CD workflows
-└── .env.example            # All required vars documented
-```
-
----
-
-## Contributing
-
-GnosIQ is a **solo-founder proprietary product**, not an open-source project.
-
-This repository is public for **transparency and developer trust** — consistent
-with our API-first positioning and the GnosIQ Architecture Manifesto.
-
-**What this means:**
-- Pull requests from external contributors are **not accepted** at this stage
-- Issues and bug reports are **welcome** via [GitHub Issues](https://github.com/gnosiqai/gnosiq-web/issues)
-- Architecture decisions are documented in `docs/ADR/` *(coming M2)*
-- All production merges require approval from [@gnosiqai](https://github.com/gnosiqai)
-
-If you're a developer interested in integrating GnosIQ into your product,
-join the [API early access waitlist](https://gnosiq.ai) — Surface 3 (M4+) opens
-to external developers after M3 validation.
-
----
-
-## Security
-
-- Cognitive assessment data is **never used to train external models**
-- All evaluation responses are encrypted at rest in Firestore
-- API keys are rotated quarterly
-- No PII is stored beyond what is strictly necessary for report delivery
-- LGPD (BR) · GDPR (EU) compliant by design
-
-Found a vulnerability? Email **security@gnosiq.ai** with subject `[SECURITY]`.
-We respond within 24 hours.
-
----
-
-## Legal
-
-**License:** Proprietary — All rights reserved © 2026 GnosIQ
-
-This software and its cognitive assessment frameworks (prompts, scoring models,
-agent orchestration logic, and psychometric benchmarks) are proprietary intellectual
-property of GnosIQ.
-
-> GnosIQ assessments are tools for self-knowledge and strategic planning.
-> They do **not** constitute clinical diagnosis, psychological evaluation,
-> or medical advice. Always consult a licensed mental health professional
-> for clinical decisions.
+GnosIQ™ and GnoScore™ are trademarks filed with the INPI (Brazil). The license
+grants no right in any GnosIQ trademark or logo.
 
 ---
 
@@ -343,14 +110,12 @@ property of GnosIQ.
 
 **GnosIQ · The Cognitive Capital API**
 
-*The first API that turns human potential into computable capital.*
+*We don't assess people. We unlock the cognitive capital hidden in every human.*
 
-[gnosiq.ai](https://gnosiq.ai) · [contact](https://gnosiq.ai#waitlist)  
-[@gnosiqai](https://x.com/gnosiqai) on X · GitHub · ProductHunt · Bluesky  
-[@gnosiq.ai](https://instagram.com/gnosiq.ai) on Instagram · YouTube · Threads
+This report identifies cognitive and behavioral patterns using validated
+screening instruments. It does NOT replace clinical diagnosis by a licensed
+neurologist, clinical psychologist, or psychiatrist.
 
----
-
-*Pre-launch · Sao Paulo → Silicon Valley*
+© 2026 GnosIQ Tecnologia Ltda. · CNPJ 66.473.762/0001-13 · Porto Alegre, Brazil
 
 </div>

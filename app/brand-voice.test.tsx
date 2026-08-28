@@ -39,6 +39,7 @@ vi.mock('@/lib/posthog-server', () => ({
 import Home from '@/app/page'
 import Privacy from '@/app/privacy/page'
 import Terms from '@/app/terms/page'
+import { DISCLAIMER_EN } from '@/lib/constants/legal'
 import { sendWaitlistConfirmation } from '@/lib/email'
 import { POST } from '@/app/api/waitlist/route'
 
@@ -53,8 +54,8 @@ import { POST } from '@/app/api/waitlist/route'
  * uma spec redigida com travessões sendo aplicada por cima de um mockup que o
  * founder já havia corrigido à mão. Revisão humana não segura isso — só um
  * teste segura. Por isso a trava roda sobre a superfície INTEIRA (HTML
- * renderizado das páginas públicas + meta tags + templates de e-mail), e não
- * sobre um arquivo ou outro.
+ * renderizado das páginas públicas + meta tags + templates de e-mail + o
+ * README.md do repo público), e não sobre um arquivo ou outro.
  *
  * Comentários de código estão fora do alvo de propósito: não são superfície
  * pública, e proibi-los custaria legibilidade sem nenhum ganho de marca.
@@ -131,6 +132,49 @@ describe('voz da marca — zero travessão no HTML renderizado', () => {
       expect(findDashes(html)).toEqual([])
     })
   }
+})
+
+describe('voz da marca — README.md (superfície pública do repo)', () => {
+ /*
+      O repositório é PÚBLICO: o README é porta de entrada L0 para devs e
+      insumo direto de crawlers. Ele é superfície pública de marca tanto
+      quanto a LP, então cai sob a mesma regra do CMO doc.
+
+      Aqui o arquivo INTEIRO entra, comentários incluídos: markdown não tem
+      "comentário de código" fora do alvo — tudo que está no arquivo é o que
+      o leitor vê no GitHub.
+
+      As duas frases canônicas EN que o README carrega verbatim (a tagline
+      "The Cognitive Capital API" e o manifesto "We don't assess people...")
+      não contêm travessão, então a CANONICAL_ALLOWLIST continua vazia.
+ */
+  it('README.md não contém U+2014 nem U+2013', () => {
+    expect(findDashes(readFileSync(join(process.cwd(), 'README.md'), 'utf8'))).toEqual([])
+  })
+
+  it('as frases canônicas EN seguem no README, verbatim', () => {
+    const readme = readFileSync(join(process.cwd(), 'README.md'), 'utf8')
+
+    expect(readme).toContain('The Cognitive Capital API')
+    expect(readme).toContain(
+      "We don't assess people. We unlock the cognitive capital hidden in every human.",
+    )
+  })
+
+ /*
+      O disclaimer clínico do rodapé é o DISCLAIMER_EN, não uma paráfrase: a
+      trava compara com a CONSTANTE, então reescrever o disclaimer no README
+      sem mexer em lib/constants/legal.ts quebra o teste.
+
+      Só o espaço em branco é normalizado, porque o markdown quebra a frase em
+      várias linhas e isso não muda o que o leitor vê renderizado.
+ */
+  it('o disclaimer clínico do rodapé é o DISCLAIMER_EN canônico', () => {
+    const readme = readFileSync(join(process.cwd(), 'README.md'), 'utf8')
+    const collapse = (text: string) => text.replace(/\s+/g, ' ')
+
+    expect(collapse(readme)).toContain(collapse(DISCLAIMER_EN))
+  })
 })
 
 describe('voz da marca — meta tags e assets de compartilhamento', () => {
