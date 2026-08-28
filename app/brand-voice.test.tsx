@@ -39,6 +39,7 @@ vi.mock('@/lib/posthog-server', () => ({
 import Home from '@/app/page'
 import Privacy from '@/app/privacy/page'
 import Terms from '@/app/terms/page'
+import { DISCLAIMER_EN } from '@/lib/constants/legal'
 import { sendWaitlistConfirmation } from '@/lib/email'
 import { POST } from '@/app/api/waitlist/route'
 
@@ -158,6 +159,21 @@ describe('voz da marca — README.md (superfície pública do repo)', () => {
     expect(readme).toContain(
       "We don't assess people. We unlock the cognitive capital hidden in every human.",
     )
+  })
+
+ /*
+      O disclaimer clínico do rodapé é o DISCLAIMER_EN, não uma paráfrase: a
+      trava compara com a CONSTANTE, então reescrever o disclaimer no README
+      sem mexer em lib/constants/legal.ts quebra o teste.
+
+      Só o espaço em branco é normalizado, porque o markdown quebra a frase em
+      várias linhas e isso não muda o que o leitor vê renderizado.
+ */
+  it('o disclaimer clínico do rodapé é o DISCLAIMER_EN canônico', () => {
+    const readme = readFileSync(join(process.cwd(), 'README.md'), 'utf8')
+    const collapse = (text: string) => text.replace(/\s+/g, ' ')
+
+    expect(collapse(readme)).toContain(collapse(DISCLAIMER_EN))
   })
 })
 
