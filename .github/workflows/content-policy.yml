@@ -74,7 +74,8 @@ jobs:
       # Restrição hard CTO n.5: credencial explícita no constructor do
       # Firestore. GoogleAuth.getClient() em serverless cai no fallback de
       # auth e produz PERMISSION_DENIED 7. O princípio já estava escrito em
-      # lib/firestore.ts e no SSOT; princípio em prompt não se auto-executa.
+      # lib/firestore.ts e na doutrina do projeto; princípio em prompt não
+      # se auto-executa, e é esse o buraco que este step fecha.
       - name: Sem GoogleAuth / google-auth-library em código de produção
         run: |
           set -euo pipefail
