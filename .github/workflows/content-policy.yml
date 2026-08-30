@@ -87,28 +87,33 @@ jobs:
           #   __tests__/ / __mocks__/  → diretórios de teste
           #   .github/workflows/       → o próprio arquivo do assert
           EXCLUIDOS='(\.(test|spec)\.(ts|tsx|js|jsx|mjs|cjs)$|(^|/)(__tests__|__mocks__)/|^\.github/workflows/)'
-          # Prefixos de linha pulados — prosa não executa, e a documentação da
-          # regra precisa poder nomear o padrão que a regra proíbe:
+          # Linha que é PURO comentário — prosa não executa, e a documentação da
+          # regra precisa poder nomear o padrão que a regra proíbe. O prefixo
+          # "arquivo:linha:" é o que `grep -nH` emite antes do conteúdo:
           #   //  linha · /*  bloco · *  docblock · #  shell
-          COMENTARIO='^[[:space:]]*(//|/\*|\*|#)'
+          COMENTARIO='^[^:]+:[0-9]+:[[:space:]]*(//|/\*|\*|#)'
           # Padrões banidos: o identificador e o módulo inteiro. Estritamente
           # mais amplo que grep de "GoogleAuth.getClient", que não pegaria
           # `new GoogleAuth()` e `.getClient()` em linhas separadas.
           BANIDOS='GoogleAuth|google-auth-library'
 
-          varridos=0
-          achados=""
-          while IFS= read -r f; do
-            printf '%s\n' "$f" | grep -qE "$EXTENSOES" || continue
-            printf '%s\n' "$f" | grep -qE "$EXCLUIDOS" && continue
-            [ -f "$f" ] || continue
-            varridos=$(( varridos + 1 ))
-            hit="$(awk -v F="$f" -v C="$COMENTARIO" -v B="$BANIDOS" \
-              '$0 ~ C { next } $0 ~ B { printf "%s:%d\n", F, FNR }' "$f")"
-            [ -n "$hit" ] && achados="${achados}${hit}"$'\n'
-          done <<< "$(git ls-files)"
+          # Só grep e o próprio shell: as strings acima chegam ao grep verbatim.
+          # NÃO usar awk -v aqui — o gawk do runner consome o `\*` da variável e
+          # transforma COMENTARIO em `(//|/*|*|#)`, cuja alternativa vazia casa
+          # QUALQUER linha. O assert nasceria cego e sempre verde; foi assim que
+          # a primeira versão deste step passou com o padrão banido plantado.
+          alvos="$(git ls-files | grep -E "$EXTENSOES" | grep -vE "$EXCLUIDOS" || true)"
+          varridos="$(printf '%s' "$alvos" | grep -c . || true)"
 
-          achados="$(printf '%s' "$achados" | sed '/^$/d')"
+          achados=""
+          if [ "$varridos" -gt 0 ]; then
+            achados="$(printf '%s\n' "$alvos" | tr '\n' '\0' \
+              | xargs -0 -r grep -I -nHE "$BANIDOS" -- \
+              | grep -vE "$COMENTARIO" \
+              | cut -d: -f1,2 || true)"
+          fi
+
+          # Só arquivo:linha é ecoado — nunca o conteúdo da linha.
           if [ -n "$achados" ]; then
             echo "::error::credencial: GoogleAuth / google-auth-library em código de produção."
             echo "Padrão canônico é credencial explícita no constructor (restrição hard CTO n.5)."
@@ -117,8 +122,8 @@ jobs:
           fi
           echo "OK — 0 ocorrências em $varridos arquivo(s) de código varrido(s)."
 
-      # Guard anti-regressão da camada fóssil erradicada na GNO-108. Fóssil que
-      # ressuscita sem gate custa o mesmo diagnóstico uma segunda vez.
+      # Guard anti-regressão da camada fóssil já erradicada deste ecossistema.
+      # Fóssil que ressuscita sem gate custa o mesmo diagnóstico uma segunda vez.
       - name: Sem camada fóssil .gnosiq/ na árvore
         run: |
           set -euo pipefail
