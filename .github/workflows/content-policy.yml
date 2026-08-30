@@ -57,3 +57,74 @@ jobs:
           fi
 
           echo "content-policy: OK — 0 ocorrências em $scanned arquivo(s)."
+
+  # Conformance asserts — regras que já são lei escrita do projeto mas que,
+  # enquanto vivem só em prompt e docblock, não se auto-executam. Cada step
+  # verifica UMA coisa determinística e derruba o build.
+  #
+  # Ao contrário do job acima, os padrões daqui são PÚBLICOS e documentados:
+  # não há nada a vazar, então o log ecoa arquivo:linha de quem quebrou.
+  # O conteúdo da linha continua fora do log.
+  conformance:
+    name: Conformance Asserts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # Restrição hard CTO n.5: credencial explícita no constructor do
+      # Firestore. GoogleAuth.getClient() em serverless cai no fallback de
+      # auth e produz PERMISSION_DENIED 7. O princípio já estava escrito em
+      # lib/firestore.ts e no SSOT; princípio em prompt não se auto-executa.
+      - name: Sem GoogleAuth / google-auth-library em código de produção
+        run: |
+          set -euo pipefail
+
+          # --- Allowlist DECLARADA (auditável aqui, sem heurística implícita) ---
+          # Extensões varridas — código que o runtime executa:
+          EXTENSOES='\.(ts|tsx|js|jsx|mjs|cjs)$'
+          # Paths excluídos — lista FECHADA. Qualquer adição é decisão de review:
+          #   *.test.* / *.spec.*      → arquivos de teste
+          #   __tests__/ / __mocks__/  → diretórios de teste
+          #   .github/workflows/       → o próprio arquivo do assert
+          EXCLUIDOS='(\.(test|spec)\.(ts|tsx|js|jsx|mjs|cjs)$|(^|/)(__tests__|__mocks__)/|^\.github/workflows/)'
+          # Prefixos de linha pulados — prosa não executa, e a documentação da
+          # regra precisa poder nomear o padrão que a regra proíbe:
+          #   //  linha · /*  bloco · *  docblock · #  shell
+          COMENTARIO='^[[:space:]]*(//|/\*|\*|#)'
+          # Padrões banidos: o identificador e o módulo inteiro. Estritamente
+          # mais amplo que grep de "GoogleAuth.getClient", que não pegaria
+          # `new GoogleAuth()` e `.getClient()` em linhas separadas.
+          BANIDOS='GoogleAuth|google-auth-library'
+
+          varridos=0
+          achados=""
+          while IFS= read -r f; do
+            printf '%s\n' "$f" | grep -qE "$EXTENSOES" || continue
+            printf '%s\n' "$f" | grep -qE "$EXCLUIDOS" && continue
+            [ -f "$f" ] || continue
+            varridos=$(( varridos + 1 ))
+            hit="$(awk -v F="$f" -v C="$COMENTARIO" -v B="$BANIDOS" \
+              '$0 ~ C { next } $0 ~ B { printf "%s:%d\n", F, FNR }' "$f")"
+            [ -n "$hit" ] && achados="${achados}${hit}"$'\n'
+          done <<< "$(git ls-files)"
+
+          achados="$(printf '%s' "$achados" | sed '/^$/d')"
+          if [ -n "$achados" ]; then
+            echo "::error::credencial: GoogleAuth / google-auth-library em código de produção."
+            echo "Padrão canônico é credencial explícita no constructor (restrição hard CTO n.5)."
+            printf '%s\n' "$achados"
+            exit 1
+          fi
+          echo "OK — 0 ocorrências em $varridos arquivo(s) de código varrido(s)."
+
+      # Guard anti-regressão da camada fóssil erradicada na GNO-108. Fóssil que
+      # ressuscita sem gate custa o mesmo diagnóstico uma segunda vez.
+      - name: Sem camada fóssil .gnosiq/ na árvore
+        run: |
+          set -euo pipefail
+          if achados="$(git ls-files | grep -E '(^|/)\.gnosiq(/|$)')"; then
+            echo "::error::camada fóssil .gnosiq/ de volta na árvore."
+            printf '%s\n' "$achados"
+            exit 1
+          fi
+          echo "OK — nenhum path .gnosiq/ na árvore."
