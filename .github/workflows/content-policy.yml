@@ -57,3 +57,80 @@ jobs:
           fi
 
           echo "content-policy: OK — 0 ocorrências em $scanned arquivo(s)."
+
+  # Conformance asserts — regras que já são lei escrita do projeto mas que,
+  # enquanto vivem só em prompt e docblock, não se auto-executam. Cada step
+  # verifica UMA coisa determinística e derruba o build.
+  #
+  # Ao contrário do job acima, os padrões daqui são PÚBLICOS e documentados:
+  # não há nada a vazar, então o log ecoa arquivo:linha de quem quebrou.
+  # O conteúdo da linha continua fora do log.
+  conformance:
+    name: Conformance Asserts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # Restrição hard CTO n.5: credencial explícita no constructor do
+      # Firestore. GoogleAuth.getClient() em serverless cai no fallback de
+      # auth e produz PERMISSION_DENIED 7. O princípio já estava escrito em
+      # lib/firestore.ts e na doutrina do projeto; princípio em prompt não
+      # se auto-executa, e é esse o buraco que este step fecha.
+      - name: Sem GoogleAuth / google-auth-library em código de produção
+        run: |
+          set -euo pipefail
+
+          # --- Allowlist DECLARADA (auditável aqui, sem heurística implícita) ---
+          # Extensões varridas — código que o runtime executa:
+          EXTENSOES='\.(ts|tsx|js|jsx|mjs|cjs)$'
+          # Paths excluídos — lista FECHADA. Qualquer adição é decisão de review:
+          #   *.test.* / *.spec.*      → arquivos de teste
+          #   __tests__/ / __mocks__/  → diretórios de teste
+          #   .github/workflows/       → o próprio arquivo do assert
+          EXCLUIDOS='(\.(test|spec)\.(ts|tsx|js|jsx|mjs|cjs)$|(^|/)(__tests__|__mocks__)/|^\.github/workflows/)'
+          # Linha que é PURO comentário — prosa não executa, e a documentação da
+          # regra precisa poder nomear o padrão que a regra proíbe. O prefixo
+          # "arquivo:linha:" é o que `grep -nH` emite antes do conteúdo:
+          #   //  linha · /*  bloco · *  docblock · #  shell
+          COMENTARIO='^[^:]+:[0-9]+:[[:space:]]*(//|/\*|\*|#)'
+          # Padrões banidos: o identificador e o módulo inteiro. Estritamente
+          # mais amplo que grep de "GoogleAuth.getClient", que não pegaria
+          # `new GoogleAuth()` e `.getClient()` em linhas separadas.
+          BANIDOS='GoogleAuth|google-auth-library'
+
+          # Só grep e o próprio shell: as strings acima chegam ao grep verbatim.
+          # NÃO usar awk -v aqui — o gawk do runner consome o `\*` da variável e
+          # transforma COMENTARIO em `(//|/*|*|#)`, cuja alternativa vazia casa
+          # QUALQUER linha. O assert nasceria cego e sempre verde; foi assim que
+          # a primeira versão deste step passou com o padrão banido plantado.
+          alvos="$(git ls-files | grep -E "$EXTENSOES" | grep -vE "$EXCLUIDOS" || true)"
+          varridos="$(printf '%s' "$alvos" | grep -c . || true)"
+
+          achados=""
+          if [ "$varridos" -gt 0 ]; then
+            achados="$(printf '%s\n' "$alvos" | tr '\n' '\0' \
+              | xargs -0 -r grep -I -nHE "$BANIDOS" -- \
+              | grep -vE "$COMENTARIO" \
+              | cut -d: -f1,2 || true)"
+          fi
+
+          # Só arquivo:linha é ecoado — nunca o conteúdo da linha.
+          if [ -n "$achados" ]; then
+            echo "::error::credencial: GoogleAuth / google-auth-library em código de produção."
+            echo "Padrão canônico é credencial explícita no constructor (restrição hard CTO n.5)."
+            printf '%s\n' "$achados"
+            exit 1
+          fi
+          echo "OK — 0 ocorrências em $varridos arquivo(s) de código varrido(s)."
+
+      # Guard anti-regressão da camada fóssil já erradicada deste ecossistema.
+      # Fóssil que ressuscita sem gate custa o mesmo diagnóstico uma segunda vez.
+      - name: Sem camada fóssil .gnosiq/ na árvore
+        run: |
+          set -euo pipefail
+          if achados="$(git ls-files | grep -E '(^|/)\.gnosiq(/|$)')"; then
+            echo "::error::camada fóssil .gnosiq/ de volta na árvore."
+            printf '%s\n' "$achados"
+            exit 1
+          fi
+          echo "OK — nenhum path .gnosiq/ na árvore."
