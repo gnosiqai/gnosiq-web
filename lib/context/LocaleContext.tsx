@@ -5,6 +5,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import posthog from 'posthog-js'
 
 type Locale = 'pt' | 'en'
 
@@ -29,20 +30,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   const setLocale = (next: Locale) => {
     setLocaleState(next)
     localStorage.setItem('gnosiq_locale', next)
-    if (
-      typeof window !== 'undefined' &&
-      (
-        window as Window & {
-          posthog?: { capture: (event: string, props: object) => void }
-        }
-      ).posthog
-    ) {
-      ;(
-        window as Window & {
-          posthog?: { capture: (event: string, props: object) => void }
-        }
-      ).posthog!.capture('locale_switch', { from: locale, to: next })
-    }
+    posthog.capture('locale_switch', { from: locale, to: next })
   }
 
   return (
