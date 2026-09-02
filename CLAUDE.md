@@ -12,7 +12,15 @@
    e corpo contendo `Fixes GNO-xx` na primeira linha. Sem exceção —
    é isso que garante o vínculo e o auto-close no Linear mesmo quando
    a branch fugiu do padrão.
+   ID da issue em título, branch ou subject SOMENTE quando o PR fecha a
+   issue (escopo fechado, Fixes no corpo) — qualquer um dos três já é
+   vínculo de fechamento automático. Issue permanente ou multi-item: PR
+   neutro, sem ID, Refs no corpo. Precedente: PRs #117-#121.
 4. Nunca abrir PR sem aprovação explícita do founder ("approved").
 7. FECHAMENTO DE ISSUE: usar `Fixes GNO-xx` somente quando o merge conclui
    TODO o DoD da issue. Issues com entregáveis além do código: usar
    `Refs GNO-xx` — fechamento é decisão do founder.
+8. REPORT-BACK: ao encerrar um escopo, postar o report-back completo da
+   sessão como comentário na issue de trabalho, incluindo a seção BECOS SEM
+   SAÍDA. Nunca em issue permanente. Canônico: seção de regras do executor
+   no documento canônico de regras.
