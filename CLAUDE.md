@@ -16,6 +16,3 @@
 7. FECHAMENTO DE ISSUE: usar `Fixes GNO-xx` somente quando o merge conclui
    TODO o DoD da issue. Issues com entregáveis além do código: usar
    `Refs GNO-xx` — fechamento é decisão do founder.
-8. REPORT-BACK NO LINEAR: ao encerrar um escopo, postar o report-back completo da
-   sessão como comentário na issue de trabalho via MCP, incluindo a seção BECOS SEM
-   SAÍDA. Nunca em issue permanente. Canônico: executor_regras_operacionais no SSOT.
