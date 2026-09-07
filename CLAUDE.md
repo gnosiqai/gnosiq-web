@@ -10,7 +10,7 @@
    Linear antes de criar — nunca confiar em número herdado de documento).
 3. PULL REQUEST: título no formato `tipo(escopo): GNO-xx — descrição`
    e corpo contendo `Fixes GNO-xx` na primeira linha.
-   é isso que garante o vínculo e o auto-close no Linear mesmo quando
+   É isso que garante o vínculo e o auto-close no Linear mesmo quando
    a branch fugiu do padrão.
    ID da issue em título, branch ou subject SOMENTE quando o PR fecha a
    issue (escopo fechado, Fixes no corpo) — qualquer um dos três já é
