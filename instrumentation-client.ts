@@ -16,3 +16,4 @@ posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY as string, {
   // 1.394.0: super-property $device_model via UA client hints (Android Chromium).
   disableDeviceModel: true,
 })
+posthog.unregister('$device_model') // privacy: clear persisted $device_model from clients that visited before the opt-out
