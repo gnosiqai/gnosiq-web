@@ -17,10 +17,11 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-// VETO GATE: a descrição anterior terminava em "por R$97." e era
-// reusada em `description`, `openGraph` e `twitter`. Três <meta> com preço
-// numérico no HTML renderizado — o DoD exige zero. Uma constante só para as
-// três, para que a próxima edição não reintroduza a divergência.
+// R$97 público na LP por decisão GATE 2026-09-08 (GNO-97 · 02:55:37Z) · GNO-136.
+// Lista BR permanece interna (SSOT pricing). Moeda sempre completa em PT.
+// O preço vive na copy da LP, não nestes <meta>: a descrição é reusada em
+// `description`, `openGraph` e `twitter`, e uma constante só para as três
+// evita que a próxima edição reintroduza divergência entre elas.
 const META_DESCRIPTION =
   "A GnosIQ mapeia o seu perfil cognitivo com instrumentos validados e IA " +
   "especializada, e entrega um relatório com o seu GnoScore™ em cerca de 30 " +

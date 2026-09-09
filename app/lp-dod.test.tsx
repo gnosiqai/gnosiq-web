@@ -13,7 +13,7 @@ import { COMPANY_CNPJ } from '@/lib/constants/company'
  * travas do DoD.
  *
  * Estes testes não checam estética: eles seguram as duas proibições que têm
- * custo real se vazarem para produção (CFP e VETO GATE) e a validade do
+ * custo real se vazarem para produção (CFP e a regra de preço do GATE) e a validade do
  * schema. São propositalmente rodados sobre a PÁGINA INTEIRA renderizada, e
  * não seção a seção: a violação da v1 morava no <meta> do layout e em um
  * componente órfão — lugares que um teste por seção não alcança.
@@ -32,11 +32,34 @@ describe('DoD · CFP — a palavra "diagnóstico" não existe na LP', () => {
   })
 })
 
-describe('DoD · VETO GATE — nenhum preço numérico na LP', () => {
-  it('não há cifra seguida de dígito', () => {
- // Pega R$97, R$ 97, $97, US$ 97. "R$ milhares" passa: não tem dígito.
-    const matches = html.match(/(?:R\$|US\$|\$)\s*\d/g) ?? []
-    expect(matches).toEqual([])
+/*
+   R$97 público na LP por decisão GATE 2026-09-08 (GNO-97 · 02:55:37Z) · GNO-136.
+   Lista BR permanece interna (SSOT pricing). Moeda sempre completa em PT.
+   Regra viva: toda cifra renderizada é exatamente "R$97", em 3 montagens
+   (FounderSlots no hero e no formulário + título em FounderConditions).
+ */
+describe('DoD · GATE 2026-09-08 — toda cifra renderizada é exatamente R$97 (3 montagens); zero 297; zero cifra sem R$', () => {
+ // Pega R$97, R$ 97, $97, US$ 97, R$1.234,56. "R$ milhares" passa: não tem dígito.
+  const prices = html.match(/(?:R\$|US\$|\$)\s*\d+(?:[.,]\d+)?/g) ?? []
+
+  it('toda cifra renderizada é exatamente "R$97"', () => {
+    expect(prices.every((m) => m === 'R$97')).toBe(true)
+  })
+
+  it('a cifra aparece 3 vezes: 2 montagens de FounderSlots + 1 título de FounderConditions', () => {
+    expect(prices).toHaveLength(3)
+  })
+
+  it('a lista BR não vaza para a página', () => {
+ // O carimbo de build (ISO com milissegundos) é mascarado antes da guarda:
+ // não é copy, e um ".297Z" aleatório não pode derrubar o DoD.
+    const copy = html.replace(/\d{4}-\d{2}-\d{2}T[\d:.]+Z/g, '')
+    expect(copy).not.toMatch(/297/)
+  })
+
+  it('nenhuma cifra sem "R$": "$97" e "US$97" são proibidos em PT', () => {
+    const bare = html.match(/(?<!R)\$\s*\d/g) ?? []
+    expect(bare).toEqual([])
   })
 
   it('não há valor escrito por extenso em reais', () => {

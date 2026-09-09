@@ -2,10 +2,10 @@
  * @file lib/constants/founder.ts
  * @description Constantes da oferta "Condições de Fundador".
  *
- * VETO GATE: nenhum preço numérico mora aqui — nem como teto, nem como
- * comentário. A LP v2 não publica número até o GATE fixar o preço final.
- * A condição de fundador é descrita qualitativamente ("preço de fundador
- * travado"), nunca quantificada.
+ * R$97 público na LP por decisão GATE 2026-09-08 (GNO-97 · 02:55:37Z) · GNO-136.
+ * Lista BR permanece interna (SSOT pricing). Moeda sempre completa em PT.
+ * O número do preço não mora aqui: vive na copy dos componentes que o exibem
+ * (FounderSlots e FounderConditions). Aqui só o tamanho da turma.
  */
 
 /** Tamanho da turma de fundadores. */
