@@ -33,8 +33,8 @@ describe('DoD · CFP — a palavra "diagnóstico" não existe na LP', () => {
 })
 
 /*
-   R$97 público na LP por decisão GATE 2026-09-08 (GNO-97 · 02:55:37Z) · GNO-136.
-   Lista BR permanece interna (SSOT pricing). Moeda sempre completa em PT.
+   R$97 público na LP por decisão GATE 2026-09-08, executada pela issue de estreia
+   do preço na LP. Lista BR permanece interna. Moeda sempre completa em PT.
    Regra viva: toda cifra renderizada é exatamente "R$97", em 3 montagens
    (FounderSlots no hero e no formulário + título em FounderConditions).
  */

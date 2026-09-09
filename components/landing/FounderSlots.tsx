@@ -48,8 +48,8 @@ export default function FounderSlots({ className = '' }: Readonly<{ className?: 
  // entre os dois estados, e sem nunca exibir um placar que não veio do banco.
   // Linha de preço: estática, acima do contador, nos dois estados (a primeira
   // pintura já mostra o preço, sem depender do fetch).
-  // R$97 público na LP por decisão GATE 2026-09-08 (GNO-97 · 02:55:37Z) · GNO-136.
-  // Lista BR permanece interna (SSOT pricing). Moeda sempre completa em PT.
+  // R$97 público na LP por decisão GATE 2026-09-08, executada pela issue de estreia
+  // do preço na LP. Lista BR permanece interna. Moeda sempre completa em PT.
   const priceLine = (
     <span className="block font-semibold text-text-secondary">
       Preço de fundador travado: R$97 · 100 primeiros da waitlist · sem cobrança agora
