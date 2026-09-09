@@ -46,22 +46,33 @@ export default function FounderSlots({ className = '' }: Readonly<{ className?: 
 
  // Loading e falha renderizam a MESMA frase — sem número, sem layout shift
  // entre os dois estados, e sem nunca exibir um placar que não veio do banco.
+  // Linha de preço: estática, acima do contador, nos dois estados (a primeira
+  // pintura já mostra o preço, sem depender do fetch).
+  // R$97 público na LP por decisão GATE 2026-09-08, executada pela issue de estreia
+  // do preço na LP. Lista BR permanece interna. Moeda sempre completa em PT.
+  const priceLine = (
+    <span className="block font-semibold text-text-secondary">
+      Preço de fundador travado: R$97 · 100 primeiros da waitlist · sem cobrança agora
+    </span>
+  )
+
   if (state.status !== 'ready') {
     return (
       <p className={className}>
+        {priceLine}
         Vagas de fundador limitadas aos{' '}
         <span className="font-bold text-accent-light">{FOUNDER_SLOTS} primeiros</span>
-        {' '}· sem cobrança agora
       </p>
     )
   }
 
   return (
     <p className={className}>
+      {priceLine}
       <span className="font-bold text-accent-light">
         {state.slotsRemaining} de {FOUNDER_SLOTS}
       </span>{' '}
-      vagas de fundador restantes · sem cobrança agora
+      vagas de fundador restantes
     </p>
   )
 }

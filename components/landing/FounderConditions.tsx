@@ -6,10 +6,10 @@ import { FOUNDER_SLOTS } from '@/lib/constants/founder'
 
 // "Condições de Fundador" (correção 1 da issue).
 //
-// VETO GATE: este bloco SUBSTITUI o card de preço "R$97" do wireframe. Não há
-// número de preço aqui, nem na tabela, nem em atributo, nem em comentário de
-// JSX que vá para o HTML. A condição é descrita qualitativamente — "preço de
-// fundador travado" — até o GATE fixar o preço final.
+// R$97 público na LP por decisão GATE 2026-09-08, executada pela issue de estreia
+// do preço na LP. Lista BR permanece interna. Moeda sempre completa em PT.
+// O preço aparece só no título do 1º benefício. A tabela de comparação segue
+// sem cifra nossa ("Fração do custo") e sem nome de concorrente.
 //
 // Item 2 do delta: a comparação é POR CATEGORIA. Sem nomes de concorrentes
 // (publicidade comparativa depreciativa) e sem cifra nossa. "R$ milhares" e
@@ -17,7 +17,7 @@ import { FOUNDER_SLOTS } from '@/lib/constants/founder'
 
 const CONDITIONS = [
   {
-    title: 'Preço de fundador travado',
+    title: 'Preço de fundador travado: R$97',
     body: `A condição de entrada dos ${FOUNDER_SLOTS} primeiros fica congelada para sempre, mesmo quando o preço público subir.`,
   },
   {

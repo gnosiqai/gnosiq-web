@@ -13,7 +13,9 @@ import { FILL_MINUTES, DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/me
 //
 // CFP: a palavra "diagnóstico" não aparece nesta superfície. A v1 dizia
 // "o diagnóstico cognitivo profundo era caro" — trocado por "mapeamento".
-// VETO GATE: nenhum preço numérico. A v1 trazia "A partir de R$97" aqui.
+// R$97 público na LP por decisão GATE 2026-09-08, executada pela issue de estreia
+// do preço na LP. Lista BR permanece interna. Moeda sempre completa em PT.
+// O preço entra pela linha de fundador em FounderSlots, abaixo do CTA.
 // CTA ÚNICO: a v1 tinha dois botões; a v2 tem um, e ele vai para a waitlist.
 
 export default function Hero() {
