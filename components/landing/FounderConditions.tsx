@@ -18,7 +18,7 @@ import { FOUNDER_SLOTS } from '@/lib/constants/founder'
 const CONDITIONS = [
   {
     title: 'Preço de fundador travado: R$97',
-    body: `A condição de entrada dos ${FOUNDER_SLOTS} primeiros fica congelada para sempre, mesmo quando o preço público subir.`,
+    body: `Para os ${FOUNDER_SLOTS} primeiros, esse preço nunca sobe: fica travado mesmo quando o preço público for outro.`,
   },
   {
     title: 'Reavaliação gratuita em 6 meses',

@@ -137,9 +137,9 @@ export default function PrivacyPage() {
               6. Contato e Controlador de Dados
             </h2>
             <p style={{ color: '#D1D5DB' }}>
-              <strong>GnosIQ</strong> · CNPJ 66.473.762/0001-13 · São Paulo, SP - Brasil
+              <strong>GNOSIQ TECNOLOGIA LTDA</strong> · CNPJ 66.473.762/0001-13
               <br />
-              Responsável pelo tratamento de dados: Carlos Alberto Gomes
+              Av. Cristóvão Colombo, 2144, Sala 408, Andar 3, Floresta, Porto Alegre/RS, CEP 90.560-001 - Brasil
               <br />
               E-mail:{' '}
               <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
@@ -246,9 +246,9 @@ export default function PrivacyPage() {
               6. Contact
             </h3>
             <p style={{ color: '#D1D5DB' }}>
-              <strong>GnosIQ</strong> · São Paulo, SP - Brazil
+              <strong>GNOSIQ TECNOLOGIA LTDA</strong> · CNPJ 66.473.762/0001-13
               <br />
-              Data Controller: Carlos Alberto Gomes
+              Av. Cristóvão Colombo, 2144, Sala 408, Andar 3, Floresta, Porto Alegre/RS, CEP 90.560-001 - Brazil
               <br />
               <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
                 hello@gnosiq.ai

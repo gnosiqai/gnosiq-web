@@ -35,10 +35,11 @@ describe('DoD · CFP — a palavra "diagnóstico" não existe na LP', () => {
 /*
    R$97 público na LP por decisão GATE 2026-09-08, executada pela issue de estreia
    do preço na LP. Lista BR permanece interna. Moeda sempre completa em PT.
-   Regra viva: toda cifra renderizada é exatamente "R$97", em 3 montagens
-   (FounderSlots no hero e no formulário + título em FounderConditions).
+   Regra viva: toda cifra renderizada é exatamente "R$97", em 5 montagens
+   (FounderSlots no hero e no formulário + título em FounderConditions +
+   resposta do FAQ "Quanto custa?", que aparece no bloco visível e no JSON-LD).
  */
-describe('DoD · GATE 2026-09-08 — toda cifra renderizada é exatamente R$97 (3 montagens); zero 297; zero cifra sem R$', () => {
+describe('DoD · GATE 2026-09-08 — toda cifra renderizada é exatamente R$97 (5 montagens); zero 297; zero cifra sem R$', () => {
  // Pega R$97, R$ 97, $97, US$ 97, R$1.234,56. "R$ milhares" passa: não tem dígito.
   const prices = html.match(/(?:R\$|US\$|\$)\s*\d+(?:[.,]\d+)?/g) ?? []
 
@@ -46,8 +47,8 @@ describe('DoD · GATE 2026-09-08 — toda cifra renderizada é exatamente R$97 (
     expect(prices.every((m) => m === 'R$97')).toBe(true)
   })
 
-  it('a cifra aparece 3 vezes: 2 montagens de FounderSlots + 1 título de FounderConditions', () => {
-    expect(prices).toHaveLength(3)
+  it('a cifra aparece 5 vezes: 2 FounderSlots + 1 título de FounderConditions + FAQ visível + FAQ no JSON-LD', () => {
+    expect(prices).toHaveLength(5)
   })
 
   it('a lista BR não vaza para a página', () => {

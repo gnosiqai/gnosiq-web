@@ -210,7 +210,7 @@ export default function WaitlistSection() {
 
       if (!res.ok || !data?.success) {
  // O token já foi consumido na tentativa: sem reset, o reenvio levaria
- // um token gasto e o servidor reprovaria de novo, para sempre.
+ // um token gasto e o servidor reprovaria de novo, indefinidamente.
         resetWidget()
         setStatus('error')
         setErrorMsg(data?.error ?? 'Serviço temporariamente indisponível. Tente novamente em instantes.')
@@ -372,8 +372,8 @@ export default function WaitlistSection() {
                   className="mt-1 w-4 h-4 shrink-0 accent-[#8B5CF6] cursor-pointer"
                 />
                 <span className="text-[13px] text-text-muted leading-relaxed">
-                  Concordo que a GnosIQ use os dados acima para me avisar sobre o acesso
-                  beta, conforme a{' '}
+                  Concordo que a GnosIQ use os dados acima para comunicação sobre o acesso
+                  antecipado ao beta e as condições de fundador, conforme a{' '}
                   <a
                     href="/privacy"
                     className="text-accent-light hover:text-accent underline"
@@ -412,7 +412,8 @@ export default function WaitlistSection() {
               )}
 
               <p className="text-[13px] text-text-muted text-center leading-relaxed">
-                Sem cobrança agora. Usamos seus dados apenas para o acesso ao beta.
+                Sem cobrança agora. Usamos seus dados apenas para comunicação sobre o acesso
+                antecipado ao beta e as condições de fundador.
               </p>
 
               <FounderSlots className="text-[13px] text-text-muted text-center" />
