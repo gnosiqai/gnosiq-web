@@ -1,6 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PRIVACY_POLICY_VERSION, PRIVACY_POLICY_DATE } from '@/lib/constants/legal';
+import {
+  COMPANY_LEGAL_NAME,
+  COMPANY_CNPJ,
+  COMPANY_ADDRESS_PT,
+  COMPANY_ADDRESS_EN,
+  COMPANY_EMAIL,
+  COMPANY_URL,
+} from '@/lib/constants/company';
 
 export const metadata: Metadata = {
   title: 'Política de Privacidade | GnosIQ',
@@ -137,17 +145,17 @@ export default function PrivacyPage() {
               6. Contato e Controlador de Dados
             </h2>
             <p style={{ color: '#D1D5DB' }}>
-              <strong>GNOSIQ TECNOLOGIA LTDA</strong> · CNPJ 66.473.762/0001-13
+              <strong>{COMPANY_LEGAL_NAME}</strong>{` · CNPJ ${COMPANY_CNPJ}`}
               <br />
-              Av. Cristóvão Colombo, 2144, Sala 408, Andar 3, Floresta, Porto Alegre/RS, CEP 90.560-001 - Brasil
+              {COMPANY_ADDRESS_PT}
               <br />
               E-mail:{' '}
-              <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
-                hello@gnosiq.ai
+              <a href={`mailto:${COMPANY_EMAIL}`} style={{ color: '#8B5CF6' }}>
+                {COMPANY_EMAIL}
               </a>
               <br />
               Site:{' '}
-              <a href="https://gnosiq.ai" style={{ color: '#8B5CF6' }}>
+              <a href={COMPANY_URL} style={{ color: '#8B5CF6' }}>
                 gnosiq.ai
               </a>
             </p>
@@ -246,15 +254,15 @@ export default function PrivacyPage() {
               6. Contact
             </h3>
             <p style={{ color: '#D1D5DB' }}>
-              <strong>GNOSIQ TECNOLOGIA LTDA</strong> · CNPJ 66.473.762/0001-13
+              <strong>{COMPANY_LEGAL_NAME}</strong>{` · CNPJ ${COMPANY_CNPJ}`}
               <br />
-              Av. Cristóvão Colombo, 2144, Sala 408, Andar 3, Floresta, Porto Alegre/RS, CEP 90.560-001 - Brazil
+              {COMPANY_ADDRESS_EN}
               <br />
-              <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
-                hello@gnosiq.ai
+              <a href={`mailto:${COMPANY_EMAIL}`} style={{ color: '#8B5CF6' }}>
+                {COMPANY_EMAIL}
               </a>{' '}
               ·{' '}
-              <a href="https://gnosiq.ai" style={{ color: '#8B5CF6' }}>
+              <a href={COMPANY_URL} style={{ color: '#8B5CF6' }}>
                 gnosiq.ai
               </a>
             </p>

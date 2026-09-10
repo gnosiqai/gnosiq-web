@@ -180,7 +180,7 @@ describe('DoD · schema JSON-LD', () => {
 describe('DoD · rodapé legal preservado', () => {
   it('CNPJ, endereço, e-mail e links legais estão no rodapé', () => {
     expect(html).toContain(COMPANY_CNPJ)
-    expect(html).toContain('Rua Cristóvão Colombo, 2144')
+    expect(html).toContain('Av. Cristóvão Colombo, 2144')
     expect(html).toContain('hello@gnosiq.ai')
     expect(html).toContain('Política de Privacidade')
     expect(html).toContain('Termos de Uso')

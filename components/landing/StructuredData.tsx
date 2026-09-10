@@ -45,7 +45,7 @@ export default function StructuredData() {
     taxID: COMPANY_CNPJ,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: COMPANY_ADDRESS.street,
+      streetAddress: `${COMPANY_ADDRESS.street}, ${COMPANY_ADDRESS.number}, ${COMPANY_ADDRESS.complement}`,
       addressLocality: COMPANY_ADDRESS.city,
       addressRegion: COMPANY_ADDRESS.region,
       postalCode: COMPANY_ADDRESS.postalCode,
