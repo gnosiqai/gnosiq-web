@@ -10,8 +10,11 @@ export const metadata: Metadata = {
 // 1.0 -> 1.1. A cláusula 3 listava só e-mail na lista de espera;
 // a LP v2 coleta WhatsApp. Mesmo princípio da Política de Privacidade —
 // documento legal que muda de conteúdo tem que mudar de carimbo.
-const TERMS_VERSION = '1.1'
-const TERMS_DATE = '25 de agosto de 2026'
+// 1.1 -> 1.2. Nova cláusula 5 "Condições de Fundador" (pacote aprovado pelo
+// founder e ratificado pelo RISK) e controlador atualizado para a razão social
+// e a sede fiscal da empresa. As cláusulas seguintes foram renumeradas.
+const TERMS_VERSION = '1.2'
+const TERMS_DATE = '10 de setembro de 2026'
 
 export default function TermsPage() {
   return (
@@ -177,7 +180,7 @@ export default function TermsPage() {
           </p>
         </div>
 
-        {/* Cláusula 5 — Limitação de Responsabilidade */}
+        {/* Cláusula 5 — Condições de Fundador */}
         <div style={{ marginBottom: '2.5rem' }}>
           <h2
             style={{
@@ -187,7 +190,56 @@ export default function TermsPage() {
               marginBottom: '0.75rem',
             }}
           >
-            5. Limitação de Responsabilidade
+            5. Condições de Fundador
+          </h2>
+          <p style={{ lineHeight: 1.7, marginBottom: '1rem' }}>
+            Os <strong style={{ color: '#FFFFFF' }}>100 (cem) primeiros inscritos</strong> na lista de espera da GnosIQ
+            (os &ldquo;Fundadores&rdquo;) fazem jus às condições abaixo, nos termos desta cláusula.
+          </p>
+          <ol style={{ paddingLeft: '1.5rem', lineHeight: 1.7 }}>
+            <li style={{ marginBottom: '0.75rem' }}>
+              <strong style={{ color: '#FFFFFF' }}>Preço travado.</strong> O preço da avaliação cognitiva individual
+              fica travado em <strong style={{ color: '#FFFFFF' }}>R$97 (noventa e sete reais)</strong> para o Fundador. A condição
+              é pessoal e intransferível, vinculada ao endereço de e-mail inscrito na lista de espera, e
+              não alcança outros produtos, planos, tiers, upgrades ou serviços adicionais que a GnosIQ venha
+              a oferecer (lista exemplificativa).
+            </li>
+            <li style={{ marginBottom: '0.75rem' }}>
+              <strong style={{ color: '#FFFFFF' }}>Vigência.</strong> A condição vigora enquanto o serviço de avaliação
+              cognitiva individual for oferecido pela GnosIQ e a conta do Fundador for mantida ativa.
+            </li>
+            <li style={{ marginBottom: '0.75rem' }}>
+              <strong style={{ color: '#FFFFFF' }}>Reavaliação gratuita.</strong> O Fundador tem direito a 1 (uma)
+              reavaliação gratuita, exercível do 6º (sexto) ao 9º (nono) mês contados da conclusão da
+              primeira avaliação, pelo fluxo disponível no produto. O direito não é cumulativo, não é
+              transferível e não é conversível em crédito, desconto ou qualquer outro valor.
+            </li>
+            <li style={{ marginBottom: '0.75rem' }}>
+              <strong style={{ color: '#FFFFFF' }}>Critério dos 100 primeiros.</strong> A ordem é definida pela data e
+              hora de inscrição na lista de espera, conforme o registro de criação mantido pela GnosIQ,
+              considerando uma inscrição por endereço de e-mail. Em caso de inscrições duplicadas, prevalece
+              a primeira. A condição de Fundador é confirmada no lançamento do serviço.
+            </li>
+            <li>
+              <strong style={{ color: '#FFFFFF' }}>Sem compromisso de data e sem cobrança antecipada.</strong> A inscrição
+              na lista de espera é gratuita e não gera obrigação de compra. A GnosIQ não assume compromisso
+              de data de lançamento, e nenhum valor é cobrado antes da disponibilização do serviço ao
+              Fundador.
+            </li>
+          </ol>
+        </div>
+
+        {/* Cláusula 6 — Limitação de Responsabilidade */}
+        <div style={{ marginBottom: '2.5rem' }}>
+          <h2
+            style={{
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              color: '#8B5CF6',
+              marginBottom: '0.75rem',
+            }}
+          >
+            6. Limitação de Responsabilidade
           </h2>
           <p style={{ lineHeight: 1.7 }}>
             Os relatórios GnosIQ são instrumentos de autoconhecimento e desenvolvimento.
@@ -196,7 +248,7 @@ export default function TermsPage() {
           </p>
         </div>
 
-        {/* Cláusula 6 — Jurisdição */}
+        {/* Cláusula 7 — Jurisdição */}
         <div style={{ marginBottom: '2.5rem' }}>
           <h2
             style={{
@@ -206,7 +258,7 @@ export default function TermsPage() {
               marginBottom: '0.75rem',
             }}
           >
-            6. Jurisdição e Foro
+            7. Jurisdição e Foro
           </h2>
           <p style={{ lineHeight: 1.7 }}>
             Estes Termos são regidos pelas leis da{' '}
@@ -217,7 +269,7 @@ export default function TermsPage() {
           </p>
         </div>
 
-        {/* Cláusula 7 — Controlador dos dados */}
+        {/* Cláusula 8 — Controlador dos dados */}
         <div style={{ marginBottom: '3rem' }}>
           <h2
             style={{
@@ -227,7 +279,7 @@ export default function TermsPage() {
               marginBottom: '0.75rem',
             }}
           >
-            7. Controlador dos Dados e Contato
+            8. Controlador dos Dados e Contato
           </h2>
           <p style={{ lineHeight: 1.7 }}>
             O controlador dos dados pessoais tratados pela GnosIQ é:
@@ -242,11 +294,13 @@ export default function TermsPage() {
               lineHeight: 2,
             }}
           >
-            <strong style={{ color: '#FFFFFF' }}>Carlos Alberto Gomes</strong>
+            <strong style={{ color: '#FFFFFF' }}>GNOSIQ TECNOLOGIA LTDA</strong>
             <br />
-            GnosIQ · CNPJ 66.473.762/0001-13
+            CNPJ 66.473.762/0001-13
             <br />
-            São Paulo, SP - Brasil
+            Av. Cristóvão Colombo, 2144, Sala 408, Andar 3, Floresta
+            <br />
+            Porto Alegre/RS, CEP 90.560-001 - Brasil
             <br />
             <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
               hello@gnosiq.ai
