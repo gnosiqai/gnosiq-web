@@ -119,6 +119,43 @@ describe('DoD · CMO restrições 4/5: nenhum "agente" no HTML público renderiz
   })
 })
 
+/*
+   Decisão GROWTH (RISK-OK, 2026-09-11): nenhum tempo de sessão em superfície
+   pública até a mediana de conclusão MEDIDA no beta entrar na fonte canônica.
+   O único tempo público é o de entrega (~30 min, da avaliação ao relatório).
+   O padrão fica atado à unidade de tempo (número vetado + "min"/"minutos"):
+   um "22" solto em CEP, data ou preço não derruba o DoD.
+ */
+describe('DoD · GROWTH 2026-09-11: nenhum tempo de sessão no HTML público renderizado', () => {
+  const SESSION_TIME = /22\s?min(utos)?\b/gi
+
+  it('a LP não cita o tempo de sessão vetado em nenhuma forma (min / minutos)', () => {
+    expect(html.match(SESSION_TIME) ?? []).toEqual([])
+  })
+
+  for (const [route, page] of Object.entries(legalPages)) {
+    it(`${route} não cita o tempo de sessão vetado em nenhuma forma`, () => {
+      expect(page.match(SESSION_TIME) ?? []).toEqual([])
+    })
+  }
+
+  it('o Hero descreve a avaliação como adaptativa, sem duração de sessão', () => {
+    expect(html).toContain(
+      'A avaliação é adaptativa e se ajusta às suas respostas, do seu computador ou celular.',
+    )
+  })
+
+  it('a resposta do FAQ sobre tempo aparece 2 vezes (visível + JSON-LD) com a entrega como único tempo', () => {
+    const answer =
+      'Cerca de 30 minutos do início da avaliação até o relatório de 18 páginas, direto do navegador, sem semanas de espera. A avaliação é adaptativa: se ajusta às suas respostas, por isso o tempo varia um pouco de pessoa para pessoa.'
+    expect(html.split(answer).length - 1).toBe(2)
+  })
+
+  it('o MetricsStrip usa a entrega como único tempo, com o rótulo em caixa-alta', () => {
+    expect(html).toContain('DA AVALIAÇÃO AO RELATÓRIO')
+  })
+})
+
 describe('DoD · estrutura AEO', () => {
   it('o H1 é a pergunta do comprador', () => {
     expect(html).toMatch(/<h1[^>]*>[\s\S]*Como a sua mente[\s\S]*realmente[\s\S]*funciona\?[\s\S]*<\/h1>/)

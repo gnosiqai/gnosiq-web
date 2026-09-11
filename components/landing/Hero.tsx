@@ -3,7 +3,7 @@
 import posthog from 'posthog-js'
 import HeroBackground from './HeroBackground'
 import FounderSlots from './FounderSlots'
-import { FILL_MINUTES, DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
+import { DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 
 // Hero v2 (AEO waitlist-first).
 //
@@ -74,8 +74,7 @@ export default function Hero() {
           instrumentos validados e IA especializada, e entrega um relatório de{' '}
           {REPORT_PAGES} páginas com o seu GnoScore™ em cerca de {DELIVERY_MINUTES}{' '}
           minutos, direto do navegador, sem semanas de espera. A avaliação é
-          adaptativa e leva cerca de {FILL_MINUTES} minutos, do seu computador ou
-          celular.
+          adaptativa e se ajusta às suas respostas, do seu computador ou celular.
         </p>
 
         {/* ICP — item 4 do delta */}
