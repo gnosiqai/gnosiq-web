@@ -14,7 +14,7 @@
  * cifra é a das Condições de Fundador, sempre "R$97" (moeda completa).
  */
 
-import { FILL_MINUTES, DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
+import { DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 import { FOUNDER_SLOTS } from '@/lib/constants/founder'
 
 export interface FaqItem {
@@ -46,7 +46,7 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: 'Quanto tempo leva e como recebo?',
     answer:
-      `A avaliação é adaptativa e leva cerca de ${FILL_MINUTES} minutos, direto do navegador. O relatório de ${REPORT_PAGES} páginas com o seu GnoScore™ fica pronto em cerca de ${DELIVERY_MINUTES} minutos e chega pelo canal que você cadastrou.`,
+      `Cerca de ${DELIVERY_MINUTES} minutos do início da avaliação até o relatório de ${REPORT_PAGES} páginas, direto do navegador, sem semanas de espera. A avaliação é adaptativa: se ajusta às suas respostas, por isso o tempo varia um pouco de pessoa para pessoa.`,
   },
   {
     question: 'Quando o beta abre?',

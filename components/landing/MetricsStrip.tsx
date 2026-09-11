@@ -1,11 +1,15 @@
 'use client'
 
 import AnimatedCounter from '@/components/ui/AnimatedCounter'
-import { FILL_MINUTES, DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
+import { DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 
-// faixa de métricas reais, preservada da LP atual (a issue lista
-// "~22 min preenchimento · ~30 min entrega · 18 páginas" entre os itens que
-// o wireframe cortou e que DEVEM sobreviver).
+// faixa de métricas reais, preservada da LP atual: "~30 min da avaliação ao
+// relatório · 18 páginas" (itens que o wireframe cortou e que DEVEM sobreviver).
+//
+// Tempo de sessão (preenchimento) saiu de toda superfície pública por decisão
+// GROWTH/RISK: o único tempo público é a entrega, e o DoD veta o antigo valor.
+// Duas colunas: a antiga coluna "Entrega" (mesmo ~30 min) foi fundida nesta.
+// Um eventual terceiro número é decisão GROWTH (follow-up).
 //
 // Substitui components/landing/SocialProof.tsx, cujo nome já não descrevia o
 // conteúdo: os depoimentos saíram na e o NPS na sobrando só
@@ -14,23 +18,14 @@ import { FILL_MINUTES, DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/me
 export default function MetricsStrip() {
   return (
     <section className="reveal border-y border-accent/10 py-12 px-6">
-      <dl className="max-w-3xl mx-auto grid grid-cols-3 gap-6 md:gap-20 text-center">
+      <dl className="max-w-3xl mx-auto grid grid-cols-2 gap-6 md:gap-20 text-center">
         <div>
           <dd className="text-3xl md:text-5xl font-bold text-text-primary tracking-tight">
-            ~<AnimatedCounter value={FILL_MINUTES} duration={1400} />
+            ~<AnimatedCounter value={DELIVERY_MINUTES} duration={1400} />
             <span className="text-lg md:text-2xl text-accent-light">min</span>
           </dd>
           <dt className="font-mono text-[10px] md:text-xs uppercase tracking-[0.14em] text-text-muted mt-2">
-            Avaliação
-          </dt>
-        </div>
-        <div>
-          <dd className="text-3xl md:text-5xl font-bold text-text-primary tracking-tight">
-            ~<AnimatedCounter value={DELIVERY_MINUTES} duration={1600} />
-            <span className="text-lg md:text-2xl text-accent-light">min</span>
-          </dd>
-          <dt className="font-mono text-[10px] md:text-xs uppercase tracking-[0.14em] text-text-muted mt-2">
-            Entrega
+            DA AVALIAÇÃO AO RELATÓRIO
           </dt>
         </div>
         <div>

@@ -11,29 +11,29 @@ afterEach(() => {
 
 describe('AnimatedCounter ( regression)', () => {
   it('renders the exact final value on static/SSR output, not an intermediate frame', () => {
- // Before the fix, static output showed Math.floor(value * 0.85) — e.g. 22 -> 18,
+ // Before the fix, static output showed Math.floor(value * 0.85) — e.g. 40 -> 34,
  // 30 -> 25, 18 -> 15 — which is exactly the "stale" counters reported in prod.
-    const fill = renderToStaticMarkup(<AnimatedCounter value={22} suffix="min" />)
+    const fill = renderToStaticMarkup(<AnimatedCounter value={40} suffix="min" />)
     const delivery = renderToStaticMarkup(<AnimatedCounter value={30} suffix="min" />)
     const pages = renderToStaticMarkup(<AnimatedCounter value={18} />)
 
-    expect(fill).toContain('22min')
+    expect(fill).toContain('40min')
     expect(delivery).toContain('30min')
     expect(pages).toContain('18')
-    expect(fill).not.toContain('18min')
+    expect(fill).not.toContain('34min')
     expect(delivery).not.toContain('25min')
   })
 
   it('still respects an explicit `from` for the eventual client-side animation start', () => {
  // `from` only affects the animated count-up after hydration; static output is
  // always the target value.
-    expect(renderToStaticMarkup(<AnimatedCounter value={22} from={10} />)).toContain('22')
+    expect(renderToStaticMarkup(<AnimatedCounter value={30} from={10} />)).toContain('30')
   })
 
   it('keeps the final value immediately when prefers-reduced-motion is set', () => {
     vi.stubGlobal('matchMedia', () => ({ matches: true }))
-    render(<AnimatedCounter value={22} suffix="min" />)
-    expect(screen.getByText('22min')).toBeTruthy()
+    render(<AnimatedCounter value={30} suffix="min" />)
+    expect(screen.getByText('30min')).toBeTruthy()
   })
 
   it('animates from 0 up to the target value once it intersects, client-side only', () => {
@@ -56,10 +56,10 @@ describe('AnimatedCounter ( regression)', () => {
     })
     vi.stubGlobal('cancelAnimationFrame', () => {})
 
-    const { container } = render(<AnimatedCounter value={22} duration={1000} />)
+    const { container } = render(<AnimatedCounter value={30} duration={1000} />)
 
- // Before intersecting, the SSR/hydration value (22) is still shown.
-    expect(container.textContent).toBe('22')
+ // Before intersecting, the SSR/hydration value (30) is still shown.
+    expect(container.textContent).toBe('30')
 
     act(() => {
       observerCallback([{ isIntersecting: true }])
@@ -73,6 +73,6 @@ describe('AnimatedCounter ( regression)', () => {
     })
 
  // ...and lands back on the exact target value.
-    expect(container.textContent).toBe('22')
+    expect(container.textContent).toBe('30')
   })
 })
