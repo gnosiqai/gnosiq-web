@@ -37,10 +37,13 @@ describe('seções da LP renderizam as métricas canônicas', () => {
     expect(html).toContain(`${DELIVERY_MINUTES} minutos`)
   })
 
-  it('Science cita o tempo de preenchimento e o número de páginas', () => {
+  it('Science cita o tempo de entrega e o número de páginas no card 03', () => {
     const html = renderToStaticMarkup(<Science />)
-    expect(html).toContain(`${FILL_MINUTES} minutos`)
     expect(html).toContain(`${REPORT_PAGES} páginas`)
+    expect(html).toContain(`${DELIVERY_MINUTES} minutos`)
+ // O tempo de preenchimento saiu da seção Ciência por decisão RISK/GROWTH:
+ // o card 01 descreve o benefício (adaptativa, no navegador), sem cifra.
+    expect(html).not.toContain(`${FILL_MINUTES} minutos`)
   })
 
   it('FounderConditions usa o tempo de entrega canônico na comparação', () => {
