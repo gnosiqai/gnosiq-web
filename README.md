@@ -30,17 +30,14 @@ one structured report, one programmatic surface.
 
 ## What is GnosIQ
 
-GnosIQ maps a cognitive profile from an adaptive session and returns a written
-report in about 30 minutes, grounded in the CHC model, the most widely accepted
-framework in contemporary intelligence research.
+GnosIQ maps a cognitive profile from one adaptive session and returns a written
+report in about 30 minutes. The assessment adjusts to your answers as you go.
+The report is written in plain language: what your profile looks like, what the
+results mean, and what to do with them.
 
-Three specialized AI agents, in sequence:
-
-| | Agent | What it does |
-|---|---|---|
-| 01 | Adaptive assessment | Runs the session and adjusts the path to the answers given |
-| 02 | Psychometric analysis | Computes the GnoScore™ and the profile across CHC domains |
-| 03 | Report writing | Writes the report: what the numbers mean and what to do with them |
+The assessment is built on internationally validated instruments and specialized
+AI. The methodology, the scoring, and the way the report is produced are
+proprietary and live outside this repository.
 
 ## Status
 
@@ -116,6 +113,6 @@ This report identifies cognitive and behavioral patterns using validated
 screening instruments. It does NOT replace clinical diagnosis by a licensed
 neurologist, clinical psychologist, or psychiatrist.
 
-© 2026 GnosIQ Tecnologia Ltda. · CNPJ 66.473.762/0001-13 · Porto Alegre, Brazil
+© 2026 GNOSIQ TECNOLOGIA LTDA · CNPJ 66.473.762/0001-13 · Porto Alegre, Brazil
 
 </div>

@@ -21,8 +21,10 @@ export const metadata: Metadata = {
 // 1.1 -> 1.2. Nova cláusula 5 "Condições de Fundador" (pacote aprovado pelo
 // founder e ratificado pelo RISK) e controlador atualizado para a razão social
 // e a sede fiscal da empresa. As cláusulas seguintes foram renumeradas.
-const TERMS_VERSION = '1.2'
-const TERMS_DATE = '10 de setembro de 2026'
+// 1.2 -> 1.2.1. Cláusula 7: foro da comarca da sede (Porto Alegre) com a
+// ressalva do foro do domicílio do consumidor; eleição exclusiva removida.
+const TERMS_VERSION = '1.2.1'
+const TERMS_DATE = '11 de setembro de 2026'
 
 export default function TermsPage() {
   return (
@@ -270,10 +272,11 @@ export default function TermsPage() {
           </h2>
           <p style={{ lineHeight: 1.7 }}>
             Estes Termos são regidos pelas leis da{' '}
-            <strong style={{ color: '#FFFFFF' }}>República Federativa do Brasil</strong>. Fica eleito o foro da
-            comarca de <strong style={{ color: '#FFFFFF' }}>São Paulo, Estado de São Paulo</strong>, para dirimir
-            quaisquer controvérsias decorrentes deste instrumento, com renúncia expressa a qualquer outro, por
-            mais privilegiado que seja.
+            <strong style={{ color: '#FFFFFF' }}>República Federativa do Brasil</strong>. Para as controvérsias
+            decorrentes destes Termos, fica eleito o foro da comarca de{' '}
+            <strong style={{ color: '#FFFFFF' }}>Porto Alegre, Estado do Rio Grande do Sul</strong>, ressalvado, nas
+            relações de consumo, o direito do consumidor de optar pelo foro do seu próprio domicílio, nos termos da
+            legislação aplicável.
           </p>
         </div>
 
