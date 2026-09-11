@@ -6,6 +6,8 @@ vi.mock('next/navigation', () => ({
 }))
 
 import Home from '@/app/page'
+import Privacy from '@/app/privacy/page'
+import Terms from '@/app/terms/page'
 import { FAQ_ITEMS } from '@/lib/constants/faq'
 import { COMPANY_CNPJ } from '@/lib/constants/company'
 
@@ -20,6 +22,10 @@ import { COMPANY_CNPJ } from '@/lib/constants/company'
  */
 
 const html = renderToStaticMarkup(<Home />)
+const legalPages = {
+  '/privacy': renderToStaticMarkup(<Privacy />),
+  '/terms': renderToStaticMarkup(<Terms />),
+}
 
 describe('DoD · CFP — a palavra "diagnóstico" não existe na LP', () => {
   it('nenhuma flexão de diagnóstic* no HTML renderizado', () => {
@@ -70,6 +76,46 @@ describe('DoD · GATE 2026-09-08 — toda cifra renderizada é exatamente R$97 (
   it('a condição de fundador é qualitativa, não um número', () => {
     expect(html).toContain('Preço de fundador travado')
     expect(html).toContain('Fração do custo')
+  })
+})
+
+/*
+   Restrições 4 e 5 da CMO: a LP vende benefício e resultado, nunca a composição
+   interna do pipeline. "Agente" (e "agent") é a palavra que reintroduz a contagem
+   de componentes pela porta dos fundos, então é vetada em todo HTML público
+   renderizado: LP e páginas legais. "CHC" não entra no veto: é taxonomia pública
+   e continua sendo a única referência teórica citada na seção Ciência.
+ */
+describe('DoD · CMO restrições 4/5: nenhum "agente" no HTML público renderizado', () => {
+  const AGENT_WORD = /\bagentes?\b|\bagents?\b/gi
+
+  it('a LP não menciona "agente" nem "agent" em nenhuma flexão', () => {
+    expect(html.match(AGENT_WORD) ?? []).toEqual([])
+  })
+
+  for (const [route, page] of Object.entries(legalPages)) {
+    it(`${route} não menciona "agente" nem "agent" em nenhuma flexão`, () => {
+      expect(page.match(AGENT_WORD) ?? []).toEqual([])
+    })
+  }
+
+  it('"modelo CHC" aparece 5 vezes no HTML: abertura da seção Ciência + card 02 + WhatYouGet + FAQ visível + FAQ no JSON-LD', () => {
+ // São 4 textos distintos na página; a resposta do FAQ renderiza duas vezes
+ // (bloco visível e schema FAQPage), como a cifra R$97 acima. Trava o
+ // inalterado: a troca dos cards não pode somar nem subtrair referência ao CHC.
+    expect(html.match(/modelo CHC/g) ?? []).toHaveLength(5)
+  })
+
+  it('os 3 cards da seção Ciência descrevem benefício e resultado, não a composição do pipeline', () => {
+    expect(html).toContain(
+      'A avaliação se ajusta às suas respostas enquanto você responde, direto do navegador.',
+    )
+    expect(html).toContain(
+      'O seu GnoScore™ e o seu perfil por domínio do modelo CHC são calculados a partir das suas respostas, com IA especializada em cognição.',
+    )
+    expect(html).toContain(
+      'Você recebe as 18 páginas em cerca de 30 minutos: o que os números significam e o que fazer com eles.',
+    )
   })
 })
 

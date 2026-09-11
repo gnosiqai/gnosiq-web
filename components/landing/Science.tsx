@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useStaggerReveal } from '@/hooks/useStaggerReveal'
 import founderPhoto from '@/public/foto-de-perfil-linkedin.jpg'
-import { FILL_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
+import { DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 
 // "Isso tem base científica?" · bloco de PROVA da categoria.
 //
@@ -18,25 +18,27 @@ import { FILL_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 // Qualquer nome próprio de instrumento que voltar a esta seção reabre o risco
 // que a correção 3 fechou.
 //
-// Substitui HowItWorks.tsx: os 3 passos (os 3 agentes de IA, em nível alto,
-// zero internals e zero prompts) migram para cá como a metodologia que
-// sustenta a resposta "sim, tem base científica".
+// Substitui HowItWorks.tsx: os 3 passos migram para cá como a metodologia que
+// sustenta a resposta "sim, tem base científica". Cada card descreve o
+// benefício e o resultado da etapa, nunca a composição interna do pipeline
+// (contagem de componentes, camadas ou internals): a etapa é o que o usuário
+// vive, não o que a roda.
 
 const STEPS = [
   {
     num: '01',
     title: 'Avaliação adaptativa',
-    body: `Um agente de IA conduz a avaliação e ajusta o percurso às suas respostas, em cerca de ${FILL_MINUTES} minutos.`,
+    body: 'A avaliação se ajusta às suas respostas enquanto você responde, direto do navegador.',
   },
   {
     num: '02',
     title: 'Análise psicométrica',
-    body: 'Um segundo agente calcula o seu GnoScore™ e o perfil por domínio do modelo CHC.',
+    body: 'O seu GnoScore™ e o seu perfil por domínio do modelo CHC são calculados a partir das suas respostas, com IA especializada em cognição.',
   },
   {
     num: '03',
     title: 'Relatório em linguagem clara',
-    body: `Um terceiro agente redige as ${REPORT_PAGES} páginas: o que os números significam e o que fazer com eles.`,
+    body: `Você recebe as ${REPORT_PAGES} páginas em cerca de ${DELIVERY_MINUTES} minutos: o que os números significam e o que fazer com eles.`,
   },
 ] as const
 
