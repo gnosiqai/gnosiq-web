@@ -1,5 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import {
+  COMPANY_LEGAL_NAME,
+  COMPANY_CNPJ,
+  COMPANY_ADDRESS_LINE1,
+  COMPANY_ADDRESS_LINE2_PT,
+  COMPANY_EMAIL,
+  COMPANY_URL,
+} from '@/lib/constants/company'
 
 export const metadata: Metadata = {
   title: 'Termos de Uso | GnosIQ',
@@ -294,19 +302,19 @@ export default function TermsPage() {
               lineHeight: 2,
             }}
           >
-            <strong style={{ color: '#FFFFFF' }}>GNOSIQ TECNOLOGIA LTDA</strong>
+            <strong style={{ color: '#FFFFFF' }}>{COMPANY_LEGAL_NAME}</strong>
             <br />
-            CNPJ 66.473.762/0001-13
+            {`CNPJ ${COMPANY_CNPJ}`}
             <br />
-            Av. Cristóvão Colombo, 2144, Sala 408, Andar 3, Floresta
+            {COMPANY_ADDRESS_LINE1}
             <br />
-            Porto Alegre/RS, CEP 90.560-001 - Brasil
+            {COMPANY_ADDRESS_LINE2_PT}
             <br />
-            <a href="mailto:hello@gnosiq.ai" style={{ color: '#8B5CF6' }}>
-              hello@gnosiq.ai
+            <a href={`mailto:${COMPANY_EMAIL}`} style={{ color: '#8B5CF6' }}>
+              {COMPANY_EMAIL}
             </a>{' '}
             ·{' '}
-            <a href="https://gnosiq.ai" style={{ color: '#8B5CF6' }}>
+            <a href={COMPANY_URL} style={{ color: '#8B5CF6' }}>
               gnosiq.ai
             </a>
           </div>
