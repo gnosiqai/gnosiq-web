@@ -120,6 +120,10 @@ export default function HeroBackground() {
     <canvas
       ref={canvasRef}
       className="absolute inset-0 w-full h-full pointer-events-none"
+      // Decorativo: fora da ordem de foco E fora da árvore de acessibilidade.
+      // Os dois juntos, porque `aria-hidden` num elemento que ainda recebe foco
+      // deixa o leitor de tela num nó invisível (achado de confiabilidade do Sonar).
+      tabIndex={-1}
       aria-hidden="true"
     />
   )
