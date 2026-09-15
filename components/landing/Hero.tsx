@@ -20,7 +20,7 @@ import { DELIVERY_MINUTES, REPORT_PAGES } from '@/lib/constants/metrics'
 
 export default function Hero() {
   const handleCtaClick = () => {
-    posthog.capture('cta clicked', {
+    posthog.capture('cta_clicked', {
       label: 'hero_primary',
       destination: '#waitlist',
     })

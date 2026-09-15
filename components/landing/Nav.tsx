@@ -46,7 +46,7 @@ export default function Nav() {
             href="#waitlist"
             onClick={(e) => {
               e.preventDefault()
-              posthog.capture('cta clicked', {
+              posthog.capture('cta_clicked', {
                 label: 'nav_primary',
                 destination: '#waitlist',
               })
