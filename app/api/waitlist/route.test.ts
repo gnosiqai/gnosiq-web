@@ -656,6 +656,32 @@ describe('o caminho de e-mail não falha em silêncio', () => {
     vi.restoreAllMocks()
   })
 
+  it('a chave do provedor não vaza em log, evento nem resposta na falha de e-mail', async () => {
+ // Espelho da trava do Turnstile ("o log não carrega o valor da chave"),
+ // agora para o segundo segredo que esta rota toca. Usa a classe de erro
+ // REAL e uma chave sentinela: o que se prova é a propriedade, não a copy.
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const CHAVE = 're_chave_sentinela_que_nao_pode_vazar'
+    vi.stubEnv('RESEND_API_KEY', CHAVE)
+    const { EmailConfigError } = await import('@/lib/email')
+    sendWaitlistConfirmationPT.mockRejectedValue(new EmailConfigError('RESEND_API_KEY'))
+
+    const res = await POST(req(emailLead))
+    const body = JSON.stringify(await res.json())
+
+    expect(res.status).toBe(200)
+    expect(body).not.toContain(CHAVE)
+    expect(body).not.toContain('RESEND_API_KEY')
+
+    const logged = errorSpy.mock.calls.flat().join(' ')
+    expect(logged).toMatch(/RESEND_API_KEY/)
+    expect(logged).not.toContain(CHAVE)
+    expect(JSON.stringify(captureServerEvent.mock.calls)).not.toContain(CHAVE)
+
+    vi.unstubAllEnvs()
+    vi.restoreAllMocks()
+  })
+
   it('falha de e-mail NÃO derruba a inscrição — o lead já está gravado', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
     const { EmailDeliveryError } = await import('@/lib/email')

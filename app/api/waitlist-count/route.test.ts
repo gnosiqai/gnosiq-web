@@ -44,7 +44,7 @@ vi.mock('next/cache', () => ({
 }))
 
 const route = await import('./route')
-const { GET, runtime, revalidate } = route
+const { GET, runtime } = route
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -71,7 +71,7 @@ it('a leitura é amortizada em janela de 10s, e a rota não é pré-renderizada'
   expect(cacheSpy.revalidate).toBe(10)
   expect(cacheSpy.keys).toEqual(['waitlist-count'])
 
-  expect(revalidate).toBeUndefined()
+  expect((route as { revalidate?: number }).revalidate).toBeUndefined()
   expect((route as { dynamic?: string }).dynamic).toBeUndefined()
 })
 

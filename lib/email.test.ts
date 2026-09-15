@@ -91,6 +91,53 @@ describe('fail-fast de configuração (absorve o item 7 da )', () => {
   })
 })
 
+/**
+ * a chave do provedor nunca atravessa para erro, log ou resposta.
+ *
+ * Espelha a trava equivalente de lib/turnstile.ts ("o erro nomeia a variável
+ * e o defeito, NUNCA o valor da chave"). A key entra no SDK pelo constructor
+ * e é o único lugar onde ela existe; qualquer mensagem que este módulo
+ * produz no caminho de FALHA tem de sair limpa dela.
+ */
+describe('RESEND_API_KEY não vaza no caminho de falha', () => {
+  const CHAVE = 're_chave_sentinela_que_nao_pode_vazar'
+
+  it('erro de configuração nomeia a variável, NUNCA o valor da chave', async () => {
+    vi.stubEnv('RESEND_API_KEY', CHAVE)
+    vi.stubEnv('EMAIL_FROM', '')
+
+    const erro = (await sendWaitlistConfirmationPT({ email: 'lead@exemplo.com' }).catch(
+      (e: unknown) => e,
+    )) as Error
+
+    expect(erro).toBeInstanceOf(EmailConfigError)
+    expect(erro.message).toMatch(/EMAIL_FROM/)
+    expect(erro.message).not.toContain(CHAVE)
+    expect(send).not.toHaveBeenCalled()
+  })
+
+  it('recusa do provedor vira exceção que nomeia o motivo, não a chave', async () => {
+    vi.stubEnv('RESEND_API_KEY', CHAVE)
+    recusado('Unauthorized')
+
+    const erro = (await sendWaitlistConfirmationPT({ email: 'lead@exemplo.com' }).catch(
+      (e: unknown) => e,
+    )) as Error
+
+    expect(erro).toBeInstanceOf(EmailDeliveryError)
+    expect(erro.message).toBe('Unauthorized')
+    expect(erro.message).not.toContain(CHAVE)
+  })
+
+  it('o payload enviado ao SDK não carrega a chave em campo nenhum', async () => {
+    vi.stubEnv('RESEND_API_KEY', CHAVE)
+
+    await sendWaitlistConfirmationPT({ email: 'lead@exemplo.com' })
+
+    expect(JSON.stringify(send.mock.calls)).not.toContain(CHAVE)
+  })
+})
+
 describe('trava do caminho silencioso', () => {
   it('erro devolvido pelo SDK VIRA EXCEÇÃO — não passa por sucesso', async () => {
     recusado('Unauthorized')

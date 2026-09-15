@@ -26,7 +26,7 @@ describe('Nav — CTA único e navegação sem hash', () => {
 
     fireEvent.click(screen.getByRole('link', { name: /entrar na lista/i }))
 
-    expect(capture).toHaveBeenCalledWith('cta clicked', {
+    expect(capture).toHaveBeenCalledWith('cta_clicked', {
       label: 'nav_primary',
       destination: '#waitlist',
     })

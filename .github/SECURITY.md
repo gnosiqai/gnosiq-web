@@ -1,34 +1,32 @@
 # Security Policy
 
-## Supported Versions
+## Reporting a vulnerability
 
-| Version | Supported |
-|---------|-----------|
-| main    | ✅ Yes    |
+Do not open a public GitHub issue for security vulnerabilities.
 
-## Reporting a Vulnerability
+Report privately by e-mail: **security@gnosiq.ai**
 
-**Do NOT open a public GitHub issue for security vulnerabilities.**
+Please include:
 
-Report security issues privately via email: **security@gnosiq.ai**
-
-Include:
-- Description of the vulnerability
+- A description of the vulnerability
 - Steps to reproduce
 - Potential impact
-- Suggested fix (optional)
+- A suggested fix (optional)
 
-**Response time:** 48 hours acknowledgment · 7 days resolution target
+**Response time:** acknowledgment within 48 business hours, on a best-effort basis. There is no fixed remediation SLA: fixes are prioritized by impact.
 
 ## Scope
 
-- gnosiq.ai API endpoints
-- Authentication and authorization logic
-- Data handling and privacy (LGPD/GDPR)
-- Third-party integrations (GCP, Vercel)
+- `gnosiq.ai` and the routes it currently serves
+- Nothing else is in scope
 
-## Out of Scope
+## Out of scope
 
 - Issues in third-party dependencies (report upstream)
-- Theoretical attacks without proof of concept
+- Theoretical attacks without a proof of concept
 - Social engineering
+- Denial of service, automated scanning and volumetric testing
+
+## Bounty
+
+There is no bug bounty program at this time. Responsible reports are acknowledged and credited on request.

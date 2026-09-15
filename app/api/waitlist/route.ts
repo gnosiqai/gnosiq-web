@@ -307,11 +307,13 @@ export async function POST(req: NextRequest) {
  *
  *  2. Quantificadores LIMITADOS, como defesa em profundidade: mesmo que
  *     alguém reintroduza ambiguidade aqui um dia, o trabalho por posição
- *     tem teto. O limite é 254 e não 64 (o máximo de um local-part
- *     válido) de propósito: um endereço com local-part maior que o teto
- *     seria redigido pela METADE, vazando o começo do endereço. 254 é o
- *     mesmo MAX_FIELD_LENGTH que esta rota já impõe na entrada, então
- *     nenhum endereço que o nosso pipeline aceita escapa inteiro.
+ *     tem teto. O limite é `MAX_FIELD_LENGTH` (254) e não 64 (o máximo de
+ *     um local-part válido) de propósito: um endereço com local-part maior
+ *     que o teto seria redigido pela METADE, vazando o começo do endereço.
+ *     O teto é a MESMA constante que esta rota já impõe na entrada, lida
+ *     dela e não repetida como literal: se o limite de entrada mudar, a
+ *     redação acompanha, e nenhum endereço que o pipeline aceita escapa
+ *     inteiro.
  *
  * Por que isto importa e não é cosmético: o texto que passa por aqui é a
  * mensagem de ERRO do provedor, e provedor gosta de ecoar o campo que
@@ -320,8 +322,11 @@ export async function POST(req: NextRequest) {
  * dado pessoal em log é anterior a qualquer conveniência de diagnóstico, e o
  * custo de casar essa regra não pode ser uma superfície de negação de serviço.
  */
+const EMAIL_PART = `[^\\s<>()"',;:@]{1,${MAX_FIELD_LENGTH}}`
+const EMAIL_TOKEN_RE = new RegExp(`${EMAIL_PART}@${EMAIL_PART}`, 'g')
+
 function redactEmails(text: string): string {
-  return text.replace(/[^\s<>()"',;:@]{1,254}@[^\s<>()"',;:@]{1,254}/g, '[e-mail]')
+  return text.replace(EMAIL_TOKEN_RE, '[e-mail]')
 }
 
 /**
