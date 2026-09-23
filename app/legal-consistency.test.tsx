@@ -183,7 +183,7 @@ describe('textos jurídicos canônicos: pino por hash', () => {
 
 /** Minúsculas e sem acento: a varredura não depende de grafia. */
 const normalize = (s: string) =>
-  s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+  s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
 /** Todas as strings exportadas pelo módulo, inclusive as aninhadas em objetos. */
 function exportedStrings(value: unknown): string[] {
