@@ -43,3 +43,6 @@ export const PRIVACY_POLICY_URL = '/privacy';
 // renderizado na LP — ele continua válido para relatório e páginas legais,
 // onde o termo técnico é apropriado e exigido.
 export const CLINICAL_DISCLAIMER_LP = 'A GnosIQ não substitui avaliação clínica.'
+
+// --- Textos canônicos pt-BR (consentimentos, avisos e bloco de segurança) ---
+export * from './legal/pt-BR'
