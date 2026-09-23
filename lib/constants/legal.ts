@@ -28,15 +28,6 @@ export const LGPD_NOTICE_EN =
   'Your data is processed solely for generating this report and never used to train ' +
   'external AI models. Per LGPD (Brazilian Data Protection Law 13.709/2018) and GDPR.'
 
-// --- Gatilhos de Encaminhamento Clínico (Agent1 CAT) ---
-
-export const CLINICAL_REFERRAL_TRIGGERS = {
-  AQ10_THRESHOLD: 6,       // possíveis traços TEA — acionar RAADS-R + aviso profissional
-  PHQ9_THRESHOLD: 10,      // rastreio depressão moderada/grave
-  GAD7_THRESHOLD: 10,      // rastreio ansiedade moderada/grave
-  ASRS_POSITIVE: true,     // padrão TDAH confirmado pelo ASRS
-} as const
-
 // ─── Privacy Policy ────────────────────────────────────────────────
 // | 2026-04-28
 // 1.0 -> 1.1. A v1.0 afirmava que telefone NÃO era coletado; a LP v2
