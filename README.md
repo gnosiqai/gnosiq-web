@@ -109,9 +109,9 @@ grants no right in any GnosIQ trademark or logo.
 
 *We don't assess people. We unlock the cognitive capital hidden in every human.*
 
-This report identifies cognitive and behavioral patterns using validated
-screening instruments. It does NOT replace clinical diagnosis by a licensed
-neurologist, clinical psychologist, or psychiatrist.
+This report describes cognitive and personality patterns based on your
+answers. It does NOT replace a diagnostic assessment conducted by a licensed
+psychologist, psychiatrist or neurologist.
 
 © 2026 GNOSIQ TECNOLOGIA LTDA · CNPJ 66.473.762/0001-13 · Porto Alegre, Brazil
 

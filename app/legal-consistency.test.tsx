@@ -2,7 +2,10 @@ import { describe, it, expect } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import Privacy from '@/app/privacy/page'
 import Terms from '@/app/terms/page'
+import { createHash } from 'node:crypto'
+import * as legal from '@/lib/constants/legal'
 import { PRIVACY_POLICY_VERSION } from '@/lib/constants/legal'
+import { LEGAL_BY_LOCALE } from '@/lib/constants/legal/index'
 
 /**
  * a revisão de segurança bloqueou o merge porque /privacy afirmava
@@ -119,5 +122,157 @@ describe('a política nomeia o provedor de e-mail REAL', () => {
  // O provedor saiu do código nesta issue. Política que cita sub-processador
  // que não processa mais nada é declaração falsa, não sobra inofensiva.
     expect(t).not.toContain('SendGrid')
+  })
+})
+
+/**
+ * Textos jurídicos canônicos: pino por sha256.
+ *
+ * O texto é a letra revisada, não copy. Qualquer mudança de uma vírgula
+ * troca o hash e quebra este teste: a mudança só passa se o literal abaixo
+ * for atualizado junto, o que torna a revisão explícita. O engine vendoriza
+ * os mesmos textos com os mesmos hashes.
+ */
+describe('textos jurídicos canônicos: pino por hash', () => {
+  const sha256 = (s: string) => createHash('sha256').update(s, 'utf8').digest('hex')
+
+  const PINS = {
+    CONSENT_ASSESSMENT_PT: '2c74bf7b86a36f3f06f2882d99d543980ceda23ec6f132fa816943f7932d557a',
+    CONSENT_FEEDBACK_PT: '5497efd85896943ca29a14f7cc0f48ec1370f728838366e8b9ecb978572fc81a',
+    CONSENT_TESTIMONIAL_PT: 'ad6b065eebc50cb4b68602c221745ef8eb82be1a5e1348930646911d3df9af16',
+    AI_GENERATED_NOTICE_PT: '4d5fca905b484159957644e79ed8287aa9a545f9a3c24bb787c9db263d118bd3',
+    METHOD_LIMITATION_PT: '97ed17109b0abe70b254f10ff0ba48bc5aebe82dfd77078e08ad1c2c41146eee',
+    SAFETY_NOTICE_PT: 'b5fcff645dbc64e34d6d1231fb2c03f8ef75b2e13f2a3884ab08676f08a353be',
+    DISCLAIMER_PT: '96d7713807effdab537cd5d661fcac4c49e647deeece3c3f83aa6b90b0911126',
+    DISCLAIMER_EN: 'c414b3998b194e59aa4d82760f6a81f75f343d744a3290c680b50298c0faa560',
+  } as const
+
+  for (const [name, pin] of Object.entries(PINS)) {
+    it(`${name} bate com o hash fixado`, () => {
+      expect(sha256(legal[name as keyof typeof PINS])).toBe(pin)
+    })
+  }
+
+  it('o mapa por locale aponta para as mesmas constantes, com pt-BR único', () => {
+    expect(Object.keys(LEGAL_BY_LOCALE)).toEqual(['pt-BR'])
+    const pt = LEGAL_BY_LOCALE['pt-BR']
+    expect(pt.CONSENT_ASSESSMENT).toBe(legal.CONSENT_ASSESSMENT_PT)
+    expect(pt.CONSENT_FEEDBACK).toBe(legal.CONSENT_FEEDBACK_PT)
+    expect(pt.CONSENT_TESTIMONIAL).toBe(legal.CONSENT_TESTIMONIAL_PT)
+    expect(pt.AI_GENERATED_NOTICE).toBe(legal.AI_GENERATED_NOTICE_PT)
+    expect(pt.METHOD_LIMITATION).toBe(legal.METHOD_LIMITATION_PT)
+    expect(pt.SAFETY_NOTICE).toBe(legal.SAFETY_NOTICE_PT)
+    expect(pt.SAFETY_RESOURCES).toBe(legal.SAFETY_RESOURCES_PT)
+  })
+
+  it('o bloco de segurança traz os canais que ele promete', () => {
+    for (const canal of ['188', '192', 'cvv.com.br']) {
+      expect(legal.SAFETY_NOTICE_PT).toContain(canal)
+    }
+    expect(legal.SAFETY_RESOURCES_PT.cvv.phone).toBe('188')
+    expect(legal.SAFETY_RESOURCES_PT.samu.phone).toBe('192')
+  })
+
+  it('limiares de encaminhamento clínico não voltam ao módulo público', () => {
+ // O encaminhamento é o bloco de segurança, exibido por código. Limiar de
+ // escala clínica em repo público é desenho exposto e jogável.
+    expect(Object.keys(legal).filter((k) => /REFERRAL|TRIGGER|THRESHOLD/.test(k))).toEqual([])
+    expect(Object.keys(legal)).not.toContain('COGNITIVE_ASSESSMENT_DISCLAIMER')
+  })
+})
+
+/** Minúsculas e sem acento: a varredura não depende de grafia. */
+const normalize = (s: string) =>
+  s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+
+/** Todas as strings exportadas pelo módulo, inclusive as aninhadas em objetos. */
+function exportedStrings(value: unknown): string[] {
+  if (typeof value === 'string') return [value]
+  if (value && typeof value === 'object') return Object.values(value).flatMap(exportedStrings)
+  return []
+}
+
+describe('coerência: nenhum texto jurídico afirma o que o produto não sustenta', () => {
+ // Sem base normativa, o produto não pode se dizer validado nem de rastreio,
+ // e não promete que os dados nunca saem de um perímetro: há suboperadores.
+  const strings = exportedStrings(legal).map(normalize)
+
+  for (const termo of ['validad', 'rastreio', 'perimetro', 'nunca saem']) {
+    it(`nenhuma string exportada contém "${termo}"`, () => {
+      expect(strings.filter((s) => s.includes(termo))).toEqual([])
+    })
+  }
+})
+
+describe('linha CFP: vocabulário vetado fora dos textos canônicos', () => {
+ /*
+      Vocabulário vetado em todo relatório. É lista pública por natureza: diz
+      o que o produto não afirma, não como algo é detectado. Casamento por
+      fronteira de palavra, sem acento, com flexões (a palavra perde a vogal
+      final e aceita até quatro letras de sufixo).
+ */
+  const VETADOS = [
+    // mensuração clínica
+    'QI', 'quociente de inteligência', 'IQ', 'percentil', 'desvio padrão',
+    'escore padronizado', 'escore-z', 'norma', 'normativo',
+    // referência a população
+    'acima da média', 'abaixo da média', 'na média', 'a maioria das pessoas',
+    '% da população', 'raro', 'superior', 'inferior', 'deficit', 'déficit',
+    // ato privativo ou diagnóstico
+    'diagnóstico', 'diagnosticar', 'laudo', 'parecer psicológico',
+    'avaliação psicológica', 'avaliação neuropsicológica', 'teste psicológico',
+    'psicodiagnóstico', 'prognóstico',
+    // rótulos clínicos
+    'transtorno', 'síndrome', 'distúrbio', 'patologia', 'sintoma', 'TDAH', 'TEA',
+    'autismo', 'autista', 'bipolar', 'depressão', 'depressivo', 'borderline',
+    'esquizofrenia', 'dislexia', 'neurodivergente', 'neurodivergência',
+    'tratamento', 'medicação', 'medicamento', 'terapia',
+    // veredito sobre a pessoa
+    'superdotado', 'superdotação', 'altas habilidades', 'AH/SD', 'gênio',
+    'talento excepcional',
+    // certeza indevida
+    'comprova', 'prova que', 'garante', 'definitivamente', 'certamente', 'sem dúvida',
+  ] as const
+
+ // As negações exigidas pela própria linha CFP: o texto nega o ato, não o pratica.
+  const ALLOWLIST = [
+    'NÃO substitui avaliação diagnóstica',
+    'does NOT replace a diagnostic assessment',
+    'Não é avaliação psicológica, laudo ou diagnóstico clínico',
+  ].map(normalize)
+
+  const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')
+  const pattern = (termo: string) => {
+    const t = normalize(termo)
+    const flexao = /[a-z]{5,}[aeo]$/.test(t) ? `${escape(t.slice(0, -1))}[a-z]{0,4}` : `${escape(t)}s?`
+    return new RegExp(`(?<![a-z0-9])${flexao}(?![a-z0-9])`)
+  }
+
+  const CONSTANTES = [
+    'CONSENT_ASSESSMENT_PT', 'CONSENT_FEEDBACK_PT', 'CONSENT_TESTIMONIAL_PT',
+    'AI_GENERATED_NOTICE_PT', 'METHOD_LIMITATION_PT', 'SAFETY_NOTICE_PT',
+    'DISCLAIMER_PT', 'DISCLAIMER_EN',
+  ] as const
+
+  for (const nome of CONSTANTES) {
+    it(`${nome} não usa vocabulário vetado`, () => {
+      const texto = ALLOWLIST.reduce((acc, frase) => acc.split(frase).join(' '), normalize(legal[nome]))
+      expect(VETADOS.filter((termo) => pattern(termo).test(texto))).toEqual([])
+    })
+  }
+
+  it('a varredura enxerga flexão e acento (sem falso negativo)', () => {
+    expect(pattern('diagnóstico').test(normalize('uma avaliação DIAGNÓSTICA'))).toBe(true)
+    expect(pattern('déficit').test(normalize('deficits'))).toBe(true)
+  })
+
+  it('a varredura respeita fronteira de palavra (sem falso positivo)', () => {
+    expect(pattern('TEA').test(normalize('teatro'))).toBe(false)
+    expect(pattern('norma').test(normalize('informação'))).toBe(false)
+  })
+
+  it('sem a allowlist, as negações canônicas seriam pegas: ela é necessária, não enfeite', () => {
+    expect(pattern('diagnóstico').test(normalize(legal.DISCLAIMER_PT))).toBe(true)
+    expect(pattern('laudo').test(normalize(legal.AI_GENERATED_NOTICE_PT))).toBe(true)
   })
 })
