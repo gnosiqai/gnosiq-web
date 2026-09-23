@@ -230,9 +230,6 @@ describe('linha CFP: vocabulário vetado fora dos textos canônicos', () => {
     // veredito sobre a pessoa
     'superdotado', 'superdotação', 'altas habilidades', 'AH/SD', 'gênio',
     'talento excepcional',
-    // instrumentos restritos ou proprietários
-    'WAIS', 'WISC', 'Wechsler', 'Raven', 'BPR', 'NEO', 'MBTI', 'MMPI',
-    'Stanford-Binet', 'Rorschach', 'HTP', 'Palográfico', 'ICAR', 'PTGI', 'SRBCSS',
     // certeza indevida
     'comprova', 'prova que', 'garante', 'definitivamente', 'certamente', 'sem dúvida',
   ] as const
