@@ -8,14 +8,14 @@
 // --- Disclaimer Clínico ---
 
 export const DISCLAIMER_PT =
-  'Este relatório identifica padrões cognitivos e comportamentais com base em instrumentos ' +
-  'de rastreio validados internacionalmente. NÃO substitui avaliação diagnóstica conduzida ' +
-  'por neurologista, psicólogo clínico ou psiquiatra habilitado.'
+  'Este relatório descreve padrões cognitivos e de personalidade a partir das suas respostas. ' +
+  'NÃO substitui avaliação diagnóstica conduzida por psicólogo, psiquiatra ou neurologista ' +
+  'habilitado.'
 
 export const DISCLAIMER_EN =
-  'This report identifies cognitive and behavioral patterns using validated screening ' +
-  'instruments. It does NOT replace clinical diagnosis by a licensed neurologist, ' +
-  'clinical psychologist, or psychiatrist.'
+  'This report describes cognitive and personality patterns based on your answers. ' +
+  'It does NOT replace a diagnostic assessment conducted by a licensed psychologist, ' +
+  'psychiatrist or neurologist.'
 
 // --- Aviso LGPD / GDPR ---
 
@@ -36,11 +36,6 @@ export const LGPD_NOTICE_EN =
 export const PRIVACY_POLICY_VERSION = '1.1';
 export const PRIVACY_POLICY_DATE = '2026-08-25';
 export const PRIVACY_POLICY_URL = '/privacy';
-
-// Disclaimer canônico CFP/LGPD — usar em todos os relatórios de avaliação
-export const COGNITIVE_ASSESSMENT_DISCLAIMER =
-  'Este relatório é gerado por IA e não substitui diagnóstico clínico. ' +
-  'Os dados são confidenciais e nunca saem do perímetro GnosIQ.';
 
 // --- Disclaimer da landing page ------------------------------
 // CFP: a LP não pode conter a palavra "diagnóstico" em nenhuma flexão.
