@@ -17,9 +17,9 @@ export const CONSENT_FEEDBACK_PT =
 export const CONSENT_TESTIMONIAL_PT =
   'Autorizo a GnosIQ a usar meu comentário como depoimento público, identificado como [ ] primeiro nome e sobrenome [ ] apenas iniciais [ ] anônimo. Posso revogar quando quiser, dentro do produto ou pelo e-mail hello@gnosiq.ai, e o comentário deixará de ser usado em novos materiais.'
 
-/** Aviso de conteúdo gerado por IA, na página 1 do relatório, antes do disclaimer clínico. */
+/** Aviso de conteúdo gerado por IA, na página 1 da análise, antes do disclaimer clínico. */
 export const AI_GENERATED_NOTICE_PT =
-  'Este relatório foi gerado por inteligência artificial a partir das suas respostas. A pontuação do GnoScore é calculada por software da GnosIQ; os textos são escritos por IA e verificados automaticamente. Não é avaliação psicológica, laudo ou diagnóstico clínico.'
+  'Esta análise foi gerada por inteligência artificial a partir das suas respostas. A pontuação do GnoScore é calculada por software da GnosIQ; os textos são escritos por IA e verificados automaticamente. Não é avaliação psicológica, laudo ou diagnóstico clínico.'
 
 /** Limitação metodológica, de presença obrigatória no relatório. */
 export const METHOD_LIMITATION_PT =
