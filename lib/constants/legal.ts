@@ -8,9 +8,7 @@
 // --- Disclaimer Clínico ---
 
 export const DISCLAIMER_PT =
-  'Este relatório descreve padrões cognitivos e de personalidade a partir das suas respostas. ' +
-  'NÃO substitui avaliação diagnóstica conduzida por psicólogo, psiquiatra ou neurologista ' +
-  'habilitado.'
+  'Esta análise descreve padrões cognitivos e de personalidade a partir das suas respostas. NÃO substitui avaliação diagnóstica conduzida por psicólogo, psiquiatra ou neurologista habilitado.'
 
 export const DISCLAIMER_EN =
   'This report describes cognitive and personality patterns based on your answers. ' +
