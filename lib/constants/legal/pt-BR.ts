@@ -35,3 +35,11 @@ export const SAFETY_RESOURCES_PT = {
   samu: { phone: '192' },
   caps: { label: 'CAPS da sua cidade' },
 } as const
+
+/**
+ * Bloco "Sobre esta análise", na seção final da análise. Fica fora da
+ * varredura de vocabulário por lista explícita: está isento pelo sha256
+ * (app/legal-consistency.test.tsx).
+ */
+export const ABOUT_THIS_ANALYSIS_PT =
+  'Esta análise descreve como seu perfil cognitivo se organiza: seus pontos fortes relativos e como se beneficiar deles. Ela não identifica altas habilidades/superdotação nem qualquer condição de saúde; essa identificação é feita por psicólogo(a) com registro no CRP, em sessões de avaliação psicológica.'
