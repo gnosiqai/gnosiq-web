@@ -6,6 +6,7 @@ import { createHash } from 'node:crypto'
 import * as legal from '@/lib/constants/legal'
 import { PRIVACY_POLICY_VERSION } from '@/lib/constants/legal'
 import { LEGAL_BY_LOCALE } from '@/lib/constants/legal/index'
+import * as ptBR from '@/lib/constants/legal/pt-BR'
 
 /**
  * a revisão de segurança bloqueou o merge porque /privacy afirmava
@@ -145,6 +146,7 @@ describe('textos jurídicos canônicos: pino por hash', () => {
     SAFETY_NOTICE_PT: 'b5fcff645dbc64e34d6d1231fb2c03f8ef75b2e13f2a3884ab08676f08a353be',
     DISCLAIMER_PT: '601819cf109d7da7fe4ecfeb9d92672c2c817a0fbe4b1f729c30c89cd25b5e5d',
     DISCLAIMER_EN: 'c414b3998b194e59aa4d82760f6a81f75f343d744a3290c680b50298c0faa560',
+    ABOUT_THIS_ANALYSIS_PT: 'e58eb91d7dfc7933cce2ee21c0364995760eb04343bd4ad588695cf0f8493e03',
   } as const
 
   for (const [name, pin] of Object.entries(PINS)) {
@@ -163,6 +165,7 @@ describe('textos jurídicos canônicos: pino por hash', () => {
     expect(pt.METHOD_LIMITATION).toBe(legal.METHOD_LIMITATION_PT)
     expect(pt.SAFETY_NOTICE).toBe(legal.SAFETY_NOTICE_PT)
     expect(pt.SAFETY_RESOURCES).toBe(legal.SAFETY_RESOURCES_PT)
+    expect(pt.ABOUT_THIS_ANALYSIS).toBe(legal.ABOUT_THIS_ANALYSIS_PT)
   })
 
   it('o bloco de segurança traz os canais que ele promete', () => {
@@ -260,6 +263,38 @@ describe('linha CFP: vocabulário vetado fora dos textos canônicos', () => {
       expect(VETADOS.filter((termo) => pattern(termo).test(texto))).toEqual([])
     })
   }
+
+ /*
+      Toda constante de texto do módulo jurídico pt-BR entra na varredura
+      acima (CONSTANTES) ou está isenta pelo sha256 do texto. A isenção é
+      fechada: contém só o bloco "Sobre esta análise", cuja letra é revisada
+      fora deste repositório. Constante nova fora dos dois conjuntos reprova.
+ */
+  const sha256 = (s: string) => createHash('sha256').update(s, 'utf8').digest('hex')
+  const ISENTAS_POR_HASH: ReadonlySet<string> = new Set([
+    'e58eb91d7dfc7933cce2ee21c0364995760eb04343bd4ad588695cf0f8493e03', // ABOUT_THIS_ANALYSIS_PT
+  ])
+  const foraDaVarredura = (modulo: Record<string, unknown>) =>
+    Object.entries(modulo)
+      .filter((e): e is [string, string] => typeof e[1] === 'string')
+      .filter(([nome, texto]) => !(CONSTANTES as readonly string[]).includes(nome) && !ISENTAS_POR_HASH.has(sha256(texto)))
+      .map(([nome]) => nome)
+
+  it('toda constante de texto do módulo pt-BR está na varredura ou isenta pelo hash', () => {
+    expect(foraDaVarredura(ptBR)).toEqual([])
+  })
+
+  it('a isenção contém só o bloco "Sobre esta análise", que fica fora de CONSTANTES', () => {
+    expect([...ISENTAS_POR_HASH]).toEqual([sha256(legal.ABOUT_THIS_ANALYSIS_PT)])
+    expect(CONSTANTES as readonly string[]).not.toContain('ABOUT_THIS_ANALYSIS_PT')
+  })
+
+  it('constante plantada fora dos dois conjuntos reprova; texto isento alterado em 1 caractere também', () => {
+    expect(foraDaVarredura({ ...ptBR, CONSTANTE_PLANTADA_PT: 'texto qualquer' })).toEqual(['CONSTANTE_PLANTADA_PT'])
+    const original = legal.ABOUT_THIS_ANALYSIS_PT
+    const alterado = original.slice(0, -1) + (original.endsWith('.') ? '!' : '.')
+    expect(foraDaVarredura({ ABOUT_THIS_ANALYSIS_PT: alterado })).toEqual(['ABOUT_THIS_ANALYSIS_PT'])
+  })
 
   it('a varredura enxerga flexão e acento (sem falso negativo)', () => {
     expect(pattern('diagnóstico').test(normalize('uma avaliação DIAGNÓSTICA'))).toBe(true)
